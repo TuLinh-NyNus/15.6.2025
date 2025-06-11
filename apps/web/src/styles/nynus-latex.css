@@ -1,0 +1,406 @@
+.nynus-latex-container {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #f8fafc; /* Màu chữ trắng cho nền tối */
+  padding: 1rem;
+  background-color: #1e293b; /* Nền tối */
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Áp dụng màu chữ đen khi ở chế độ sáng */
+.light .nynus-latex-container {
+  color: #333;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nynus-latex-renderer {
+  width: 100%;
+}
+
+/* Xử lý môi trường center */
+.nynus-center {
+  text-align: center;
+  margin: 1rem 0;
+  color: #f8fafc;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-center {
+  color: #333;
+}
+
+/* Xử lý các đoạn văn bản và công thức toán học */
+.nynus-text {
+  margin: 0.5rem 0;
+  text-align: justify;
+  color: #f8fafc;
+}
+
+.nynus-math {
+  margin: 1rem 0;
+  overflow-x: auto; /* Cho phép cuộn ngang nếu công thức quá dài */
+  color: #f8fafc;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-text,
+.light .nynus-math {
+  color: #333;
+}
+
+.nynus-tikz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-tikz {
+  background-color: #f5f5f5;
+  border: 1px dashed #ccc;
+  color: #666;
+}
+
+/* Xử lý các môi trường đặc biệt */
+.nynus-itemchoice {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nynus-itemch {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-itemchoice {
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+}
+
+.light .nynus-itemch {
+  background-color: #f5f5f5;
+  border-left: 3px solid #ddd;
+}
+
+.nynus-choiceTF, .nynus-choice {
+  margin: 1rem 0;
+}
+
+.nynus-choices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.light .nynus-choices-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.nynus-choice-item {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-right: 2rem; /* Thêm padding bên phải để có chỗ cho dấu tích */
+}
+
+.nynus-choice-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nynus-choice-item:last-child {
+  margin-bottom: 0;
+}
+
+.nynus-choice-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.nynus-choice-label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  min-width: 2rem;
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 0.25rem; /* Thêm padding-top để căn chỉnh với nội dung đáp án */
+}
+
+.nynus-choice-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.nynus-choice-row {
+  display: flex;
+  align-items: flex-start; /* Căn chỉnh theo flex-start để đảm bảo text được căn chỉnh đúng */
+  width: 100%;
+  position: relative;
+}
+
+.nynus-answer-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  position: relative;
+}
+
+/* Định dạng cho nội dung đáp án */
+.nynus-answer-content {
+  display: inline;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+/* Định dạng cho văn bản thường và công thức toán học */
+.normal-text {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  display: inline;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+.math-formula {
+  display: inline;
+  margin: 0 0.1rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.nynus-choice-line {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.nynus-choice-line:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.nynus-choice-line:before {
+  content: attr(data-line);
+  position: absolute;
+  left: -1.5rem;
+  top: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  display: none;
+}
+
+.nynus-choice-item:hover .nynus-choice-line:before {
+  display: block;
+}
+
+.nynus-choice-item.correct {
+  background-color: rgba(40, 167, 69, 0.2);
+  border-color: rgba(40, 167, 69, 0.3);
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-choice-item {
+  background-color: #f5f5f5;
+  border: 1px solid #eee;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.light .nynus-choice-item:hover {
+  background-color: #ffffff;
+  border-color: #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.light .nynus-choice-item.correct {
+  background-color: #e6f7e6;
+  border-color: #c3e6cb;
+}
+
+.light .nynus-choice-line {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.light .nynus-choice-line:before {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.nynus-true {
+  color: #28a745;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nynus-loigiai {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  border-left: 4px solid rgba(108, 117, 125, 0.5);
+}
+
+.nynus-loigiai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.nynus-loigiai h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.nynus-toggle-solution {
+  background-color: rgba(108, 117, 125, 0.2);
+  color: #f8fafc;
+  border: 1px solid rgba(108, 117, 125, 0.5);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nynus-toggle-solution:hover {
+  background-color: rgba(108, 117, 125, 0.3);
+}
+
+.nynus-toggle-solution:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nynus-solution-content.hidden {
+  display: none;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .nynus-loigiai {
+  background-color: #f8f9fa;
+  border-left: 4px solid #6c757d;
+}
+
+.light .nynus-loigiai h3 {
+  color: #495057;
+}
+
+.light .nynus-toggle-solution {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #495057;
+  border: 1px solid rgba(108, 117, 125, 0.3);
+}
+
+.light .nynus-toggle-solution:hover {
+  background-color: rgba(108, 117, 125, 0.2);
+}
+
+.nynus-solution-content {
+  margin-top: 1rem;
+}
+
+/* Đảm bảo thẻ <br> được hiển thị đúng trong nội dung LaTeX */
+.nynus-solution-content br,
+.nynus-choice-content br,
+.nynus-latex-renderer br {
+  display: block;
+  margin-top: 0.5rem;
+  content: "";
+}
+
+/* Cải thiện hiển thị các ký hiệu toán học */
+.katex {
+  font-size: 1.1em !important;
+  color: #f8fafc !important;
+  display: inline !important;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .katex {
+  color: #333 !important;
+}
+
+/* Cải thiện hiển thị KaTeX trong đáp án */
+.nynus-answer-content .katex {
+  display: inline !important;
+}
+
+.nynus-answer-content .katex-display {
+  display: inline !important;
+  margin: 0 !important;
+}
+
+/* Cải thiện hiển thị các ký hiệu vector */
+.katex .vec {
+  position: relative;
+}
+
+.katex .vec:after {
+  content: "→";
+  position: absolute;
+  top: -0.5em;
+  right: -0.2em;
+}
+
+/* Cải thiện hiển thị các phân số */
+.katex .frac {
+  vertical-align: middle;
+}
+
+/* Placeholder styles */
+.loading-placeholder {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Áp dụng màu khác khi ở chế độ sáng */
+.light .loading-placeholder {
+  color: #6c757d;
+}

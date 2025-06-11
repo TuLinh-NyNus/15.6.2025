@@ -1,0 +1,279 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Light mode (default) - Bảng màu mới với tông màu đất và vàng */
+  :root {
+    /* Màu nền chính - Kem nhạt (Cream/Off-white) */
+    --background: 48 50% 97%;  /* #FCFBF4 */
+    --foreground: 27 14% 16%;  /* #312520 - Nâu đậm */
+
+    /* Màu card - Ngọc nhạt (Soft Jade) */
+    --card: 43 29% 86%;  /* #EAE4D1 */
+    --card-foreground: 27 14% 16%;  /* #312520 - Nâu đậm */
+
+    /* Màu popover - Trắng ánh bạc (Silver White) */
+    --popover: 40 10% 94%;  /* #F1F0ED */
+    --popover-foreground: 27 14% 16%;  /* #312520 - Nâu đậm */
+
+    /* Màu chính - Vàng đồng (Gold) */
+    --primary: 37 68% 65%;  /* #E7B864 */
+    --primary-foreground: 27 14% 16%;  /* #312520 - Nâu đậm */
+
+    /* Màu thứ cấp - Gốm tử sa (Terracotta) */
+    --secondary: 23 56% 31%;  /* #7C4622 */
+    --secondary-foreground: 48 50% 97%;  /* #FCFBF4 - Kem nhạt */
+
+    /* Màu muted - Trắng ánh bạc (Silver White) */
+    --muted: 40 10% 94%;  /* #F1F0ED */
+    --muted-foreground: 27 33% 37%;  /* #7C5B3E - Nâu đất */
+
+    /* Màu accent - Hồng đào (Soft Pink) */
+    --accent: 350 79% 85%;  /* #F6BEC8 */
+    --accent-foreground: 27 14% 16%;  /* #312520 - Nâu đậm */
+
+    /* Màu destructive - Đất nung (Burnt Sienna) */
+    --destructive: 12 53% 37%;  /* #8F3D2C */
+    --destructive-foreground: 48 50% 97%;  /* #FCFBF4 - Kem nhạt */
+
+    /* Màu viền và input */
+    --border: 23 56% 31% / 0.2;  /* #7C4622 với độ trong suốt */
+    --input: 23 56% 31% / 0.2;  /* #7C4622 với độ trong suốt */
+    --ring: 37 68% 65%;  /* #E7B864 - Vàng đồng */
+
+    --radius: 0.5rem;
+  }
+
+  /* Dark mode */
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 252 92% 51%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 252 92% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Nền trang với gradient nhẹ cho Light Mode */
+  :root:not(.dark) body, .light body {
+    background: linear-gradient(135deg, #FCFBF4, #EAE4D1, #F1F0ED);
+  }
+
+  /* Enhanced Light Theme Styles - Bảng màu mới với tông màu đất và vàng */
+  .light-mode-enhanced {
+    --gradient-start: 48 50% 97%;  /* #FCFBF4 - Kem nhạt */
+    --gradient-mid: 43 29% 86%;    /* #EAE4D1 - Ngọc nhạt */
+    --gradient-end: 40 10% 94%;    /* #F1F0ED - Trắng ánh bạc */
+    --card-bg: 43 29% 86%;         /* #EAE4D1 - Ngọc nhạt */
+    --card-bg-hover: 37 68% 65%;   /* #E7B864 - Vàng đồng */
+    --card-border: 23 56% 31%;     /* #7C4622 - Gốm tử sa */
+    --card-shadow: 0 4px 20px rgba(124, 70, 34, 0.08);
+    --text-primary: 27 14% 16%;    /* #312520 - Nâu đậm */
+    --text-secondary: 27 33% 37%;  /* #7C5B3E - Nâu đất */
+  }
+
+  /* Improved Light Theme Components - Bảng màu mới */
+  :root:not(.dark) .fancy-glass, .light .fancy-glass {
+    @apply bg-nynus-cream/90 backdrop-blur-md border border-nynus-jade shadow-sm;
+  }
+
+  :root:not(.dark) .fancy-card, .light .fancy-card {
+    @apply bg-nynus-jade border border-primary-terracotta/20 shadow-sm hover:shadow-md transition-shadow duration-300 hover:border-primary-gold;
+  }
+
+  :root:not(.dark) .fancy-gradient, .light .fancy-gradient {
+    background: linear-gradient(135deg,
+      #FCFBF4 0%,    /* Kem nhạt */
+      #EAE4D1 50%,   /* Ngọc nhạt */
+      #F1F0ED 100%); /* Trắng ánh bạc */
+  }
+
+  :root:not(.dark) .section-divider, .light .section-divider {
+    @apply bg-gradient-to-r from-nynus-jade via-primary-gold/20 to-nynus-jade;
+  }
+
+  :root:not(.dark) .auth-gradient, .light .auth-gradient {
+    background: linear-gradient(135deg,
+      rgba(231, 184, 100, 0.9) 0%,  /* Vàng đồng */
+      rgba(246, 190, 200, 0.85) 50%, /* Hồng đào */
+      rgba(124, 70, 34, 0.8) 100%);  /* Gốm tử sa */
+  }
+
+  :root:not(.dark) .form-input, .light .form-input {
+    @apply bg-nynus-cream border border-primary-terracotta/20 focus:border-primary-gold/50 text-nynus-dark placeholder:text-nynus-medium/70;
+  }
+
+  :root:not(.dark) .form-label, .light .form-label {
+    @apply text-nynus-dark;
+  }
+
+  :root:not(.dark) .search-input, .light .search-input {
+    @apply bg-nynus-cream/80 border border-primary-terracotta/20 text-nynus-dark;
+  }
+
+  /* Các lớp mới cho các thành phần UI */
+  :root:not(.dark) .nynus-button-primary, .light .nynus-button-primary {
+    @apply bg-primary-gold text-nynus-dark hover:bg-primary-sienna hover:text-nynus-light transition-colors duration-300 hover:scale-105;
+  }
+
+  :root:not(.dark) .nynus-button-secondary, .light .nynus-button-secondary {
+    @apply bg-nynus-silver text-nynus-medium border border-primary-terracotta/30 hover:bg-primary-pink hover:text-nynus-dark transition-colors duration-300 hover:scale-105;
+  }
+
+  :root:not(.dark) .nynus-card, .light .nynus-card {
+    @apply bg-nynus-jade border border-primary-terracotta/20 rounded-md shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary-gold hover:scale-[1.01];
+  }
+
+  :root:not(.dark) .nynus-input, .light .nynus-input {
+    @apply bg-nynus-cream border border-primary-terracotta/20 rounded-md focus:ring-primary-gold/50 focus:border-primary-gold/50 text-nynus-dark placeholder:text-nynus-medium/70;
+  }
+
+  :root:not(.dark) .nynus-badge, .light .nynus-badge {
+    @apply bg-primary-pink/20 text-primary-sienna border border-primary-pink/30 rounded-full px-2 py-0.5;
+  }
+
+  :root:not(.dark) .nynus-gradient-bg, .light .nynus-gradient-bg {
+    background: linear-gradient(135deg, #FCFBF4, #EAE4D1, #F1F0ED);
+  }
+
+  /* Dark Theme Enhanced Styles */
+  .dark .fancy-glass {
+    @apply bg-slate-900/60 backdrop-blur-md border border-slate-700/50 shadow-md;
+  }
+
+  .dark .fancy-card {
+    @apply bg-slate-800/50 border border-slate-700/50 shadow-md hover:shadow-lg transition-shadow duration-300 hover:border-primary/30;
+  }
+
+  .dark .fancy-gradient {
+    background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.8) 0%,
+      rgba(20, 30, 55, 0.9) 50%,
+      rgba(25, 35, 60, 0.8) 100%);
+  }
+
+  .dark .section-divider {
+    @apply bg-gradient-to-r from-slate-800 via-primary/20 to-slate-800;
+  }
+
+  .dark .auth-gradient {
+    background: linear-gradient(135deg,
+      rgba(89, 46, 217, 0.95) 0%,
+      rgba(113, 55, 221, 0.9) 50%,
+      rgba(137, 64, 225, 0.85) 100%);
+  }
+
+  .dark .form-input {
+    @apply bg-slate-800 border border-slate-700 focus:border-primary/50 text-white placeholder:text-slate-500;
+  }
+
+  .dark .form-label {
+    @apply text-slate-300;
+  }
+
+  .dark .search-input {
+    @apply bg-slate-800/80 border border-slate-700 text-white;
+  }
+}
+
+/* Smooth focus transitions */
+* {
+  @apply transition-colors duration-300;
+}
+
+/* Các lớp tiện ích cho bảng màu mới */
+.nynus-gradient-bg {
+  background: linear-gradient(135deg, #FCFBF4, #EAE4D1, #F1F0ED);
+}
+
+.nynus-card {
+  @apply bg-nynus-jade border border-primary-terracotta/20 rounded-md shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary-gold hover:scale-[1.01];
+}
+
+.nynus-button-primary {
+  @apply bg-primary-gold text-nynus-dark hover:bg-primary-sienna hover:text-nynus-light transition-colors duration-300 hover:scale-105;
+}
+
+.nynus-button-secondary {
+  @apply bg-nynus-silver text-nynus-medium border border-primary-terracotta/30 hover:bg-primary-pink hover:text-nynus-dark transition-colors duration-300 hover:scale-105;
+}
+
+.nynus-input {
+  @apply bg-nynus-cream border border-primary-terracotta/20 rounded-md focus:ring-primary-gold/50 focus:border-primary-gold/50 text-nynus-dark placeholder:text-nynus-medium/70;
+}
+
+.nynus-badge {
+  @apply bg-primary-pink/20 text-primary-sienna border border-primary-pink/30 rounded-full px-2 py-0.5;
+}
+
+/* Hide scrollbar but allow scrolling */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-primary-gold via-primary-pink to-primary-sienna bg-clip-text text-transparent;
+}
+
+/* Gradient mới cho chế độ Light Mode */
+:root:not(.dark) .nynus-text-gradient, .light .nynus-text-gradient {
+  @apply bg-gradient-to-r from-primary-terracotta via-primary-gold to-primary-pink bg-clip-text text-transparent;
+}

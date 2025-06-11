@@ -1,0 +1,231 @@
+/* Styles for NynusLatexRenderer */
+
+.nynus-latex-container {
+  min-height: 100px;
+  position: relative;
+}
+
+.loading-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.nynus-latex-renderer {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #f8fafc; /* text-slate-100 */
+  padding: 1rem;
+}
+
+.nynus-content {
+  margin: 1rem 0;
+}
+
+.nynus-solution-content {
+  margin-top: 1rem;
+}
+
+/* Các môi trường */
+.nynus-center {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.nynus-tikz {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  border-radius: 0.25rem;
+}
+
+.nynus-itemchoice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Các lệnh đặc biệt */
+.nynus-choiceTF, .nynus-choice {
+  margin: 1.5rem 0;
+}
+
+.nynus-choices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nynus-choice-item {
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.nynus-choice-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nynus-true {
+  color: rgba(16, 185, 129, 0.9); /* text-emerald-500/90 */
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.nynus-itemch {
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.75rem;
+}
+
+.nynus-loigiai {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-radius: 0.375rem;
+  background-color: rgba(59, 130, 246, 0.1); /* bg-blue-500/10 */
+  border-left: 4px solid rgba(59, 130, 246, 0.5); /* border-blue-500/50 */
+}
+
+.nynus-loigiai h3 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: rgba(59, 130, 246, 0.8); /* text-blue-500/80 */
+  font-size: 1.125rem;
+}
+
+/* Styles cho câu hỏi trả lời ngắn (SA) */
+.nynus-shortans {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nynus-shortans-question {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nynus-shortans-answer {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: rgba(16, 185, 129, 0.1); /* bg-emerald-500/10 */
+  border-left: 3px solid rgba(16, 185, 129, 0.5); /* border-emerald-500/50 */
+  color: rgba(16, 185, 129, 0.9); /* text-emerald-500/90 */
+  font-weight: 500;
+}
+
+/* Styles cho câu hỏi ghép đôi (MA) */
+.nynus-matching {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nynus-matching-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nynus-matching-item {
+  display: flex;
+  align-items: stretch;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.nynus-matching-left,
+.nynus-matching-right {
+  padding: 0.75rem;
+  flex: 1;
+}
+
+.nynus-matching-left {
+  background-color: rgba(139, 92, 246, 0.1); /* bg-violet-500/10 */
+  border-right: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.nynus-matching-right {
+  background-color: rgba(59, 130, 246, 0.1); /* bg-blue-500/10 */
+}
+
+/* Các lệnh từ Header.tex */
+.nynus-vec {
+  position: relative;
+}
+
+.nynus-vec::after {
+  content: "→";
+  position: absolute;
+  top: -0.5em;
+  right: -0.5em;
+  font-size: 0.8em;
+}
+
+.nynus-heva, .nynus-hoac {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Styles cho KaTeX */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+  .nynus-latex-renderer {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .nynus-choice-item {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .nynus-loigiai {
+    padding: 1rem;
+  }
+
+  .nynus-shortans {
+    padding: 0.75rem;
+  }
+
+  .nynus-shortans-answer {
+    padding: 0.5rem;
+  }
+
+  .nynus-matching {
+    padding: 0.75rem;
+  }
+
+  .nynus-matching-left,
+  .nynus-matching-right {
+    padding: 0.5rem;
+  }
+
+  .katex {
+    font-size: 1em;
+  }
+}

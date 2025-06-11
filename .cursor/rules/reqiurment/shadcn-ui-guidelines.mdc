@@ -1,0 +1,118 @@
+---
+name: shadcn-ui-guidelines.mdc
+description: Hướng dẫn và best practices cho việc sử dụng Shadcn UI trong dự án
+globs: apps/web/src/components/ui/**/*.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+
+# Guidelines cho Shadcn UI
+
+## Cài đặt và Cấu hình
+
+- Cài đặt Shadcn UI bằng CLI với `npx shadcn-ui@latest add [component]`
+- Lưu trữ components trong `src/components/ui/`
+- Cấu hình toàn bộ trong file `components.json`
+- Duy trì biến màu sắc trong `globals.css`
+- Đảm bảo cài đặt đúng các dependencies cho từng component
+- Sử dụng path alias `@/components/ui` cho imports
+- Tuân thủ cấu trúc thư mục của Shadcn UI
+
+## Component Customization
+
+- Không sửa đổi trực tiếp component source code trừ khi cần thiết
+- Tùy chỉnh components thông qua CSS variables
+- Tạo variants với class-variance-authority (cva)
+- Extend component functionality bằng cách bọc thay vì sửa
+- Giữ nguyên API của components gốc
+- Tạo wrapper components cho use cases đặc biệt
+- Tạo theme nhất quán bằng CSS variables
+
+## Theme
+
+- Sử dụng CSS variables cho theme (`--primary`, `--secondary`, etc.)
+- Implement dark mode và light mode
+- Duy trì consistent color palette
+- Tạo color tokens cho toàn bộ hệ thống
+- Sử dụng `cn()` utility để merge classNames
+- Đảm bảo tương thích với color scheme system của người dùng
+- Maintain accessible color contrasts
+
+## Component Usage
+
+- Import trực tiếp từ `@/components/ui` thay vì copy code
+- Tái sử dụng Primitive components cho UI phức tạp
+- Kết hợp nhiều components để tạo composite components
+- Áp dụng component composition khi thích hợp
+- Pass các props đúng theo API docs
+- Sử dụng consistent naming conventions
+- Document các custom props
+
+## Forms & Inputs
+
+- Sử dụng Form components với React Hook Form
+- Validate với Zod schemas
+- Tạo FormField wrappers cho các input types
+- Xử lý form errors nhất quán
+- Implement focus states và accessibility attributes
+- Tạo consistent styling cho form fields
+- Duy trì consistent spacing giữa các form elements
+
+## Dialogs & Modals
+
+- Sử dụng Dialog component cho tất cả modals
+- Implement keyboard navigation (Escape để đóng)
+- Đảm bảo focus management đúng
+- Bọc content trong DialogContent
+- Tạo reusable dialog patterns
+- Sử dụng DialogPortal để render bên ngoài DOM tree
+- Implement responsive dialogs
+
+## Dropdowns & Select
+
+- Sử dụng Select component cho native select dropdowns
+- Sử dụng DropdownMenu cho menu phức tạp
+- Implement keyboard navigation
+- Tạo custom command palettes khi cần
+- Đảm bảo accessibility cho dropdown items
+- Xử lý overflow và ẩn khi cần thiết
+- Tạo consistent styling cho tất cả dropdown elements
+
+## Integration với Tailwind
+
+- Sử dụng Tailwind utility classes khi cần
+- Kết hợp với các variants của Shadcn UI
+- Tránh override default styling trừ khi cần thiết
+- Sử dụng responsive variants của Tailwind
+- Kết hợp với class-variance-authority
+- Tạo custom utilities cho patterns lặp lại
+- Đảm bảo responsive behavior
+
+## Accessibility
+
+- Đảm bảo ARIA attributes phù hợp
+- Duy trì keyboard navigation
+- Test với screen readers
+- Đảm bảo đủ contrast
+- Implement focus states rõ ràng
+- Cung cấp text alternatives cho non-text content
+- Comply với WCAG standards
+
+## Performance
+
+- Lazy load components khi có thể
+- Tối ưu render cycles
+- Tránh prop drilling qua nhiều levels
+- Sử dụng React.memo khi thích hợp
+- Implement virtualization cho danh sách dài
+- Optimize animations
+- Minimize re-renders
+
+## Maintenance
+
+- Cập nhật Shadcn UI components khi có phiên bản mới
+- Duy trì changelog cho custom components
+- Document tất cả customizations
+- Tạo storybook entries cho custom components
+- Regression test sau khi update
+- Publish internal component library documentation
+- Monitor breaking changes từ upstream 

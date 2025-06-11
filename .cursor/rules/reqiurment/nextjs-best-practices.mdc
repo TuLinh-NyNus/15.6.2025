@@ -1,0 +1,107 @@
+---
+name: nextjs-best-practices.mdc
+description: Các quy tắc và practice tốt nhất cho phát triển frontend với Next.js, Tailwind và Shadcn UI
+globs: apps/web/**/*.{ts,tsx,js,jsx,css}
+alwaysApply: true
+---
+
+# Best Practices cho Next.js và Frontend
+
+## Cấu trúc dự án
+
+- Sử dụng App Router cho định tuyến
+- Tổ chức code theo cấu trúc feature-first: `features/auth/`, `features/dashboard/`, v.v.
+- Đặt các components dùng chung trong `components/ui/`
+- Đặt Shadcn UI components trong `components/ui/`
+- Đặt các hooks dùng chung trong `hooks/`
+- Đặt các utils và helpers trong `lib/`
+- Sử dụng Next.js layout để tối ưu UI chung
+
+## Components
+
+- Tạo components nhỏ, tập trung vào một trách nhiệm
+- Áp dụng nguyên tắc composition
+- Sử dụng Typescript interfaces/types cho props
+- Triển khai error boundaries
+- Tạo Skeleton components cho loading states
+- Tối ưu hóa re-renders với memo, useMemo, useCallback
+- Viết JSDoc cho tất cả components public
+
+## State Management
+
+- Sử dụng React Context API cho global state đơn giản
+- Sử dụng React Query cho server state
+- Sử dụng state machines cho complex workflows
+- Tránh prop drilling với custom hooks
+- Áp dụng nguyên tắc colocation (state gần nơi sử dụng)
+- Sử dụng local storage/cookies cho persistent state nhỏ
+
+## Styling & UI
+
+- Áp dụng nguyên tắc Mobile-first với Tailwind CSS
+- Tối ưu hóa responsive breakpoints
+- Sử dụng dark mode và light mode với CSS variables
+- Sử dụng các biến CSS cho theme
+- Tận dụng variants với cva (class-variance-authority)
+- Tuân thủ design system và color palette
+- Kết hợp Shadcn UI với các custom components
+
+## Forms & Validation
+
+- Sử dụng React Hook Form cho form management
+- Validate với Zod schema
+- Tạo custom form components cho các field types phổ biến
+- Xử lý errors và display validation messages
+- Tạo form wrappers cho consistent UI
+- Triển khai optimistic updates
+- Áp dụng controlled vs uncontrolled patterns cho từng use case
+
+## Data Fetching
+
+- Sử dụng Server Components khi thích hợp
+- Áp dụng Suspense cho async data loading
+- Triển khai data prefetching
+- Tối ưu hóa cache với React Query
+- Sử dụng SWR cho real-time data
+- Triển khai pagination và infinite loading
+- Xử lý error states
+
+## Performance
+
+- Sử dụng dynamic imports cho code splitting
+- Tối ưu hóa images với Next.js Image component
+- Lazy load components không cần thiết ngay lập tức
+- Áp dụng memoization cho expensive calculations
+- Sử dụng Web Vitals API để monitoring
+- Tối ưu bundle size với import cost
+- Tuân thủ Core Web Vitals
+
+## Testing
+
+- Viết unit tests cho business logic
+- Sử dụng React Testing Library cho component tests
+- Viết integration tests cho các user flows chính
+- Sử dụng mock service worker cho API requests
+- Tạo custom test helpers và fixtures
+- Triển khai visual regression testing
+- Test cả light và dark mode
+
+## A11y & Internationalization
+
+- Sử dụng roles và aria attributes đúng cách
+- Đảm bảo keyboard navigation
+- Tạo focus management cho modals và drawers
+- Support screen readers
+- Sử dụng next-i18next cho internationalization
+- Tạo dynamic routes cho ngôn ngữ khác nhau
+- Đảm bảo contrast ratios phù hợp
+
+## Shadcn UI Components
+
+- Import components từ `@/components/ui` thay vì copy trực tiếp
+- Customize components với các variants dùng cva
+- Sử dụng mixin pattern khi cần extend component behavior
+- Tạo high-level wrappers cho các components phức tạp
+- Tuân thủ nguyên tắc composability
+- Đảm bảo tương thích với themes
+- Kết hợp với Radix UI hooks cho advanced interactions 

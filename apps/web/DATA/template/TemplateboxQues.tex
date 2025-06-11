@@ -1,0 +1,220 @@
+\documentclass[12pt,varwidth=210mm,border=0pt]{standalone}
+
+\usepackage{amsmath,amssymb,grffile,makecell,fancyhdr,enumerate,arcs,physics,tasks,mathrsfs,graphics,yhmath,miama,venndiagram,diagbox,CJKutf8,circuitikz}
+\usepackage{tikz,tikz-3dplot,tkz-euclide,tkz-tab,tkz-linknodes,tabvar,pgfplots,esvect,fontawesome,tikzpeople,shadow,pgf-pie,pifont,twemojis}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage[utf8]{vietnam}
+%\usepackage[book]{ex_test}
+\usepackage[solcolor]{ex_test}
+%Các thư viện
+\usetikzlibrary{shapes.geometric,shadings,calc,snakes,patterns.meta,arrows,intersections,angles,backgrounds,quotes,shadows,decorations.text,matrix,angles}
+\usetkzobj{all}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=newest}\mathversion{bold}
+%
+%Một số lệnh tắt
+\def\vec{\overrightarrow}
+\newcommand{\hoac}[1]{\left[\begin{aligned}#1\end{aligned}\right.}
+\newcommand{\heva}[1]{\left\{\begin{aligned}#1\end{aligned}\right.}
+\newcommand{\hetde}{\centerline{\rule[0.5ex]{2cm}{1pt} HẾT \rule[0.5ex]{2cm}{1pt}}}
+%
+\theoremstyle{nonumberbreak} %ko đánh số,xuống dòng
+\theorembodyfont{\normalfont} %phần thân
+\theoremseparator{}
+\newtheorem{cm}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Chứng minh}
+\newtheorem{bode}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Bổ đề}
+\newtheorem{note}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Lưu ý}
+\newtheorem{phantich}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Phân tích}
+\newtheorem{nx}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Nhận xét}
+\newtheorem{luuy}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Lưu ý}
+\newtheorem{cachkhac}{}
+\newcommand{\ck}[1]{
+	\renewcommand{\IMleftright}[2]{
+		\par\noindent
+		\begin{minipage}[t][][t]{\textwidth-\widthimmini-\fboxsep}
+			##1
+		\end{minipage}
+		\begin{minipage}[t][][b]{\widthimmini}\vspace{-12pt}
+			##2
+		\end{minipage}
+		\par\nointerlineskip
+	}
+	\renewcommand{\immini}[2]{
+		\setbox\imbox=\vbox{\hbox{##2}}
+		\widthimmini=\wd\imbox
+		\IMleftright{##1}{##2}
+	}
+	\begin{cachkhac}
+		{\color{yellow!30!orange}\bfseries\faLocationArrow\,Cách khác} \newline
+		{#1}
+	\end{cachkhac}
+}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{environ}
+\usepackage{etoolbox}
+\usepackage{xstring}
+\usepackage{multicol} % Cho bố cục hai cột
+\usepackage{enumitem} % Cho định dạng danh sách
+\usepackage{tkz-tab} % Cho bảng xét dấu
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{fadings,calc,shadows,shadows.blur}
+% Lưu lại định nghĩa gốc của \True và \choice
+\let\originalTrue\True
+\let\originalchoice\choice
+
+% Định nghĩa màu sắc
+\definecolor{mainbg}{HTML}{FFFFFF} % Màu nền chính (Trắng)
+\definecolor{titlebg}{HTML}{E7B864} % Màu nền tiêu đề (Vàng đất, tông ấm)
+\definecolor{midbg}{HTML}{424242} % Màu trung gian (Xám đậm - Grey 800)
+\definecolor{loigiaibg}{HTML}{FEF6F8} % Màu nền lời giải (Hồng cực nhạt)
+\definecolor{loigiaitext}{HTML}{333333} % Màu chữ lời giải (Xám đậm hơn - Grey 900)
+\definecolor{answerbg}{HTML}{E7B864} % Màu nền đáp án đúng (Vàng đất, tông ấm)
+\definecolor{questiontext}{HTML}{424242} % Màu chữ câu hỏi (Xám đậm - Grey 800)
+\definecolor{tikzcolor}{HTML}{757575} % Màu cho hình vẽ tikz (Xám - Grey 600)
+\definecolor{pinktext}{HTML}{FF6B81} % Màu hồng đậm cho chữ "Lời giải" và "Chọn đáp án" (Hồng cánh sen)
+
+% Định nghĩa lại lệnh immini để có màu chữ trắng
+\makeatletter
+\renewcommand{\immini}[3][]{%
+	\savebox{\imbox}{%
+		\begingroup
+		\color{questiontext}%
+		#3%
+		\endgroup
+	}
+	\ifthenelse{\equal{#1}{thm}}
+	{\savebox{\imboxtext}{\vbox{#2}}\def\title{\protect\leavevmode\mbox{\labelthmfull}}
+		\xdef\saveFileAns{}\xdef\keyEX{}\setcounter{dapan}{0}}
+	{\par\noindent\def\title{}%
+		\ifthenelse{\equal{#1}{}}{}
+		{\def\IMheight{#1\linewidth}}}
+	\tcbset{before={\parindent=0pt},before skip=\baselineskip-5pt}%
+	\tcbsidebyside[blanker, sidebyside adapt=right,
+	sidebyside align=top seam, sidebyside gap=\IMheight,
+	top=-4pt,left=0pt,right=0pt,bottom=-3pt,
+	]{{\ignorespaces\title}\color{questiontext}\ignorespaces#2}{\usebox{\imbox}}%
+}%
+\makeatother
+
+% Định nghĩa lại môi trường ex
+\makeatletter
+% Lưu lại định nghĩa gốc của ex từ ex_test.sty
+\let\originalex\ex
+\let\originalendex\endex
+
+% Định nghĩa lại môi trường ex
+\RenewTColorBox{ex}{O{TL.000000}}{%
+	enhanced,
+	breakable,
+	colback=mainbg,
+	coltext=questiontext,
+	colframe=titlebg,
+	arc=5mm, % Bo tròn phù hợp với desktop
+	boxrule=1pt,
+	frame style={opacity=0.9},
+	left=15pt, % Padding phù hợp với desktop
+	right=15pt, % Padding phù hợp với desktop
+	top=20pt, % Padding phù hợp với desktop
+	bottom=15pt, % Padding phù hợp với desktop
+	enlarge top by=0mm, % Loại bỏ khoảng cách dư thừa ở trên
+	width=\linewidth, % Điều chỉnh chiều rộng để không có khoảng trắng bên ngoài
+	shadow={2mm}{-1mm}{0mm}{black!20}, % Bóng đổ phù hợp với desktop
+	fuzzy shadow={0mm}{-0.3mm}{0.2mm}{0.2mm}{black!10}, % Bóng đổ phù hợp với desktop
+	overlay={
+		% Hiển thị ID ở góc trên bên trái
+		\node[
+		fill=titlebg,
+		text=midbg,
+		font=\bfseries\small, % Kích cỡ font phù hợp với desktop
+		anchor=north west,
+		rounded corners=1.5mm, % Bo tròn phù hợp với desktop
+		inner sep=3pt, % Padding phù hợp với desktop
+		outer sep=0pt
+		] at ([xshift=10pt, yshift=-5pt]frame.north west) {#1};
+
+		% Tạo khoảng cách giữa ID và nội dung câu hỏi
+		\path[fill=none] ([yshift=-25pt]frame.north west) -- ([yshift=-25pt]frame.north east);
+
+		% Đã xóa biểu tượng ngôi sao
+
+		% Đường phân cách sẽ được thêm trong môi trường loigiai
+
+		% Không thêm điểm nhấn ở góc
+		% Đã xóa biểu tượng mức độ khó
+	},
+	attach title to upper={\par\medskip},
+}
+\makeatother
+
+% Tùy chỉnh môi trường lời giải
+\makeatletter
+% Lưu lại định nghĩa gốc của \loigiai từ ex_test.sty
+\let\originalloigiai\loigiai
+
+% Định nghĩa lại \loigiai để kiểm tra nếu đang ở chế độ dethi
+\renewcommand{\loigiai}[1]{%
+	% Kiểm tra nếu đang hiển thị đáp án (không phải chế độ dethi)
+	\ifshowanswers
+	% Thêm đường ngăn cách giữa câu hỏi và lời giải (nét đứt)
+	\par\noindent\vspace{0.5em}
+	\noindent\makebox[\linewidth]{\color{midbg}\leaders\hbox{\rule[0.5ex]{0.5em}{0.5pt}\hskip 0.5em}\hfill}\par\vspace{0.5em}
+	\par\noindent
+	\begin{tcolorbox}[
+		enhanced,
+		colback=loigiaibg,
+		coltext=loigiaitext,
+		colframe=pinktext,
+		arc=5mm, % Bo tròn phù hợp với desktop
+		boxrule=0.8pt,
+		frame style={opacity=0.9},
+		left=6.8pt, % Padding phù hợp với desktop
+		right=6.8pt, % Padding phù hợp với desktop
+		top=6.8pt, % Padding phù hợp với desktop
+		bottom=6.8pt, % Padding phù hợp với desktop
+		width=\linewidth+6.4pt, % Điều chỉnh chiều rộng
+		overlay={
+			% Đã xóa biểu tượng tròn màu vàng
+		}
+		]
+		{\textcolor{pinktext}{\textbf{Lời giải:}}\par #1}
+	\end{tcolorbox}
+	\else
+	% Nếu đang ở chế độ dethi, không hiển thị gì cả
+	% Hoặc có thể gọi định nghĩa gốc nếu cần
+	% \originalloigiai{#1}
+	\fi
+}
+\makeatother
+
+% Không định nghĩa lại lệnh True để tránh xung đột
+
+% Tạo lệnh để biên dịch một file câu hỏi
+\newcommand{\compilequestion}[1]{%
+	\input{#1}
+}
+
+% Điều chỉnh kích thước bảng xét dấu
+\tikzset{
+	tkz tab/.style={
+		scale=0.8, % Kích thước bảng phù hợp với desktop
+		font=\small % Kích thước font phù hợp với desktop
+	}
+}
+
+% Thêm lệnh để chuyển đổi giữa chế độ dethi và chế độ hiển thị đáp án
+\newcommand{\togglesolutions}{%
+	\ifshowanswers
+	\hideanswers % Ẩn đáp án (chế độ dethi)
+	\else
+	\showanswers % Hiển thị đáp án
+	\fi
+}
+
+\begin{document}
+
+
+%%%%%CHÈN CÂU HỎI VÔ ĐÂY
+
+
+\end{document}

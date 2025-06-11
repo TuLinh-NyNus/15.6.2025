@@ -1,0 +1,7 @@
+your-domain.ddns.net {
+  reverse_proxy localhost:3000
+}
+
+api.your-domain.ddns.net {
+  reverse_proxy localhost:5000
+}

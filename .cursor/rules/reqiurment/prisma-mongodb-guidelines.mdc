@@ -1,0 +1,164 @@
+---
+name: prisma-mongodb-guidelines.mdc
+description: Hướng dẫn và best practices cho việc sử dụng Prisma với PostgreSQL và Mongoose với MongoDB
+globs: apps/api/src/**/*.{ts,js,prisma}
+alwaysApply: true
+---
+
+# Guidelines cho Database Access
+
+## Prisma với PostgreSQL
+
+### Schema Design
+
+- Sử dụng descriptive model names (PascalCase singular)
+- Đặt tên fields theo camelCase
+- Sử dụng @relation để định nghĩa relationship
+- Implement proper indices cho performance
+- Sử dụng @unique và @id đúng cách
+- Sử dụng enum types cho các giá trị hữu hạn
+- Comment trên schema để document business rules
+
+### Migrations
+
+- Tạo migrations với `prisma migrate dev`
+- Review migrations trước khi apply
+- Sử dụng `prisma migrate deploy` cho production
+- Kiểm tra backwards compatibility
+- Tránh phá vỡ existing data
+- Tạo seeder scripts cho development data
+- Maintain migration history trong version control
+
+### Querying
+
+- Sử dụng Prisma Client cho tất cả database access
+- Implement transaction khi cần thiết
+- Sử dụng select để giới hạn returned fields
+- Optimize queries với include statements
+- Implement pagination cho large datasets
+- Sử dụng proper error handling cho database errors
+- Cache query results khi thích hợp
+
+### Performance
+
+- Tạo composite indices cho queries phổ biến
+- Sử dụng query batching
+- Implement connection pooling
+- Monitor query performance
+- Tránh N+1 query problems
+- Sử dụng middleware cho common operations
+- Implement query caching
+
+### Bảo mật
+
+- Không expose Prisma Client trực tiếp
+- Validate tất cả input dữ liệu
+- Implement proper access control
+- Sử dụng environment variables cho credentials
+- Encrypt sensitive data
+- Audit database access
+- Implement row-level security khi cần
+
+### Best Practices
+
+- Cô lập Prisma logic trong repository layer
+- Tạo domain-specific repositories
+- Tái sử dụng common query patterns
+- Tạo custom Prisma extensions khi cần
+- Implement soft deletes cho entities quan trọng
+- Version database schema
+- Maintain documentation cho database schema
+
+## Mongoose với MongoDB
+
+### Schema Design
+
+- Tạo schemas với strict validation
+- Sử dụng SchemaTypes đúng đắn
+- Implement custom validators
+- Sử dụng middleware cho pre/post hooks
+- Cẩn thận với deeply nested documents
+- Denormalize khi thích hợp cho performance
+- Sử dụng references đúng đắn
+
+### Models
+
+- Tạo consistent model naming (PascalCase singular)
+- Cung cấp timestamps cho tất cả models
+- Implement static methods cho common operations
+- Tạo instance methods cho model-specific logic
+- Sử dụng virtuals cho computed properties
+- Implement proper indexing
+- Document model behavior rõ ràng
+
+### Querying
+
+- Sử dụng query builders thay vì raw queries
+- Implement proper filtering
+- Sử dụng projection để giới hạn returned fields
+- Áp dụng pagination cho all endpoints exposing collections
+- Sử dụng lean() cho read-only operations
+- Cẩn thận với deeply nested queries
+- Implement proper error handling
+
+### Performance
+
+- Tạo compound indices cho common queries
+- Avoid large documents
+- Implement proper caching strategies
+- Monitor query performance
+- Tránh in-memory operations trên large datasets
+- Sử dụng aggregation pipeline cho complex operations
+- Implement proper connection pooling
+
+### Bảo mật
+
+- Validate tất cả input
+- Implement proper access control
+- Sử dụng environment variables cho credentials
+- Hash sensitive data
+- Implement proper error handling
+- Audit database access
+- Sử dụng MongoDB Atlas security features
+
+### Best Practices
+
+- Cô lập Mongoose logic trong repository layer
+- Dùng typescript interfaces cho type safety
+- Implement proper error handling
+- Sử dụng transactions khi cần thiết
+- Maintain migration scripts cho schema changes
+- Version database schema
+- Backup dữ liệu đều đặn
+
+## Multi-Database Architecture
+
+### Separation of Concerns
+
+- Sử dụng repository pattern để abstract database access
+- Tạo interfaces cho repositories
+- Implement database-specific repository implementations
+- Sử dụng dependency injection để provide repositories
+- Tránh database-specific code trong business logic
+- Sử dụng transaction managers để coordinate cross-database operations
+- Document data flow between databases
+
+### Caching Strategy
+
+- Implement caching layer cho frequent queries
+- Sử dụng Redis cho distributed caching
+- Invalidate cache khi data thay đổi
+- Cẩn thận với stale data
+- Implement cache versioning
+- Monitor cache hit rates
+- Optimize cache key strategies
+
+### Consistency
+
+- Maintain eventual consistency giữa các databases
+- Implement event-driven architecture cho cross-database updates
+- Sử dụng outbox pattern khi cần thiết
+- Document consistency guarantees
+- Implement reconciliation processes
+- Monitor data consistency
+- Tạo resolution strategies cho conflicts 

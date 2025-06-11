@@ -1,0 +1,291 @@
+---
+name: workflow.mdc
+description: Quy trình làm việc thích ứng dựa trên độ phức tạp của task
+globs: memory-bank/tasks.md
+---
+
+# Adaptive Structured Workflow Implementation
+
+## Nguyên Tắc Cơ Bản
+
+Quy trình làm việc thích ứng dựa trên độ phức tạp của task, với 4 cấp độ:
+
+1. **Level 1**: Quick Bug Fix - Sửa lỗi đơn giản, vấn đề nhỏ
+2. **Level 2**: Simple Enhancement - Tính năng nhỏ, cải tiến đơn giản
+3. **Level 3**: Intermediate Feature - Tính năng hoàn chỉnh, thay đổi đáng kể
+4. **Level 4**: Complex System - Hệ thống lớn, thay đổi kiến trúc
+
+## Quy Trình Thích Ứng
+
+### Level 1: Quick Bug Fix
+
+```
+INITIALIZATION → IMPLEMENTATION → DOCUMENTATION
+```
+
+#### INITIALIZATION
+- Xác định ngắn gọn vấn đề
+- Đánh dấu task trong `tasks.md`
+- Kiểm tra nhanh môi trường phát triển
+
+#### IMPLEMENTATION
+- Thực hiện sửa lỗi
+- Chạy tests để verify fix
+- Commit changes
+
+#### DOCUMENTATION
+- Cập nhật `tasks.md`
+- Thêm ghi chú ngắn vào `progress.md`
+- Không cần documentation chi tiết
+
+### Level 2: Simple Enhancement
+
+```
+INITIALIZATION → DOCUMENTATION → PLANNING → IMPLEMENTATION → REFLECTION → ARCHIVING
+```
+
+#### INITIALIZATION
+- Tạo task mới trong `tasks.md`
+- Verify technical constraints
+- Kiểm tra môi trường phát triển
+
+#### DOCUMENTATION
+- Cập nhật `techContext.md` nếu cần
+- Document initial approach trong `progress.md`
+
+#### PLANNING
+- Phác thảo implementation plan
+- Xác định các subtasks
+- List potential challenges
+
+#### IMPLEMENTATION
+- Thực hiện các subtasks
+- Commit changes thường xuyên
+- Chạy tests
+
+#### REFLECTION
+- Review changes
+- Document lessons learned
+- Update progress documentation
+
+#### ARCHIVING
+- Move task sang Completed trong `tasks.md`
+- Archive task information
+
+### Level 3: Intermediate Feature
+
+```
+INITIALIZATION → DOCUMENTATION → PLANNING → VERIFICATION → CREATIVE PHASE → IMPLEMENTATION → TESTING → REFLECTION → ARCHIVING
+```
+
+#### INITIALIZATION
+- Tạo task mới trong `tasks.md`
+- Verify all requirements
+- Kiểm tra đầy đủ môi trường phát triển
+- Xác định dependencies
+
+#### DOCUMENTATION
+- Update tất cả file Memory Bank liên quan
+- Document approach và constraints
+- Create detailed documentation plan
+
+#### PLANNING
+- Tạo detailed implementation plan
+- Break down task thành subtasks
+- Identify potential blockers
+- Estimate effort và timeline
+
+#### VERIFICATION
+- Validate approach với requirements
+- Check cho potential conflicts
+- Review plan
+
+#### CREATIVE PHASE
+- Engage in structured creative thinking
+- Explore multiple approaches
+- Evaluate trade-offs
+- Document decisions
+
+#### IMPLEMENTATION
+- Execute implementation plan
+- Regular progress updates
+- Frequent commits
+- Document code
+
+#### TESTING
+- Write comprehensive tests
+- Perform integration testing
+- Verify all requirements met
+- Test edge cases
+
+#### REFLECTION
+- Document lessons learned
+- Identify improvements
+- Update all documentation
+
+#### ARCHIVING
+- Archive detailed task information
+- Move task sang Completed trong `tasks.md`
+- Ensure cross-references updated
+
+### Level 4: Complex System
+
+```
+INITIALIZATION → DOCUMENTATION → PLANNING → VERIFICATION → CREATIVE PHASE → ARCHITECTURAL DESIGN → IMPLEMENTATION → COMPREHENSIVE TESTING → ANALYSIS → REFLECTION → DOCUMENTATION UPDATE → ARCHIVING
+```
+
+#### INITIALIZATION
+- Comprehensive task analysis
+- Detailed requirement gathering
+- System impact assessment
+- Dependency mapping
+
+#### DOCUMENTATION
+- Extensive update to all Memory Bank files
+- Create architectural documentation
+- Document goals, constraints, và success criteria
+
+#### PLANNING
+- Create detailed project plan
+- Risk assessment
+- Resource allocation
+- Timeline với milestones
+
+#### VERIFICATION
+- Validate architecture
+- Review với stakeholders
+- Technical feasibility assessment
+- Security và performance review
+
+#### CREATIVE PHASE
+- Multiple creative sessions
+- System design exploration
+- Alternative approaches assessment
+- Innovation opportunities
+
+#### ARCHITECTURAL DESIGN
+- Detailed system architecture
+- Component diagrams
+- Data flow modeling
+- API design
+- Security architecture
+
+#### IMPLEMENTATION
+- Phased implementation
+- Regular checkpoints
+- Continuous integration
+- Documentation alongside code
+
+#### COMPREHENSIVE TESTING
+- Unit, integration, system testing
+- Performance testing
+- Security testing
+- User acceptance testing
+
+#### ANALYSIS
+- System performance analysis
+- Security assessment
+- Scalability evaluation
+- Technical debt assessment
+
+#### REFLECTION
+- Comprehensive retrospective
+- Lessons learned documentation
+- Knowledge transfer
+- Future improvement identification
+
+#### DOCUMENTATION UPDATE
+- Update all technical documentation
+- Create maintenance guides
+- Update architecture documents
+- Ensure all Memory Bank files updated
+
+#### ARCHIVING
+- Detailed archiving
+- Comprehensive task history
+- System change documentation
+- Archive cross-referencing
+
+## Xác Định Mức Độ Phức Tạp
+
+Để xác định mức độ phức tạp của một task, đánh giá các yếu tố sau:
+
+### Level 1: Quick Bug Fix
+- Thay đổi đơn giản, tác động thấp
+- Ảnh hưởng đến một file hoặc component
+- Không thay đổi API hoặc interfaces
+- Không yêu cầu tests mới
+- Ước tính dưới 1 giờ để hoàn thành
+
+### Level 2: Simple Enhancement
+- Thay đổi nhỏ với phạm vi rõ ràng
+- Ảnh hưởng đến vài files hoặc components
+- Không thay đổi architecture
+- Yêu cầu tests đơn giản
+- Ước tính 1-4 giờ để hoàn thành
+
+### Level 3: Intermediate Feature
+- Tính năng mới hoặc thay đổi đáng kể
+- Ảnh hưởng đến multiple components
+- Có thể thay đổi API hoặc interfaces
+- Yêu cầu tests toàn diện
+- Ước tính 1-3 ngày để hoàn thành
+
+### Level 4: Complex System
+- Thay đổi lớn hoặc hệ thống mới
+- Ảnh hưởng đến nhiều parts của codebase
+- Thay đổi kiến trúc hoặc core abstractions
+- Yêu cầu test plan phức tạp
+- Ước tính 3+ ngày để hoàn thành
+
+## Cập Nhật Quy Trình
+
+Tần suất cập nhật phụ thuộc vào mức độ phức tạp:
+
+- **Level 1**: 2-3 updates (start/fix/end)
+- **Level 2**: 4-6 updates tại các milestones
+- **Level 3**: 8-12 updates tại các defined points
+- **Level 4**: 15+ updates với formal verification
+
+## Tuân Thủ BOO Protocol
+
+Khi khởi đầu một task mới:
+1. Phản hồi với "OK BOO"
+2. Xác định mức độ phức tạp
+3. Bắt đầu quy trình thích hợp
+4. Thực hiện cam kết verification
+
+## Verification Checklist
+
+Trước khi hoàn thành task, phải thực hiện verification checklist phù hợp với complexity level:
+
+### Level 1
+- [ ] Task marked complete in `tasks.md`
+- [ ] Fix verified working
+- [ ] Basic documentation updated
+
+### Level 2
+- [ ] All subtasks completed
+- [ ] Tests passing
+- [ ] Documentation updated
+- [ ] Changes reviewed
+- [ ] Task moved to Completed in `tasks.md`
+
+### Level 3
+- [ ] All subtasks completed
+- [ ] Comprehensive testing done
+- [ ] All documentation updated
+- [ ] Code reviewed
+- [ ] Performance verified
+- [ ] Task archived properly
+- [ ] Cross-references updated
+
+### Level 4
+- [ ] All phases completed
+- [ ] Architecture documentation updated
+- [ ] Comprehensive testing passed
+- [ ] Performance metrics collected
+- [ ] Security verified
+- [ ] All documentation updated
+- [ ] Knowledge transfer completed
+- [ ] Detailed archiving finished 

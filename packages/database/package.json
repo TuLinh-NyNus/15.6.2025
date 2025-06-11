@@ -1,0 +1,34 @@
+{
+  "name": "@project/database",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "prisma generate && tsc -b",
+    "dev": "tsc -b --watch --preserveWatchOutput --pretty false",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "prisma": "^5.10.2",
+    "tsup": "^7.3.0",
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.13",
+    "@nestjs/core": "^11.0.13",
+    "@prisma/client": "^5.10.2",
+    "@project/dto": "workspace:^",
+    "@project/entities": "workspace:*",
+    "@project/interfaces": "workspace:^",
+    "@types/bcryptjs": "^3.0.0",
+    "bcryptjs": "^3.0.2"
+  }
+}

@@ -1,0 +1,555 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String                  @id @default(uuid())
+  email            String                  @unique
+  password         String
+  firstName        String
+  lastName         String
+  role             UserRole                @default(STUDENT)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  recommendations  ContentRecommendation[]
+  createdCourses   Course[]                @relation("CourseInstructor")
+  enrollments      Enrollment[]
+  examResults      ExamResult[]
+  createdExams     Exam[]                  @relation("ExamCreator")
+  learningPaths    LearningPath[]
+  questionVersions QuestionVersion[]
+  createdQuestions Question[]
+  activities       UserActivityLog[]
+  interests        UserInterest[]
+  learningStyle    UserLearningStyle?
+  profile          UserProfile?
+
+  @@map("users")
+}
+
+model UserProfile {
+  id                      String    @id @default(uuid())
+  userId                  String    @unique
+  bio                     String?
+  phoneNumber             String?
+  address                 String?
+  birthDate               DateTime?
+  avatarUrl               String?
+  socialLinks             Json?
+  preferences             Json?
+  completionRate          Float     @default(0)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  languagePreference      String    @default("en")
+  learningGoals           String[]  @default([])
+  notificationPreferences Json?
+  preferredLearningTime   String[]  @default([])
+  weeklyLearningTarget    Int       @default(0)
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Course {
+  id               String       @id @default(uuid())
+  title            String
+  description      String
+  duration         Int          @default(0)
+  price            Decimal      @default(0)
+  isFree           Boolean      @default(false)
+  isPublished      Boolean      @default(false)
+  categoryId       String
+  instructorId     String
+  thumbnail        String?
+  introVideo       String?
+  prerequisites    String[]     @default([])
+  learningOutcomes String[]     @default([])
+  totalStudents    Int          @default(0)
+  totalLessons     Int          @default(0)
+  status           CourseStatus @default(DRAFT)
+  language         String       @default("en")
+  averageRating    Float        @default(0)
+  totalRatings     Int          @default(0)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  category         Category     @relation(fields: [categoryId], references: [id])
+  instructor       User         @relation("CourseInstructor", fields: [instructorId], references: [id])
+  enrollments      Enrollment[]
+  lessons          Lesson[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id          String     @id @default(uuid())
+  title       String
+  content     String
+  order       Int
+  type        LessonType @default(VIDEO)
+  isFree      Boolean    @default(false)
+  courseId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  description String?
+  duration    Int?
+  resourceUrl String?
+  course      Course     @relation(fields: [courseId], references: [id])
+  progress    Progress[]
+  exams       Exam[]     @relation("LessonExams")
+
+  @@map("lessons")
+}
+
+model Enrollment {
+  id        String           @id @default(uuid())
+  userId    String
+  courseId  String
+  status    EnrollmentStatus @default(ACTIVE)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  course    Course           @relation(fields: [courseId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
+  progress  Progress[]
+
+  @@map("enrollments")
+}
+
+model Progress {
+  id               String            @id @default(uuid())
+  enrollmentId     String
+  lessonId         String
+  completed        Boolean           @default(false)
+  lastAccessed     DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  revisitCount     Int               @default(0)
+  attentionScore   Float?
+  difficulty       LessonDifficulty?
+  interactionCount Int?
+  notes            String?
+  timeSpent        Int?
+  enrollment       Enrollment        @relation(fields: [enrollmentId], references: [id])
+  lesson           Lesson            @relation(fields: [lessonId], references: [id])
+
+  @@map("progress")
+}
+
+model Category {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  description   String?
+  slug          String         @unique
+  imageUrl      String?
+  order         Int            @default(0)
+  isVisible     Boolean        @default(true)
+  parentId      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  parent        Category?      @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children      Category[]     @relation("CategoryHierarchy")
+  courses       Course[]
+  userInterests UserInterest[]
+
+  @@map("categories")
+}
+
+model Assessment {
+  id                  String               @id @default(uuid())
+  title               String
+  description         String?
+  courseId            String
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  assessmentQuestions AssessmentQuestion[]
+
+  @@map("assessments")
+}
+
+model AssessmentQuestion {
+  id           String     @id @default(uuid())
+  assessmentId String
+  questionId   String
+  order        Int
+  score        Float      @default(1.0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  question     Question   @relation(fields: [questionId], references: [id])
+
+  @@unique([assessmentId, questionId])
+  @@index([assessmentId])
+  @@index([questionId])
+  @@map("assessment_questions")
+}
+
+model UserActivityLog {
+  id           String       @id @default(uuid())
+  userId       String
+  activityType ActivityType
+  entityId     String?
+  entityType   String?
+  metadata     Json?
+  deviceInfo   String?
+  ipAddress    String?
+  timestamp    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, activityType])
+  @@index([entityType, entityId])
+  @@map("user_activity_logs")
+}
+
+model UserLearningStyle {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  visualScore      Float    @default(0)
+  auditoryScore    Float    @default(0)
+  readingScore     Float    @default(0)
+  kinestheticScore Float    @default(0)
+  lastUpdated      DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_learning_styles")
+}
+
+model UserInterest {
+  id            String   @id @default(uuid())
+  userId        String
+  categoryId    String
+  interestLevel Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId])
+  @@map("user_interests")
+}
+
+model ContentRecommendation {
+  id          String    @id @default(uuid())
+  userId      String
+  contentId   String
+  contentType String
+  score       Float     @default(0)
+  reason      String[]  @default([])
+  isViewed    Boolean   @default(false)
+  isEnrolled  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, contentType])
+  @@map("content_recommendations")
+}
+
+model LearningPath {
+  id                      String             @id @default(uuid())
+  userId                  String
+  title                   String
+  description             String?
+  goals                   String[]           @default([])
+  estimatedCompletionTime Int                @default(0)
+  status                  PathStatus         @default(NOT_STARTED)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  steps                   LearningPathStep[]
+  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("learning_paths")
+}
+
+model LearningPathStep {
+  id          String       @id @default(uuid())
+  pathId      String
+  contentId   String
+  contentType String
+  order       Int
+  isRequired  Boolean      @default(true)
+  status      PathStatus   @default(NOT_STARTED)
+  completedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  path        LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@index([pathId, order])
+  @@map("learning_path_steps")
+}
+
+model Exam {
+  id            String         @id @default(uuid())
+  title         String
+  description   Json?
+  duration      Int
+  difficulty    Difficulty
+  subject       String
+  grade         Int
+  form          ExamForm       @default(TRAC_NGHIEM)
+  createdBy     String
+  averageScore  Float?
+  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime       @default(now())
+  tags          String[]
+  examCategory  ExamCategory
+  type          ExamType       @default(DRAFT)
+  examQuestions ExamQuestion[]
+  examResults   ExamResult[]
+  creator       User           @relation("ExamCreator", fields: [createdBy], references: [id])
+  lessons       Lesson[]       @relation("LessonExams")
+
+  @@index([subject, grade, difficulty, examCategory])
+  @@index([createdBy])
+  @@map("exams")
+}
+
+model ExamResult {
+  id          String   @id @default(uuid())
+  userId      String
+  examId      String
+  score       Float
+  maxScore    Float
+  startedAt   DateTime
+  completedAt DateTime
+  duration    Int
+  answers     Json?
+  exam        Exam     @relation(fields: [examId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([examId])
+  @@map("exam_results")
+}
+
+model Question {
+  id                  String               @id @default(uuid())
+  content             String
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  answers             Json?
+  creatorId           String
+  feedback            Int                  @default(0)
+  questionId          String?
+  rawContent          String
+  solution            String?
+  source              String?
+  status              QuestionStatus       @default(ACTIVE)
+  subcount            String?
+  type                QuestionType
+  usageCount          Int                  @default(0)
+  correctAnswer       Json?
+  options             Json?
+  QuestionToTags      QuestionToTags[]
+  assessmentQuestions AssessmentQuestion[]
+  examQuestions       ExamQuestion[]
+  images              QuestionImage[]
+  versions            QuestionVersion[]
+  stats               QuestionStats?
+  creator             User                 @relation(fields: [creatorId], references: [id])
+
+  @@index([type, status])
+  @@index([questionId])
+  @@index([subcount])
+  @@index([creatorId])
+  @@map("questions")
+}
+
+model QuestionVersion {
+  id          String   @id @default(uuid())
+  questionId  String
+  version     Int
+  content     String
+  rawContent  String
+  changedAt   DateTime @default(now())
+  changedById String
+  changedBy   User     @relation(fields: [changedById], references: [id])
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, version])
+  @@index([questionId])
+  @@map("question_versions")
+}
+
+model QuestionImage {
+  id         String            @id @default(uuid())
+  questionId String
+  url        String
+  type       QuestionImageType
+  createdAt  DateTime          @default(now())
+  question   Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("question_images")
+}
+
+model QuestionTag {
+  id             String           @id @default(uuid())
+  name           String           @unique
+  description    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  QuestionToTags QuestionToTags[]
+
+  @@map("question_tags")
+}
+
+model ExamQuestion {
+  id         String   @id @default(uuid())
+  examId     String
+  questionId String
+  order      Int
+  score      Float    @default(1.0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  exam       Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id])
+
+  @@unique([examId, questionId])
+  @@index([examId])
+  @@index([questionId])
+  @@map("exam_questions")
+}
+
+model QuestionToTags {
+  A             String
+  B             String
+  questions     Question    @relation(fields: [A], references: [id], onDelete: Cascade)
+  question_tags QuestionTag @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@unique([A, B], map: "_QuestionToTags_AB_unique")
+  @@index([B], map: "_QuestionToTags_B_index")
+  @@map("_QuestionToTags")
+}
+
+model QuestionStats {
+  id                 String   @id @default(uuid())
+  questionId         String   @unique
+  totalAnswered      Int      @default(0)
+  correctCount       Int      @default(0)
+  correctRate        Float    @default(0)
+  averageTimeSpent   Float    @default(0)
+  optionDistribution Json? // Lưu trữ phân phối các lựa chọn
+  examIds            String[] @default([])
+  lastUpdated        DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  question           Question @relation(fields: [questionId], references: [id])
+
+  @@map("question_stats")
+}
+
+enum UserRole {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+  USER
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  VIDEO
+  QUIZ
+  ASSIGNMENT
+  TEXT
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum LessonDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum ActivityType {
+  VIEW_COURSE
+  VIEW_LESSON
+  START_LESSON
+  COMPLETE_LESSON
+  SEARCH
+  ENROLLMENT
+  RATING
+  LOGIN
+  LOGOUT
+  DOWNLOAD_RESOURCE
+  COMMENT
+  QUIZ_ATTEMPT
+}
+
+enum PathStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+enum ExamForm {
+  TRAC_NGHIEM
+  TU_LUAN
+  KET_HOP
+  FORM_2018
+  FORM_2025
+}
+
+enum ExamCategory {
+  THUONG_XUYEN_MIENG
+  GIUA_KI_I
+  CUOI_KI_I
+  GIUA_KI_II
+  CUOI_KI_II
+  KHAO_SAT
+  DE_CUONG
+  HOC_SINH_GIOI
+  TUYEN_SINH
+  KHAO_SAT_THI_THU
+}
+
+enum ExamType {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  PRACTICE
+  ASSESSMENT
+}
+
+enum QuestionType {
+  MC
+  TF
+  SA
+  ES
+  MA
+}
+
+enum QuestionStatus {
+  DRAFT
+  ACTIVE
+  PENDING
+  ARCHIVED
+  DELETED
+}
+
+enum QuestionImageType {
+  QUESTION
+  SOLUTION
+}

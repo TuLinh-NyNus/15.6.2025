@@ -1,0 +1,87 @@
+---
+name: nestjs-best-practices.mdc
+description: Các quy tắc và practice tốt nhất cho phát triển backend với NestJS
+globs: apps/api/**/*.{ts,js}
+alwaysApply: true
+---
+
+# Best Practices cho NestJS
+
+## Kiến trúc Module
+
+- Mỗi tính năng nên có module riêng (Users, Products, Orders, v.v.)
+- Tuân thủ kiến trúc phân lớp: Controllers → Services → Repositories
+- Sử dụng `forwardRef` khi cần tham chiếu vòng tròn giữa các modules
+- Sử dụng Global modules cho các tính năng dùng chung (Database, Config, v.v.)
+
+## Controllers
+
+- Tập trung vào việc xử lý requests và responses
+- Không chứa business logic, ủy thác cho services
+- Sử dụng DTO cho dữ liệu đầu vào
+- Sử dụng các decorators như `@Get()`, `@Post()`, `@Body()`, `@Param()`, `@Query()`
+- Áp dụng Guards, Interceptors, Pipes ở mức controller hoặc endpoint
+- Tách biệt API theo versions nếu cần (`v1/users`, `v2/users`)
+
+## Services
+
+- Chứa business logic của ứng dụng
+- Tương tác với repositories, không trực tiếp với database
+- Sử dụng dependency injection
+- Xử lý các exceptions nghiệp vụ
+- Trả về entities hoặc DTO, không trả về raw database objects
+- Tái sử dụng logic thông qua các service dùng chung
+
+## Repository Pattern
+
+- Tạo interfaces cho repositories trong thư mục interfaces
+- Triển khai repository cho Prisma và Mongoose
+- Repository chỉ chứa logic truy vấn database
+- Sử dụng token injection để đăng ký repository implementations
+- Mỗi entity nên có một repository riêng
+- Chuẩn hóa các phương thức CRUD cơ bản
+
+## DTOs & Entities
+
+- Sử dụng class-transformer để serialization/deserialization
+- Sử dụng class-validator cho validation
+- Tách biệt Create, Update, Response DTOs
+- Sử dụng Partial và Pick types để tạo DTO từ entities
+- Đảm bảo tất cả DTOs đều có validation
+- Sử dụng custom decorators cho validation phức tạp
+
+## Exception Handling
+
+- Sử dụng global exception filters
+- Tạo custom exceptions khi cần
+- Chuẩn hóa response format cho errors
+- Xử lý MongoDB và Prisma errors riêng biệt
+- Log errors đầy đủ với winston hoặc nest logger
+- Đảm bảo không leak sensitive information trong error messages
+
+## Authentication & Authorization
+
+- Sử dụng JWT cho authentication
+- Implement refresh token flow
+- Sử dụng Guards cho authorization
+- Áp dụng RBAC (Role-Based Access Control)
+- Tạo custom decorators cho roles và permissions
+- Bảo vệ sensitive endpoints với nhiều lớp bảo mật
+
+## Performance Optimization
+
+- Sử dụng caching cho các queries phổ biến
+- Paginate collections để tránh quá tải
+- Sử dụng eager loading khi cần thiết
+- Tối ưu hóa Mongoose với lean() cho read operations
+- Tối ưu hóa Prisma với select và include
+- Triển khai rate limiting cho APIs
+
+## Testing
+
+- Unit test cho services và repositories
+- Integration test cho controllers
+- E2E test cho flows quan trọng
+- Sử dụng Jest mocks cho dependencies
+- Tạo TestingModule với đầy đủ mocks
+- Sử dụng in-memory database cho testing 

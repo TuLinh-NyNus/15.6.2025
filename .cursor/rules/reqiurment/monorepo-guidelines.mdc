@@ -1,0 +1,97 @@
+---
+name: monorepo-guidelines.mdc
+description: Hướng dẫn và quy tắc cho việc quản lý monorepo với Turborepo
+globs: **/{package.json,turbo.json,tsconfig.json}
+alwaysApply: true
+---
+
+# Guidelines cho Monorepo với Turborepo
+
+## Cấu trúc thư mục
+
+- Tổ chức thành `apps/` và `packages/`
+- `apps/` chứa các ứng dụng độc lập (web, api, admin)
+- `packages/` chứa các shared libraries
+- Sử dụng file `turbo.json` tại root để cấu hình
+- Đặt cấu hình chung trong `configs/` packages
+- Tuân thủ nguyên tắc độc lập giữa các apps
+
+## Workspace Management
+
+- Sử dụng PNPM workspaces cho package management
+- Chỉ định workspace dependencies đúng cách (`"workspace:*"`)
+- Tránh sử dụng global installs
+- Sử dụng `.npmrc` để cấu hình workspace
+- Đảm bảo mỗi package có `package.json` riêng
+- Declare peer dependencies chính xác
+- Maintain lockfile với `pnpm-lock.yaml`
+
+## Dependencies
+
+- Tránh dependency duplication
+- Hoist common dependencies
+- Sử dụng fixed versions cho dependencies (không dùng `^` hoặc `~`)
+- Đánh giá dependencies mới cẩn thận
+- Kiểm tra security vulnerabilities
+- Tạo internal packages cho common functionality
+- Xác định rõ peerDependencies cho shared packages
+
+## Scripts
+
+- Thiết lập consistent script names giữa các packages
+- Sử dụng Turborepo filters (`--filter`) khi chạy commands
+- Định nghĩa pipeline tasks trong `turbo.json`
+- Tận dụng Turborepo caching
+- Sử dụng `turbo prune` cho CI deployments
+- Áp dụng consistent linting và formatting
+- Khai báo task dependencies trong Turborepo
+
+## TypeScript Configuration
+
+- Sử dụng base tsconfig trong `packages/tsconfig`
+- Extend base configs trong các packages riêng
+- Thiết lập path aliases nhất quán
+- Đảm bảo type safety giữa các packages
+- Tạo type declarations cho shared packages
+- Sử dụng `project references` khi cần
+- Dùng `composite: true` cho build hiệu quả
+
+## Versioning
+
+- Sử dụng single version hoặc independent versions
+- Áp dụng semantic versioning
+- Tạo và publish packages với quy trình chuẩn
+- Sử dụng internal packages cho chức năng dùng chung
+- Document breaking changes cẩn thận
+- Cung cấp migration guides
+- Maintain changelog cho mỗi package
+
+## Testing
+
+- Tạo consistent testing practices
+- Share test configs và helpers
+- Sử dụng Jest projects để test nhiều packages
+- Cấu hình coverage thresholds
+- Chạy tests dùng chung cho shared functionality
+- Test integration points giữa packages
+- Sử dụng mocks cho dependencies
+
+## CI/CD
+
+- Cấu hình pipeline để xác định affected packages
+- Chỉ test và build những packages bị ảnh hưởng
+- Cache Turborepo artifacts để tối ưu CI runs
+- Tạo consistent deployment processes
+- Sử dụng `turbo prune` trước khi deploy
+- Setup appropriate caching
+- Implement canary deployments
+
+## Documentation
+
+- Duy trì central README về monorepo structure
+- Document inter-package dependencies
+- Tạo contribution guides
+- Giải thích architecture decisions
+- Update documentation khi architecture thay đổi
+- Cung cấp examples cho common tasks
+- Đảm bảo docs về new features đến package consumers 

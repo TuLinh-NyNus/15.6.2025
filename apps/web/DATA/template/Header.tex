@@ -1,0 +1,54 @@
+\documentclass[12pt,a4paper]{article}
+%Các gói
+%\usepackage{fourier}
+\usepackage{amsmath,amssymb,grffile,makecell,fancyhdr,enumerate,arcs,physics,tasks,mathrsfs,graphics,yhmath,miama,venndiagram,diagbox,CJKutf8,circuitikz}
+\usepackage{tikz,tikz-3dplot,tkz-euclide,tkz-tab,tkz-linknodes,tabvar,pgfplots,esvect,fontawesome,tikzpeople,shadow,pgf-pie,pifont,twemojis}
+\usepackage[top=1cm, bottom=1.5cm, left=1cm, right=1cm,paperheight=50cm]{geometry}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage[utf8]{vietnam}
+%\usepackage[book]{ex_test}
+\usepackage[solcolor]{ex_test}
+%Các thư viện
+\usetikzlibrary{shapes.geometric,shadings,calc,snakes,patterns.meta,arrows,intersections,angles,backgrounds,quotes,shadows,decorations.text,matrix,angles}
+\usetkzobj{all}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=newest}\mathversion{bold}
+%
+%Một số lệnh tắt
+\def\vec{\overrightarrow}
+\newcommand{\hoac}[1]{\left[\begin{aligned}#1\end{aligned}\right.}
+\newcommand{\heva}[1]{\left\{\begin{aligned}#1\end{aligned}\right.}
+\newcommand{\hetde}{\centerline{\rule[0.5ex]{2cm}{1pt} HẾT \rule[0.5ex]{2cm}{1pt}}}
+%
+\theoremstyle{nonumberbreak} %ko đánh số,xuống dòng
+\theorembodyfont{\normalfont} %phần thân
+\theoremseparator{}
+\newtheorem{cm}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Chứng minh}
+\newtheorem{bode}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Bổ đề}
+\newtheorem{note}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Lưu ý}
+\newtheorem{phantich}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Phân tích}
+\newtheorem{nx}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Nhận xét}
+\newtheorem{luuy}{\color{yellow!30!orange}\bfseries\faLocationArrow\,Lưu ý}
+\newtheorem{cachkhac}{}
+\newcommand{\ck}[1]{
+	\renewcommand{\IMleftright}[2]{
+		\par\noindent
+		\begin{minipage}[t][][t]{\textwidth-\widthimmini-\fboxsep}
+			##1
+		\end{minipage}
+		\begin{minipage}[t][][b]{\widthimmini}\vspace{-12pt}
+			##2
+		\end{minipage}
+		\par\nointerlineskip
+	}
+	\renewcommand{\immini}[2]{
+		\setbox\imbox=\vbox{\hbox{##2}}
+		\widthimmini=\wd\imbox
+		\IMleftright{##1}{##2}
+	}
+	\begin{cachkhac}
+		{\color{yellow!30!orange}\bfseries\faLocationArrow\,Cách khác} \newline
+		{#1}
+	\end{cachkhac}
+}
+

@@ -1,0 +1,148 @@
+---
+name: testing-guidelines.mdc
+description: Hướng dẫn và best practices cho viết tests trong dự án
+globs: **/*.{test,spec}.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+
+# Guidelines cho Testing
+
+## Structure & Organization
+
+- Organize tests theo cấu trúc thư mục của source code
+- Đặt tên test files với định dạng `*.test.ts` hoặc `*.spec.ts`
+- Sử dụng descriptive test names
+- Group related tests với `describe` blocks
+- Sử dụng nested `describe` blocks cho sub-features
+- Tạo helper functions cho common test operations
+- Phân tách tests theo loại (unit, integration, e2e)
+
+## Unit Testing
+
+- Test một unit (function/class/component) tại một thời điểm
+- Mock tất cả dependencies
+- Tập trung vào behaviors, không phải implementation
+- Test happy paths và edge cases
+- Sử dụng snapshots một cách cẩn thận
+- Ensure code coverage cho critical paths
+- Giữ unit tests nhanh
+
+## Integration Testing
+
+- Test interaction giữa multiple units
+- Sử dụng real implementations khi có thể
+- Mock external dependencies (APIs, databases)
+- Test complete features
+- Cover critical user flows
+- Test error handling và boundary conditions
+- Document test setup requirements
+
+## E2E Testing
+
+- Test từ user's perspective
+- Cover critical user journeys
+- Sử dụng production-like environment
+- Test against real UI
+- Sử dụng stable selectors (data-testid)
+- Implement proper waiting và retry strategies
+- Keep E2E tests focused và minimal
+
+## Test Doubles
+
+- Sử dụng mocks cho dependencies
+- Tạo reusable mocks cho common dependencies
+- Reset mocks giữa các tests
+- Sử dụng spies để verify behavior
+- Tạo test fixtures cho test data
+- Sử dụng factories cho complex test objects
+- Document mock behavior
+
+## React Component Testing
+
+- Sử dụng React Testing Library
+- Test component behavior, không phải implementation
+- Sử dụng `screen` queries để find elements
+- Test user interactions
+- Test accessibility
+- Mock context providers
+- Test các trạng thái khác nhau (loading, error, success)
+
+## API Testing
+
+- Test tất cả endpoints
+- Verify response codes, formats và validation
+- Test error responses
+- Test authentication và authorization
+- Sử dụng request validation
+- Mock external services
+- Set up test database environment
+
+## Test Data Management
+
+- Tạo factories cho test data
+- Sử dụng random data generators
+- Tránh hardcoded test data
+- Cleanup data sau mỗi test
+- Sử dụng transaction rollbacks với database tests
+- Implement seed data cho integration tests
+- Maintain realistic test data
+
+## Best Practices
+
+- Write tests trước khi fix bugs
+- Đảm bảo tests are deterministic
+- Avoid test interdependence
+- Write clear test assertions
+- Fail tests với meaningful messages
+- Document complex test setups
+- Run tests in CI/CD pipeline
+
+## Mocking
+
+- Tạo manual mocks cho modules
+- Mock complex objects với proper type checking
+- Spy on và verify function calls
+- Provide mock implementations khi cần thiết
+- Reset mocks giữa tests
+- Avoid excessive mocking
+- Document mock assumptions
+
+## Performance
+
+- Keep unit tests fast
+- Group slow tests
+- Parallelize test runs khi có thể
+- Use in-memory databases cho tests
+- Avoid unnecessary setup/teardown
+- Profile slow tests
+- Tối ưu hóa test suites
+
+## Coverage
+
+- Aim cho high code coverage (tối thiểu 80%)
+- Focus on critical business logic
+- Sử dụng coverage reports để identify gaps
+- Avoid coverage targets blindly
+- Đảm bảo quality over quantity
+- Set up coverage thresholds trong CI
+- Exclude auto-generated code từ coverage reports
+
+## Frontend-specific
+
+- Test responsive behavior
+- Test accessibility
+- Test form validation
+- Cover different device sizes
+- Test client-side routing
+- Verify animations và transitions
+- Test user interactions
+
+## Backend-specific
+
+- Test request validation
+- Test authentication flows
+- Test authorization rules
+- Verify database interactions
+- Test error handling
+- Verify API contracts
+- Test performance critical paths 

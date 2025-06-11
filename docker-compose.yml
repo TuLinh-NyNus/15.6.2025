@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:5000
+      - API_URL=http://api:5000
+    depends_on:
+      - api
+    restart: always
+    networks:
+      - nynus-network
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - '5000:5000'
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/nynus_db?schema=public
+      - NODE_ENV=production
+      - PORT=5000
+      - JWT_SECRET=your_production_secret_key
+      - JWT_EXPIRES_IN=7d
+      - FRONTEND_URL=http://web:3000
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - nynus-network
+
+  db:
+    image: postgres:14
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nynus_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - nynus-network
+
+volumes:
+  postgres-data:
+
+networks:
+  nynus-network:
+    driver: bridge

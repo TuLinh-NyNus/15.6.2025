@@ -1,0 +1,225 @@
+/* Styles for LaTeX renderer */
+
+/* Styles chung cho LaTeX renderer */
+.latex-renderer {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+/* Styles cho KaTeX */
+.latex-renderer .katex {
+  font-size: 1.1em;
+}
+
+.katex-renderer {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  margin: 1rem 0;
+}
+
+/* Styles cho KaTeXRenderer */
+.katex-container {
+  min-height: 100px;
+  position: relative;
+}
+
+.loading-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.katex-preview {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #f8fafc; /* text-slate-100 */
+}
+
+/* Styles cho đáp án trong KaTeX */
+.choices {
+  margin: 1rem 0;
+}
+
+.choice-item {
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  transition: all 0.3s ease;
+}
+
+.choice-item:hover {
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.1), rgba(234, 179, 8, 0.1));
+  transform: scale(1.01);
+}
+
+.choice-label {
+  font-weight: 600;
+  margin-right: 0.75rem;
+  min-width: 1.5rem;
+  color: #94a3b8; /* text-slate-400 */
+}
+
+.choice-content {
+  flex: 1;
+}
+
+.correct-mark {
+  color: #10b981; /* text-emerald-500 */
+  margin-left: auto;
+  font-weight: bold;
+}
+
+/* Styles cho lời giải */
+.solution {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #f59e0b; /* border-amber-500 */
+}
+
+.solution h3 {
+  font-weight: 600;
+  color: #f59e0b; /* text-amber-500 */
+  margin-bottom: 0.5rem;
+}
+
+.solution-content {
+  margin-top: 0.5rem;
+}
+
+/* Styles cho nội dung căn giữa */
+.center-content {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Styles cho TikZ */
+.tikz-container {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tikz-image {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  border-radius: 0.25rem;
+}
+
+/* Styles cho các lệnh LaTeX tùy chỉnh */
+.latex-choice {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.latex-choice-item {
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.latex-choice-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.latex-choice-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  min-width: 1.5rem;
+  color: #94a3b8; /* text-slate-400 */
+}
+
+.latex-choice-content {
+  flex: 1;
+}
+
+.latex-choice-correct {
+  color: #10b981; /* text-emerald-500 */
+  margin-left: 0.5rem;
+}
+
+/* Styles cho shortans */
+.latex-shortans {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.latex-shortans-answer {
+  color: #10b981; /* text-emerald-500 */
+  font-weight: 500;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(16, 185, 129, 0.1); /* bg-emerald-500/10 */
+}
+
+/* Styles cho matching */
+.latex-matching {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.latex-matching-item {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.latex-matching-left {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.latex-matching-right {
+  flex: 1;
+  padding-left: 1rem;
+  border-left: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Styles cho lời giải */
+.latex-solution {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #f59e0b; /* border-amber-500 */
+}
+
+.latex-solution-title {
+  font-weight: 600;
+  color: #f59e0b; /* text-amber-500 */
+  margin-bottom: 0.5rem;
+}
+
+/* Styles cho error */
+.latex-error {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  background-color: rgba(239, 68, 68, 0.1); /* bg-red-500/10 */
+  border: 1px solid rgba(239, 68, 68, 0.3); /* border-red-500/30 */
+  color: #ef4444; /* text-red-500 */
+}

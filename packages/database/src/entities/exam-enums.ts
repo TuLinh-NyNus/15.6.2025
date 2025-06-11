@@ -1,0 +1,41 @@
+export enum Difficulty {
+  EASY = 'easy',
+  MEDIUM = 'medium',
+  HARD = 'hard'
+}
+
+export enum ExamForm {
+  TRAC_NGHIEM = 'TRAC_NGHIEM',
+  TU_LUAN = 'TU_LUAN',
+  KET_HOP = 'KET_HOP',
+  FORM_2018 = 'FORM_2018',
+  FORM_2025 = 'FORM_2025'
+}
+
+export enum ExamCategory {
+  THUONG_XUYEN_MIENG = 'THUONG_XUYEN_MIENG',
+  GIUA_KI_I = 'GIUA_KI_I',
+  CUOI_KI_I = 'CUOI_KI_I',
+  GIUA_KI_II = 'GIUA_KI_II',
+  CUOI_KI_II = 'CUOI_KI_II',
+  KHAO_SAT = 'KHAO_SAT',
+  DE_CUONG = 'DE_CUONG',
+  HOC_SINH_GIOI = 'HOC_SINH_GIOI',
+  TUYEN_SINH = 'TUYEN_SINH',
+  KHAO_SAT_THI_THU = 'KHAO_SAT_THI_THU'
+}
+
+export enum ExamType {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'ARCHIVED'
+}
+
+export enum QuestionType {
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  SINGLE_CHOICE = 'SINGLE_CHOICE',
+  TRUE_FALSE = 'TRUE_FALSE',
+  ESSAY = 'ESSAY',
+  MATCHING = 'MATCHING',
+  FILL_IN_BLANK = 'FILL_IN_BLANK'
+}

@@ -1,0 +1,147 @@
+---
+name: creative-phase-guidelines.mdc
+description: Hướng dẫn và yêu cầu về việc xử lý các giai đoạn sáng tạo
+globs: memory-bank/*.md
+---
+
+# Enhanced Creative Phase Handling Guidelines
+
+## Mục Đích và Vai Trò
+
+Creative Phase là không gian tư duy dành riêng cho các quyết định thiết kế phức tạp, nơi tập trung vào việc khám phá và đánh giá nhiều giải pháp tiềm năng. Creative Phases mang lại cấu trúc và rõ ràng cho việc đưa ra các quyết định phức tạp.
+
+## Khi Nào Sử Dụng Creative Phase
+
+Creative Phases BẮT BUỘC cho các quyết định thiết kế/kiến trúc chính trong các task Level 3-4, bao gồm:
+
+- Thiết kế architecture cho các hệ thống phức tạp
+- Xây dựng data models hoặc database schemas
+- Phát triển algorithms phức tạp
+- Redesign UI/UX components lớn
+- Đánh giá trade-offs giữa nhiều giải pháp
+- Xây dựng integration strategies
+
+## Cấu Trúc Creative Phase
+
+Mỗi Creative Phase phải tuân theo cấu trúc sau:
+
+```
+🎨🎨🎨 ENTERING CREATIVE PHASE: [DESIGN/ALGORITHM/ARCHITECTURE] 🎨🎨🎨
+
+## Problem Statement
+[Mô tả rõ ràng vấn đề cần giải quyết]
+
+## Current Constraints
+- [Constraint 1]
+- [Constraint 2]
+- [Constraint 3]
+
+## Breaking down the problem:
+- [Component 1]
+- [Component 2]
+- [Component 3]
+
+## Approach Options
+### Option 1: [Tên]
+- Pros:
+  - [Pro 1]
+  - [Pro 2]
+- Cons:
+  - [Con 1]
+  - [Con 2]
+- Implementation complexity: [Low/Medium/High]
+- Performance impact: [Low/Medium/High]
+- Scalability: [Low/Medium/High]
+
+### Option 2: [Tên]
+[Tương tự như Option 1]
+
+## Decision Matrix
+| Option | Complexity | Performance | Scalability | Maintainability | Total Score |
+|--------|------------|-------------|-------------|-----------------|-------------|
+| Opt 1  | 3          | 4           | 3           | 4               | 14          |
+| Opt 2  | 4          | 3           | 5           | 2               | 14          |
+
+## Selected Approach
+[Option được chọn và lý do]
+
+🎨 CREATIVE CHECKPOINT: [Verification against requirements]
+
+## Implementation Plan
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+🎨🎨🎨 EXITING CREATIVE PHASE - RETURNING TO TASK TRACKING 🎨🎨🎨
+
+🔄 CREATIVE PHASE SUMMARY:
+- Completed: [Brief description of creative work]
+- Key decisions: [Important decisions made]
+- Next steps: [Follow-up implementation tasks]
+- Verification: [Confirmation solution meets requirements]
+```
+
+## Yêu Cầu Quan Trọng
+
+1. **Rõ Ràng về Vấn Đề**: Bắt đầu bằng việc đặt rõ vấn đề đang giải quyết.
+2. **Exploration Đầy Đủ**: Xem xét ít nhất 2-3 phương án khác nhau.
+3. **Trade-off Analysis**: Đánh giá pros/cons của mỗi giải pháp.
+4. **Decision Criteria**: Sử dụng tiêu chí đánh giá nhất quán.
+5. **Justification**: Giải thích rõ lý do tại sao lựa chọn giải pháp cuối cùng.
+6. **Implementation Planning**: Phác thảo các bước cụ thể để thực hiện giải pháp.
+7. **Verification**: Xác nhận giải pháp đáp ứng yêu cầu.
+
+## Mức Độ Chi Tiết Dựa trên Task Complexity
+
+### Level 3 Tasks
+- Tối thiểu 2 phương án
+- Đánh giá cơ bản về complexity, performance, maintainability
+- Implementation plan với 3-5 bước
+- Creative Phase có thể kéo dài 30-60 phút
+
+### Level 4 Tasks
+- Tối thiểu 3 phương án
+- Đánh giá toàn diện với decision matrix
+- Detailed analysis về performance, scalability, security, maintainability
+- Implementation plan với 5-10 bước, bao gồm milestones
+- Creative Phase có thể kéo dài 1-2 giờ hoặc nhiều phiên
+
+## Integration với Memory Bank
+
+- Mỗi Creative Phase phải được document trong `activeContext.md` trong quá trình thực hiện
+- Quyết định cuối cùng phải được tóm tắt trong `progress.md`
+- Architectural decisions phải được cập nhật trong `systemPatterns.md`
+- Các lessons learned phải được captured trong reflection phase
+
+## Metrics Đánh Giá
+
+Đánh giá chất lượng của Creative Phase dựa trên:
+
+1. **Độ sâu**: Mức độ chi tiết trong phân tích mỗi phương án
+2. **Độ rộng**: Số lượng phương án được đánh giá
+3. **Tính toàn diện**: Coverage các khía cạnh quan trọng
+4. **Tính khách quan**: Đánh giá dựa trên tiêu chí rõ ràng
+5. **Tính thực hiện được**: Giải pháp cuối có practical và có thể triển khai
+
+## Creative Phase Artifacts
+
+Mỗi Creative Phase nên tạo ra các artifacts sau:
+
+- Decision matrix
+- Implementation plan
+- Diagrams hoặc sketches (khi thích hợp)
+- List of assumptions
+- Test strategy cho solution được chọn
+- Documentation updates cần thực hiện
+
+## Transition Barriers
+
+Creative Phases phải được đánh dấu rõ ràng với các transition barriers:
+
+```
+🎨🎨🎨 ENTERING CREATIVE PHASE: [PURPOSE] 🎨🎨🎨
+[Creative Phase content]
+🎨🎨🎨 EXITING CREATIVE PHASE - RETURNING TO TASK TRACKING 🎨🎨🎨
+```
+
+Transition barriers này giúp phân biệt rõ ràng Creative Phase với phần còn lại của workflow, đảm bảo toàn bộ Creative Phase được hoàn thành đầy đủ trước khi quay lại task tracking. 

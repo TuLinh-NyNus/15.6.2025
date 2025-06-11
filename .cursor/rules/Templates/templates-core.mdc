@@ -1,0 +1,278 @@
+---
+description: Essential templates for Memory Bank files
+globs: "**/memory-bank/**", "**/.cursorrules", "**/docs/archive/**
+alwaysApply: false
+---
+# Memory Bank Core Templates
+
+## ⚠️ ALWAYS USE THESE TEMPLATES WHEN CREATING FILES ⚠️
+
+When creating any Memory Bank file, use these templates as the starting point. These are the ESSENTIAL templates that must be used for core files.
+
+⚠️ REFERENCE REQUIRED: For extended and specialized templates, I MUST read templates-extended.mdc.
+
+## projectbrief.md Template
+```markdown
+# Project Brief
+
+## Overview
+[Brief description of the project]
+
+## Goals and Objectives
+- [Primary goal 1]
+- [Primary goal 2]
+- [Primary goal 3]
+
+## Requirements
+- [Requirement 1]
+- [Requirement 2]
+- [Requirement 3]
+
+## Constraints
+- [Constraint 1]
+- [Constraint 2]
+
+## Stakeholders
+- [Stakeholder 1]: [Role/Interest]
+- [Stakeholder 2]: [Role/Interest]
+
+## Success Criteria
+- [Criterion 1]
+- [Criterion 2]
+```
+
+## productContext.md Template
+```markdown
+# Product Context
+
+## Problem Statement
+[Description of the problem this project solves]
+
+## Target Users
+- [User type 1]: [Needs and expectations]
+- [User type 2]: [Needs and expectations]
+
+## User Experience Goals
+- [UX goal 1]
+- [UX goal 2]
+
+## Key Features
+- [Feature 1]: [Purpose and value]
+- [Feature 2]: [Purpose and value]
+
+## Workflows
+[Description of key user workflows]
+
+## Market Context
+[ReleBOOt market information, competition, etc.]
+```
+
+## activeContext.md Template
+```markdown
+# Active Context
+
+## Current Focus
+[Description of current development focus]
+
+## Recent Changes
+- [Change 1] - [Date]
+- [Change 2] - [Date]
+
+## Active Decisions
+- [Decision 1]: [Rationale]
+- [Decision 2]: [Rationale]
+
+## Next Steps
+- [Next step 1]
+- [Next step 2]
+
+## Open Questions
+- [Question 1]
+- [Question 2]
+
+## Recent Completions
+[Most recent completed task and next focus]
+```
+
+## systemPatterns.md Template
+```markdown
+# System Patterns
+
+## Architecture Overview
+[Description of system architecture]
+
+## Key Components
+- [Component 1]: [Purpose and responsibilities]
+- [Component 2]: [Purpose and responsibilities]
+
+## Design Patterns
+- [Pattern 1]: [Usage and implementation]
+- [Pattern 2]: [Usage and implementation]
+
+## Data Flow
+[Description of data flow through the system]
+
+## Security Considerations
+[Description of security patterns and considerations]
+
+## Performance Considerations
+[Description of performance patterns and optimizations]
+```
+
+## techContext.md Template
+```markdown
+# Technical Context
+
+## Technology Stack
+- Frontend: [Technologies]
+- Backend: [Technologies]
+- Database: [Technologies]
+- DevOps: [Technologies]
+
+## Development Environment Setup
+[Instructions for setting up the development environment]
+
+## Dependencies
+- [Dependency 1]: [Version] - [Purpose]
+- [Dependency 2]: [Version] - [Purpose]
+
+## External Services
+- [Service 1]: [Purpose and integration details]
+- [Service 2]: [Purpose and integration details]
+
+## Technical Constraints
+- [Constraint 1]
+- [Constraint 2]
+```
+
+## progress.md Template
+```markdown
+# Tiến độ dự án
+
+## Trạng thái công việc
+
+- ✅: Hoàn thành
+- ⏳: Đang thực hiện
+- 🔄: Cần xem xét lại
+- 🟩: Chưa bắt đầu nhưng đã sẵn sàng để làm
+
+## Mức độ ưu tiên
+
+- **P0**: Ưu tiên cao nhất, cần hoàn thành đầu tiên
+- **P1**: Ưu tiên cao, cần hoàn thành
+- **P2**: Ưu tiên trung bình, nên hoàn thành
+- **P3**: Ưu tiên thấp, có thể hoàn thành sau
+
+## Các mốc quan trọng
+
+### 1. [Tên nhóm nhiệm vụ 1]
+
+- [Trạng thái] **1.1**: [Tên nhiệm vụ 1.1] (YYYY-MM-DD) [Mức ưu tiên]
+  - **Công cụ**: [Công cụ/công nghệ 1], [Công cụ/công nghệ 2]
+  - **Chức năng**:
+    - [Chức năng chi tiết 1]
+    - [Chức năng chi tiết 2]
+    - [Chức năng chi tiết 3]
+  - **Kỹ thuật tham chiếu**: [Kỹ thuật 1], [Kỹ thuật 2]
+
+- [Trạng thái] **1.2**: [Tên nhiệm vụ 1.2] (YYYY-MM-DD) [Mức ưu tiên]
+  - **Công cụ**: [Công cụ/công nghệ 1], [Công cụ/công nghệ 2]
+  - **Chức năng**:
+    - [Chức năng chi tiết 1]
+    - [Chức năng chi tiết 2]
+    - [Chức năng chi tiết 3]
+  - **Kỹ thuật tham chiếu**: [Kỹ thuật 1], [Kỹ thuật 2]
+
+### 2. [Tên nhóm nhiệm vụ 2]
+
+- [Trạng thái] **2.1**: [Tên nhiệm vụ 2.1] (YYYY-MM-DD) [Mức ưu tiên]
+  - **Công cụ**: [Công cụ/công nghệ 1], [Công cụ/công nghệ 2]
+  - **Chức năng**:
+    - [Chức năng chi tiết 1]
+    - [Chức năng chi tiết 2]
+    - [Chức năng chi tiết 3]
+  - **Kỹ thuật tham chiếu**: [Kỹ thuật 1], [Kỹ thuật 2]
+
+## Đang thực hiện
+
+- [Trạng thái] **[Số hiệu]**: [Tên nhiệm vụ] [Mức ưu tiên]
+  - **Công cụ**: [Công cụ/công nghệ 1], [Công cụ/công nghệ 2]
+  - **Chức năng**:
+    - [Chức năng chi tiết 1]
+    - [Chức năng chi tiết 2]
+    - [Chức năng chi tiết 3]
+  - **Kỹ thuật tham chiếu**: [Kỹ thuật 1], [Kỹ thuật 2]
+
+## Thách thức và giải pháp
+
+### Thách thức
+1. [Thách thức 1]
+2. [Thách thức 2]
+3. [Thách thức 3]
+
+### Giải pháp
+1. [Giải pháp cho thách thức 1]
+2. [Giải pháp cho thách thức 2]
+3. [Giải pháp cho thách thức 3]
+
+## Kế hoạch tiếp theo
+
+1. [Kế hoạch 1]
+2. [Kế hoạch 2]
+3. [Kế hoạch 3]
+
+```
+
+## completed_tasks.md Template
+```markdown
+# Completed Tasks
+
+[Archive entries will be added here as tasks are completed]
+```
+
+## .cursorrules Template
+```markdown
+# Project Intelligence
+
+## Project Patterns
+- [Pattern 1]: [Description]
+- [Pattern 2]: [Description]
+
+## Workflow Preferences
+- [Preference 1]: [Description]
+- [Preference 2]: [Description]
+
+## Implementation Insights
+- [Insight 1]: [Description]
+- [Insight 2]: [Description]
+
+## Known Challenges
+- [Challenge 1]: [Description and approach]
+- [Challenge 2]: [Description and approach]
+```
+
+## Implementation Template
+```markdown
+# [Feature/Component] Implementation
+
+## Overview
+[Brief description of the feature/component]
+
+## Design Decisions
+- [Decision 1]: [Rationale]
+- [Decision 2]: [Rationale]
+
+## Implementation Details
+[Detailed description of implementation]
+
+## Code Examples
+```[language]
+[Code example]
+```
+
+## Testing Strategy
+[Description of testing approach]
+
+## Future Considerations
+[Notes for future development]
+```

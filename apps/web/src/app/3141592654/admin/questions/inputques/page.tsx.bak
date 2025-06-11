@@ -1,0 +1,445 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Save, Loader2, FileCode, FileDigit, BookOpen, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { QuestionFormTabs, QuestionFormData } from '@/components/questions/QuestionFormTabs';
+import { QuestionBasicInfo } from '@/components/questions/QuestionBasicInfo';
+import { QuestionIDInfo } from '@/components/questions/QuestionIDInfo';
+import { QuestionContentInfo } from '@/components/questions/QuestionContentInfo';
+import { QuestionAnswerInfo } from '@/components/questions/QuestionAnswerInfo';
+import { QuestionMetadataInfo } from '@/components/questions/QuestionMetadataInfo';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { LatexExtractor } from '@/components/questions/LatexExtractor';
+import { LatexSamples } from '@/components/questions/LatexSamples';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+// Trang quản lý câu hỏi
+export default function InputQuesPage() {
+  const router = useRouter();
+  const [latexInput, setLatexInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [latexResult, setLatexResult] = useState<string | null>(null);
+  const [latexError, setLatexError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('latex'); // 'latex' hoặc 'doc'
+  const [bottomTab, setBottomTab] = useState<string>('samples'); // 'samples' hoặc 'form'
+  
+  // Khởi tạo form data với đầy đủ các trường
+  const [formData, setFormData] = useState<QuestionFormData>({
+    // Thông tin cơ bản
+    raw_content: '',
+    content: '',
+    type: 'multiple-choice',
+    solution: '',
+    source: '',
+    tags: [],
+    
+    // Định danh - Subcount
+    subcount: {
+      prefix: 'SC',
+      number: '',
+      fullId: '',
+    },
+    
+    // Định danh - QuestionID
+    questionID: {
+      format: 'standard',
+      fullId: '',
+      grade: {
+        value: '',
+        description: '',
+      },
+      subject: {
+        value: '',
+        description: '',
+      },
+      chapter: {
+        value: '',
+        description: '',
+      },
+      level: {
+        value: '',
+        description: '',
+      },
+      lesson: {
+        value: '',
+        description: '',
+      },
+      type: {
+        value: '',
+        description: '',
+      },
+    },
+    
+    // Đáp án
+    correctAnswer: '',
+    answers: [],
+    
+    // Hình ảnh
+    images: {
+      questionImage: null,
+      solutionImage: null,
+    },
+    
+    // Metadata
+    creator: {
+      id: "admin",
+      name: "Tú",
+    },
+    status: {
+      code: 'draft',
+      lastUpdated: new Date().toISOString(),
+    },
+    usageCount: 0,
+    examRefs: [],
+    usageHistory: [],
+    feedback: {
+      averageDifficulty: 3,
+      clarity: 3,
+      correctnessRate: 0,
+      feedbackCount: 0,
+      comments: [],
+    },
+  });
+
+  // Xử lý khi người dùng nhập LaTeX
+  const handleLatexParse = async () => {
+    if (!latexInput.trim()) {
+      setError('Vui lòng nhập nội dung LaTeX');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setLatexError(null);
+    
+    try {
+      // Mô phỏng phân tích LaTeX
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Cập nhật form với dữ liệu LaTeX
+      setFormData(prev => ({
+        ...prev,
+        raw_content: latexInput,
+        content: latexInput
+          .replace(/\\begin\{.*?\}/g, '')
+          .replace(/\\end\{.*?\}/g, '')
+          .replace(/\\item/g, '')
+          .trim(),
+      }));
+      
+      setLatexResult(latexInput);
+      setActiveTab('latex'); // Đảm bảo tab LaTeX được active
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error('Lỗi khi phân tích LaTeX:', error);
+      setError(error.message || 'Có lỗi xảy ra khi phân tích LaTeX. Vui lòng thử lại.');
+      setIsLoading(false);
+    }
+  };
+
+  // Xử lý khi người dùng lưu câu hỏi
+  const handleSaveQuestion = async () => {
+    setIsSaving(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      // Mô phỏng lưu câu hỏi
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      setSuccess('Câu hỏi đã được lưu thành công!');
+      setIsSaving(false);
+      
+      // Chuyển về trang danh sách câu hỏi sau 2 giây
+      setTimeout(() => {
+        router.push('/3141592654/admin/questions');
+      }, 2000);
+    } catch (error: any) {
+      console.error('Lỗi khi lưu câu hỏi:', error);
+      setError(error.message || 'Có lỗi xảy ra khi lưu câu hỏi. Vui lòng thử lại.');
+      setIsSaving(false);
+    }
+  };
+
+  // Xử lý khi xuất JSON
+  const handleExportJSON = () => {
+    try {
+      // Tạo file JSON
+      const dataStr = JSON.stringify(formData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      // Tạo link tải xuống
+      const exportFileDefaultName = `question_${new Date().toISOString().slice(0, 10)}.json`;
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    } catch (error) {
+      console.error('Lỗi khi xuất JSON:', error);
+      setError('Có lỗi xảy ra khi xuất JSON');
+    }
+  };
+
+  // Xử lý khi chuyển đổi giữa các tab nhập liệu
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  // Xử lý khi người dùng chọn mẫu LaTeX
+  const handleSelectSample = (sample: string) => {
+    setLatexInput(sample);
+  };
+
+  // Render UI dựa trên tab đang active
+  const renderBottomSection = () => {
+    // Chỉ hiển thị khi đang ở tab Latex
+    if (activeTab === 'latex') {
+      return (
+        <div className="mt-6">
+          <Tabs defaultValue="samples" value={bottomTab} onValueChange={setBottomTab}>
+            <TabsList className="w-full grid grid-cols-2">
+              <TabsTrigger value="samples" className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                <span>Mẫu LaTeX</span>
+              </TabsTrigger>
+              <TabsTrigger value="form" className="flex items-center gap-2">
+                <FileCode className="h-4 w-4" />
+                <span>Form</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            {/* Tab Mẫu LaTeX - chỉ hiển thị phần mẫu bên trái */}
+            <TabsContent value="samples" className="mt-4">
+              <div className="w-full">
+                <LatexSamples onSelectSample={handleSelectSample} />
+              </div>
+            </TabsContent>
+            
+            {/* Tab Form - hiển thị form hoàn chỉnh */}
+            <TabsContent value="form" className="mt-4">
+              <div className="p-4 border rounded-md">
+                <QuestionFormTabs 
+                  formData={formData}
+                  setFormData={setFormData}
+                  isLoading={isLoading}
+                  hideIdentityTab={false}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      );
+    }
+    
+    // Không hiển thị gì khi đang ở tab Doc
+    return null;
+  };
+
+  return (
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button 
+            onClick={() => router.back()}
+            variant="outline"
+            size="icon"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-2xl font-bold">Thêm câu hỏi</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={handleExportJSON}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Xuất JSON
+          </Button>
+          <Button
+            onClick={handleSaveQuestion}
+            disabled={isSaving}
+            className="flex items-center gap-2"
+          >
+            {isSaving ? 
+              <Loader2 className="h-4 w-4 animate-spin" /> : 
+              <Save className="h-4 w-4" />
+            }
+            {isSaving ? 'Đang lưu...' : 'Lưu câu hỏi'}
+          </Button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-600">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-600">
+          {success}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Tab chọn phương thức nhập: LaTeX hoặc Doc */}
+        <div className="md:col-span-12">
+          <Tabs 
+            defaultValue="latex" 
+            value={activeTab} 
+            onValueChange={handleTabChange}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsTrigger value="latex" disabled={isLoading}>
+                <FileCode className="h-4 w-4 mr-2" />
+                Trích xuất từ LaTeX
+              </TabsTrigger>
+              <TabsTrigger value="doc">
+                <FileDigit className="h-4 w-4 mr-2" />
+                Trích xuất từ Doc (đang phát triển)
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="manual" className="hidden">
+              {/* Phần form chính */}
+              <Card className="p-4">
+                <QuestionFormTabs 
+                  formData={formData}
+                  setFormData={setFormData}
+                  isLoading={isLoading}
+                  hideIdentityTab={false}
+                />
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="latex">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Phần nhập LaTeX */}
+                <div className="md:col-span-1">
+                  <Card className="h-full flex flex-col bg-slate-950 border-slate-800">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Nhập nội dung LaTeX</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow flex flex-col">
+                      <div className="space-y-2 flex-grow flex flex-col">
+                        <Textarea
+                          id="latex-input"
+                          value={latexInput}
+                          onChange={(e) => setLatexInput(e.target.value)}
+                          placeholder="Nhập nội dung LaTeX ở đây..."
+                          className="flex-grow font-mono bg-black text-white min-h-[500px] border-slate-700"
+                        />
+                      </div>
+                      
+                      <Button
+                        onClick={handleLatexParse}
+                        disabled={isLoading}
+                        variant="outline"
+                        className="w-full mt-4"
+                      >
+                        {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                        {isLoading ? 'Đang phân tích...' : 'Phân tích LaTeX'}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                {/* Kết quả trích xuất LaTeX */}
+                <div className="md:col-span-1">
+                  <Card className="h-full bg-slate-950 border-slate-800">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Kết quả trích xuất</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 h-[calc(100%-60px)] overflow-auto">
+                      <div className="p-4 h-full">
+                        <LatexExtractor
+                          latexInput={latexInput}
+                          formData={formData}
+                          setFormData={setFormData}
+                          isAnalyzing={isLoading}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="doc">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Phần nhập Word/Doc */}
+                <div className="md:col-span-1">
+                  <Card className="h-full flex flex-col">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Tải lên tài liệu Word</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow flex flex-col">
+                      <div className="space-y-2 flex-grow flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 dark:bg-gray-900">
+                        <div className="text-center">
+                          <FileDigit className="h-12 w-12 mx-auto text-gray-400" />
+                          <h3 className="mt-2 text-sm font-medium">Kéo tài liệu và thả vào đây</h3>
+                          <p className="mt-1 text-xs text-gray-500">
+                            Hỗ trợ: DOCX, DOC, PDF (có MathType/Equation)
+                          </p>
+                        </div>
+                        <Button
+                          disabled={true}
+                          variant="outline"
+                          className="mt-4"
+                        >
+                          Chọn tệp
+                        </Button>
+                      </div>
+                      
+                      <div className="mt-4">
+                        <Button
+                          disabled={true}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          Phân tích tài liệu
+                        </Button>
+                        <p className="text-xs text-gray-500 mt-2 text-center">
+                          * Đang phát triển: Tính năng này sẽ hỗ trợ trích xuất các công thức MathType và Equation từ tài liệu Word
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                {/* Kết quả trích xuất Doc */}
+                <div className="md:col-span-1">
+                  <Card className="p-4 space-y-4 h-full flex flex-col">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-medium">Kết quả trích xuất</h3>
+                    </div>
+                    <div className="flex-grow flex items-center justify-center text-gray-400">
+                      <div className="text-center">
+                        <p>Chưa có tài liệu nào được phân tích</p>
+                        <p className="text-sm mt-2">Tải lên tài liệu và nhấn phân tích để xem kết quả</p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+      {/* Render phần dưới dựa trên tab đang active */}
+      {renderBottomSection()}
+    </div>
+  );
+} 

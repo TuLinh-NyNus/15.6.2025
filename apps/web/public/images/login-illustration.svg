@@ -1,0 +1,70 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_1_2)">
+    <!-- Background elements -->
+    <path d="M673.31 306.5C673.31 390.5 605.31 507 458.31 507C311.31 507 136 507 136 306.5C136 106 311.31 106 458.31 106C605.31 106 673.31 222.5 673.31 306.5Z" fill="#F0EBFF" />
+    <path d="M643.31 306.5C643.31 382.83 581.64 491 446.81 491C312.31 491 166 529 166 306.5C166 84 312.31 122 446.81 122C581.31 122 643.31 230.17 643.31 306.5Z" fill="#E0D8FF" />
+
+    <!-- Floating shapes -->
+    <circle cx="201" cy="176" r="18" fill="#FFB7CE" />
+    <circle cx="561" cy="156" r="14" fill="#6C5DD3" opacity="0.3" />
+    <circle cx="601" cy="356" r="22" fill="#FFC0D9" opacity="0.4" />
+    <rect x="181" y="276" width="40" height="40" rx="8" fill="#A7B5FF" opacity="0.3" />
+    <rect x="521" y="406" width="30" height="30" rx="8" fill="#6C5DD3" opacity="0.2" />
+
+    <!-- Desk -->
+    <rect x="250" y="380" width="300" height="20" rx="5" fill="#8B80F9" />
+    <rect x="310" y="400" width="180" height="10" rx="2" fill="#7469E9" />
+
+    <!-- Person 1 (left) -->
+    <!-- Head -->
+    <circle cx="310" cy="280" r="50" fill="#FFD2B3" />
+    <path d="M290 260C290 260 300 265 310 265C320 265 330 260 330 260" stroke="#333" stroke-width="2" stroke-linecap="round" />
+    <circle cx="290" cy="250" r="5" fill="#333" />
+    <circle cx="330" cy="250" r="5" fill="#333" />
+    
+    <!-- Hair -->
+    <path d="M310 230C280 230 270 250 270 260C270 270 280 290 300 290C320 290 350 290 350 260C350 230 340 230 310 230Z" fill="#663300" />
+    
+    <!-- Body -->
+    <path d="M270 330C270 302.39 290.39 280 320 280C349.61 280 370 302.39 370 330V380H270V330Z" fill="#7469E9" />
+    <rect x="290" y="320" width="60" height="60" rx="5" fill="#8B80F9" />
+    
+    <!-- Arms -->
+    <path d="M270 330C250 340 240 360 240 380" stroke="#7469E9" stroke-width="10" stroke-linecap="round" />
+    <path d="M370 330C390 340 400 360 400 380" stroke="#7469E9" stroke-width="10" stroke-linecap="round" />
+    <circle cx="240" cy="380" r="10" fill="#FFD2B3" />
+    <circle cx="400" cy="380" r="10" fill="#FFD2B3" />
+
+    <!-- Person 2 (right) -->
+    <!-- Head -->
+    <circle cx="490" cy="280" r="50" fill="#FFD2B3" />
+    <path d="M470 260C470 260 480 265 490 265C500 265 510 260 510 260" stroke="#333" stroke-width="2" stroke-linecap="round" />
+    <circle cx="470" cy="250" r="5" fill="#333" />
+    <circle cx="510" cy="250" r="5" fill="#333" />
+    
+    <!-- Hair -->
+    <path d="M490 230C520 230 530 245 530 260C530 275 520 280 510 280C500 280 480 285 480 260C480 235 460 230 490 230Z" fill="#222222" />
+    
+    <!-- Body -->
+    <path d="M450 330C450 302.39 470.39 280 500 280C529.61 280 550 302.39 550 330V380H450V330Z" fill="#6C5DD3" />
+    <rect x="470" y="320" width="60" height="60" rx="5" fill="#8B80F9" />
+    
+    <!-- Arms -->
+    <path d="M450 330C430 340 420 360 420 380" stroke="#6C5DD3" stroke-width="10" stroke-linecap="round" />
+    <path d="M550 330C570 340 580 360 580 380" stroke="#6C5DD3" stroke-width="10" stroke-linecap="round" />
+    <circle cx="420" cy="380" r="10" fill="#FFD2B3" />
+    <circle cx="580" cy="380" r="10" fill="#FFD2B3" />
+
+    <!-- Document/Laptop being worked on -->
+    <rect x="340" y="320" width="120" height="80" rx="5" fill="#FFFFFF" stroke="#8B80F9" stroke-width="2" />
+    <line x1="350" y1="340" x2="450" y2="340" stroke="#DDD" stroke-width="2" />
+    <line x1="350" y1="355" x2="420" y2="355" stroke="#DDD" stroke-width="2" />
+    <line x1="350" y1="370" x2="440" y2="370" stroke="#DDD" stroke-width="2" />
+    <circle cx="410" cy="400" r="10" fill="#FFB7CE" />
+  </g>
+  <defs>
+    <clipPath id="clip0_1_2">
+      <rect width="800" height="600" fill="white" />
+    </clipPath>
+  </defs>
+</svg> 

@@ -1,0 +1,263 @@
+%% Template khung cho các loại câu hỏi
+%% Tài liệu này chứa các mẫu cho các loại câu hỏi khác nhau
+%% Sử dụng các mẫu này để tạo câu hỏi mới
+
+%% ===== 1. TRẮC NGHIỆM MỘT PHƯƠNG ÁN ĐÚNG (MC) =====
+
+%% Mẫu cơ bản
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6] % QuestionID
+Lời dẫn câu hỏi
+\choice   % Có thể thay bằng \choice[1], \choice[2], \choice[4]
+{ đáp án 1}               % Đáp án sai
+{ đáp án 2}               % Đáp án sai
+{\True đáp án 3}         % Đáp án đúng
+{ đáp án 4}               % Đáp án sai
+Lời dẫn bổ sung (nếu có)
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (1 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+Lời dẫn câu hỏi
+\begin{center}
+    \begin{tikzpicture}
+        % Mã vẽ hình ở đây
+    \end{tikzpicture}
+\end{center}
+\choice
+{ đáp án 1}
+{ đáp án 2}
+{\True đáp án 3}
+{ đáp án 4}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (2 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+\immini[thm]  %[thm] có thể không có
+{Lời dẫn câu hỏi
+\choice
+{ đáp án 1}
+{ đáp án 2}
+{\True đáp án 3}
+{ đáp án 4}}
+{\begin{tikzpicture}
+    % Mã vẽ hình ở đây
+\end{tikzpicture}}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% ===== 2. TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN ĐÚNG (TF) =====
+
+%% Mẫu cơ bản
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+Lời dẫn câu hỏi
+\choiceTF   % Có thể thay bằng \choiceTF[t], \choiceTFt, \choiceTF[1]
+{\True đáp án 1}         % Đáp án đúng
+{ đáp án 2}              % Đáp án sai
+{\True đáp án 3}         % Đáp án đúng
+{ đáp án 4}              % Đáp án sai
+Lời dẫn bổ sung (nếu có)
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (1 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+Lời dẫn câu hỏi
+\begin{center}
+    \begin{tikzpicture}
+        % Mã vẽ hình ở đây
+    \end{tikzpicture}
+\end{center}
+\choiceTF[t]  %[t], [1], [2], t có thể không có
+{\True đáp án 1}
+{ đáp án 2}
+{\True đáp án 3}
+{ đáp án 4}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (2 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+\immini[thm]  %[thm] có thể không có
+{Lời dẫn câu hỏi
+\choiceTF[t]  %[t], [1], [2], t có thể không có
+{\True đáp án 1}
+{ đáp án 2}
+{\True đáp án 3}
+{ đáp án 4}}
+{\begin{tikzpicture}
+    % Mã vẽ hình ở đây
+\end{tikzpicture}}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% ===== 3. TRẮC NGHIỆM TRẢ LỜI NGẮN (SA) =====
+
+%% Mẫu cơ bản
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+Lời dẫn câu hỏi
+\shortans{'đáp án'}      % hoặc \shortans[oly]{'đáp án'}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (1 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+Lời dẫn câu hỏi
+\begin{center}
+    \begin{tikzpicture}
+        % Mã vẽ hình ở đây
+    \end{tikzpicture}
+\end{center}
+\shortans[oly]{'Câu trả lời đúng'} %[oly] có thể không có
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (2 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+\immini[thm]  %[thm] có thể không có
+{Lời dẫn câu hỏi
+\shortans[oly]{'Câu trả lời đúng'} %[oly] có thể không có}
+{\begin{tikzpicture}
+    % Mã vẽ hình ở đây
+\end{tikzpicture}}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% ===== 4. CÂU HỎI TỰ LUẬN (ES) =====
+
+%% Mẫu cơ bản
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+Lời dẫn câu hỏi tự luận
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (1 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+Lời dẫn câu hỏi tự luận
+\begin{center}
+    \begin{tikzpicture}
+        % Mã vẽ hình ở đây
+    \end{tikzpicture}
+\end{center}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% Mẫu với hình ảnh (2 cột)
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+[XX.Y] %subcount
+\immini[thm]  %[thm] có thể không có
+{Lời dẫn câu hỏi tự luận}
+{\begin{tikzpicture}
+    % Mã vẽ hình ở đây
+\end{tikzpicture}}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% ===== 5. CÂU HỎI GHÉP ĐÔI (MA) =====
+
+%% Mẫu cơ bản
+\begin{ex}%[Nguồn: "Nguồn câu hỏi"] %[1P1V1-6]
+Lời dẫn câu hỏi ghép đôi
+\matching
+{Mục A1} {Mục B1}
+{Mục A2} {Mục B2}
+{Mục A3} {Mục B3}
+{Mục A4} {Mục B4}
+\loigiai{
+    Lời giải của câu hỏi
+}
+\end{ex}
+
+%% ===== CÁC CÔNG THỨC TOÁN HỌC THƯỜNG DÙNG =====
+
+%% Phân số
+% \frac{tử số}{mẫu số}
+
+%% Căn thức
+% \sqrt{biểu thức}
+% \sqrt[n]{biểu thức} % Căn bậc n
+
+%% Chỉ số và số mũ
+% a^{số mũ}
+% a_{chỉ số}
+
+%% Tích phân
+% \int_{cận dưới}^{cận trên} biểu thức \, dx
+
+%% Đạo hàm
+% \frac{d}{dx}f(x)
+% \frac{d^2}{dx^2}f(x)
+
+%% Giới hạn
+% \lim_{x \to a} f(x)
+
+%% Tổng và tích
+% \sum_{i=1}^{n} a_i
+% \prod_{i=1}^{n} a_i
+
+%% Ma trận
+% \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+% \begin{bmatrix} a & b \\ c & d \end{bmatrix}
+
+%% Hệ phương trình
+% \begin{cases}
+%   x + y = 1 \\
+%   x - y = 2
+% \end{cases}
+
+%% Vector
+% \vec{AB}
+% \overrightarrow{AB}
+
+%% ===== CÁC LỆNH ĐẶC BIỆT =====
+
+%% Lệnh \hoac và \heva
+% \hoac{
+%   x + y = 1 \\
+%   x - y = 2
+% }
+
+% \heva{
+%   x + y = 1 \\
+%   x - y = 2
+% }
+
+%% Lệnh \immini để tạo bố cục 2 cột
+% \immini[thm]{nội dung bên trái}{nội dung bên phải}
+
+%% Lệnh \ck để thêm cách giải khác
+% \ck{
+%   Nội dung cách giải khác
+% }

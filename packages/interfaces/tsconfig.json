@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "target": "es2017",
+    "module": "commonjs",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "noEmit": false,
+    "paths": {
+      "@project/entities": ["../entities/src"],
+      "@project/dto": ["../dto/src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../entities" },
+    { "path": "../dto" }
+  ]
+}

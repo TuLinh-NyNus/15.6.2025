@@ -1,0 +1,29 @@
+# Các thư mục và file không cần thiết cho Docker build
+node_modules
+.next
+.git
+.github
+.vscode
+.idea
+*.md
+*.log
+.env
+.env.*
+!.env.example
+!.env.production
+
+# Các thư mục build
+**/dist
+**/build
+**/.turbo
+
+# Các file cấu hình
+**/.eslintrc
+**/.prettierrc
+**/tsconfig.tsbuildinfo
+
+# Các file test
+**/*.test.*
+**/*.spec.*
+**/cypress
+**/tests

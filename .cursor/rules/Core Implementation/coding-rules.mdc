@@ -1,0 +1,173 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Quy Tắc Coding
+
+## 1. Frontend Code Patterns
+
+### Components
+
+- Sử dụng functional components với hooks.
+- Định nghĩa interfaces cho props với TypeScript.
+- Chia nhỏ giao diện thành các component có thể tái sử dụng.
+- Sử dụng React.memo để tối ưu hiệu năng.
+- Tuân thủ quản lý state đúng cách.
+
+### Hooks
+
+- Tạo custom hooks cho logic tái sử dụng.
+- Tuân thủ quy tắc của React hooks.
+- Đặt tên hook theo quy tắc (ví dụ: useXxx).
+- Thêm TypeScript typing hợp lý.
+
+### Performance
+
+- 🚨 Minimize `use client`, `useEffect`, và `setState`—ưu tiên React Server Components.
+- 🚨 Wrap client components trong `Suspense` với fallback.
+- ⚠️ Sử dụng dynamic imports cho non-critical components.
+- ⚠️ Optimize images (WebP, lazy loading, explicit dimensions).
+
+### Next.js Best Practices
+
+- 🚨 Sử dụng `nuqs` cho URL search params.
+- ⚠️ Tối ưu Web Vitals (LCP, CLS, FID).
+- ⚠️ Ưu tiên server components & SSR; hạn chế client-side state management.
+- 💡 Tuân thủ guidelines của Next.js cho data fetching, rendering, và routing.
+
+## 2. Backend Code Patterns
+
+### Controllers
+
+- Sử dụng decorators để định nghĩa route.
+- Sử dụng DTOs cho việc validate request.
+- Trả về response theo định dạng nhất quán.
+- Ủy quyền business logic cho services.
+- Sử dụng status codes HTTP thích hợp.
+- Xử lý lỗi một cách đầy đủ.
+
+### Services
+
+- Sử dụng dependency injection.
+- Thực hiện business logic.
+- Sử dụng repositories cho truy cập dữ liệu.
+- Xử lý lỗi hợp lý.
+- Sử dụng async/await một cách nhất quán.
+- Trả về kết quả đã được typed.
+
+### Repositories
+
+- Tuân thủ repository pattern.
+- Sử dụng interfaces để định nghĩa hợp đồng.
+- Thực hiện logic truy cập dữ liệu.
+- Dùng MongoDB với Mongoose cho dữ liệu phi quan hệ.
+- Dùng PostgreSQL với Prisma cho dữ liệu quan hệ.
+- Xử lý lỗi và sử dụng strong typing.
+
+## 3. NestJS Specific
+
+### Basic Principles
+
+- Sử dụng kiến trúc module hóa.
+- Tách riêng API theo domain/route:
+  - Mỗi module chính cho 1 domain/route.
+  - Một controller chính cho route đó, kèm theo các controller phụ nếu cần.
+  - Thư mục models chứa các kiểu dữ liệu.
+  - DTOs được validate với class-validator.
+  - Định nghĩa các types đơn giản cho outputs.
+  - Module services chứa business logic và persistence.
+  - Entities sử dụng MikroORM cho việc lưu trữ dữ liệu, mỗi entity có 1 service riêng.
+- Module core cho các artifacts của NestJS:
+  - Global filters cho exception handling.
+  - Global middlewares cho request management.
+  - Guards cho việc quản lý permission.
+  - Interceptors cho việc quản lý request.
+- Module shared cho các dịch vụ dùng chung:
+  - Utilities và logic kinh doanh dùng chung.
+
+## 4. Database Rules
+
+### MongoDB
+
+- Sử dụng schemas với validate.
+- Định nghĩa các chỉ mục (indexes) phù hợp.
+- Sử dụng các kiểu dữ liệu thích hợp.
+- Xử lý chuyển đổi ObjectId một cách đúng đắn.
+- Dùng aggregation cho các query phức tạp.
+
+### PostgreSQL
+
+- Định nghĩa các mối quan hệ (relationships) rõ ràng.
+- Sử dụng migrations cho các thay đổi schema.
+- Định nghĩa indexes phù hợp.
+- Sử dụng transactions cho các thao tác phức tạp.
+- Chọn kiểu dữ liệu phù hợp.
+
+## 5. Monorepo Guidelines
+
+### Workspace Structure
+
+- Gom các ứng dụng vào thư mục `apps/`
+- Gom các thư viện và packages dùng chung vào `packages/`
+- Sử dụng Turborepo cho việc quản lý lệnh và dependencies
+
+### Package References
+
+- Sử dụng đường dẫn tương đối khi tham chiếu giữa các package trong monorepo
+- Trong tsconfig.json, nên sử dụng đường dẫn tương đối với tệp extends
+- Đảm bảo đường dẫn trong các import phải chính xác
+
+### Development Workflow
+
+- Chạy `npm run dev` ở thư mục gốc để phát triển toàn bộ workspace
+- Sử dụng `npm run dev --filter={package-name}` để chỉ chạy một package cụ thể
+- Đảm bảo các package có phiên bản tương thích với nhau
+
+## 6. Xử Lý Lỗi Chuẩn
+
+### Error Handling Frontend
+
+- Sử dụng try-catch cho async operations
+- Sử dụng Error Boundaries cho client components
+- Trả về user-friendly error messages
+- Sử dụng toast notifications khi cần
+
+### Error Handling Backend
+
+- Sử dụng global exception filters trong NestJS
+- Trả về HTTP status codes phù hợp
+- Cung cấp error codes và messages rõ ràng
+- Log errors đầy đủ (không log sensitive information)
+
+## 7. Bảo Mật
+
+### Frontend Security Checklist
+
+- [ ] Xác thực tất cả input từ người dùng
+- [ ] Tránh XSS bằng cách sử dụng React (không dùng dangerouslySetInnerHTML)
+- [ ] Không lưu thông tin nhạy cảm trong localStorage/sessionStorage
+- [ ] Sử dụng HTTPS cho tất cả API calls
+- [ ] Triển khai CSP (Content Security Policy)
+- [ ] Bảo vệ chống CSRF
+- [ ] Sử dụng httpOnly cookies cho authentication
+- [ ] Implement rate limiting cho forms
+
+### Backend Security Checklist
+
+- [ ] Validate tất cả input từ client
+- [ ] Sử dụng prepared statements cho database queries
+- [ ] Implement rate limiting
+- [ ] Set security headers
+- [ ] Cấu hình CORS đúng cách
+- [ ] Không trả về thông tin nhạy cảm trong error messages
+- [ ] Implement phân quyền đúng đắn
+- [ ] Sử dụng các thư viện đã được cập nhật
+
+## 8. Testing Guidelines
+
+- Viết unit tests cho services và repositories.
+- Sử dụng Jest làm framework test.
+- Mock các dependency bên ngoài.
+- Test cả trường hợp thành công và lỗi.
+- Sử dụng mô hình AAA (Arrange, Act, Assert) trong mô tả test.

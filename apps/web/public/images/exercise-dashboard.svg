@@ -1,0 +1,103 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dashboard Background -->
+  <rect width="800" height="600" rx="16" fill="#1E293B" />
+  
+  <!-- Header Area -->
+  <rect x="20" y="20" width="760" height="60" rx="8" fill="#0F172A" />
+  <text x="40" y="55" font-family="Arial" font-size="18" font-weight="bold" fill="#F8FAFC">Luyện đề thông minh với AI</text>
+  
+  <!-- Sidebar -->
+  <rect x="20" y="100" width="180" height="480" rx="8" fill="#0F172A" />
+  
+  <!-- Dashboard Widgets -->
+  <rect x="220" y="100" width="560" height="200" rx="8" fill="#0F172A" />
+  <text x="240" y="130" font-family="Arial" font-size="16" font-weight="bold" fill="#F8FAFC">Tổng quan tiến độ</text>
+  
+  <!-- Progress bars -->
+  <rect x="240" y="150" width="240" height="12" rx="6" fill="#334155" />
+  <rect x="240" y="150" width="180" height="12" rx="6" fill="url(#progressGradient1)" />
+  <text x="240" y="180" font-family="Arial" font-size="12" fill="#94A3B8">Đề thi đã hoàn thành</text>
+  <text x="480" y="180" font-family="Arial" font-size="12" font-weight="bold" fill="#A5B4FC">12/20</text>
+  
+  <rect x="240" y="200" width="240" height="12" rx="6" fill="#334155" />
+  <rect x="240" y="200" width="200" height="12" rx="6" fill="url(#progressGradient2)" />
+  <text x="240" y="230" font-family="Arial" font-size="12" fill="#94A3B8">Điểm trung bình</text>
+  <text x="480" y="230" font-family="Arial" font-size="12" font-weight="bold" fill="#A5B4FC">8.5/10</text>
+  
+  <rect x="240" y="250" width="240" height="12" rx="6" fill="#334155" />
+  <rect x="240" y="250" width="160" height="12" rx="6" fill="url(#progressGradient3)" />
+  <text x="240" y="280" font-family="Arial" font-size="12" fill="#94A3B8">Thời gian luyện tập</text>
+  <text x="480" y="280" font-family="Arial" font-size="12" font-weight="bold" fill="#A5B4FC">18 giờ 42 phút</text>
+  
+  <!-- Charts -->
+  <rect x="510" y="150" width="250" height="150" rx="8" fill="#1E293B" />
+  <text x="530" y="175" font-family="Arial" font-size="12" fill="#94A3B8">Phân tích kỹ năng</text>
+  
+  <!-- AI Recommendations -->
+  <rect x="220" y="320" width="560" height="120" rx="8" fill="#0F172A" />
+  <text x="240" y="350" font-family="Arial" font-size="16" font-weight="bold" fill="#F8FAFC">Gợi ý từ AI</text>
+  
+  <rect x="240" y="370" width="520" height="50" rx="6" fill="#1E293B" />
+  <text x="260" y="400" font-family="Arial" font-size="12" fill="#94A3B8">Tập trung vào các chủ đề: Hàm số, Số phức, Nguyên hàm. Đề xuất luyện tập thêm 3 đề về Hàm số.</text>
+  
+  <!-- Recommended Exams -->
+  <rect x="220" y="460" width="270" height="120" rx="8" fill="#0F172A" />
+  <text x="240" y="490" font-family="Arial" font-size="16" font-weight="bold" fill="#F8FAFC">Đề thi đề xuất</text>
+  
+  <rect x="240" y="510" width="230" height="50" rx="6" fill="#1E293B" />
+  <text x="260" y="535" font-family="Arial" font-size="12" fill="#A5B4FC">Luyện đề Hàm số - Lớp 10</text>
+  
+  <!-- Recent Activity -->
+  <rect x="510" y="460" width="270" height="120" rx="8" fill="#0F172A" />
+  <text x="530" y="490" font-family="Arial" font-size="16" font-weight="bold" fill="#F8FAFC">Hoạt động gần đây</text>
+  
+  <text x="530" y="520" font-family="Arial" font-size="12" fill="#94A3B8">Đã hoàn thành: Đề ôn thi Học kỳ 1 - Lớp 12</text>
+  <text x="530" y="545" font-family="Arial" font-size="12" fill="#94A3B8">Điểm số: 8.5/10</text>
+  
+  <!-- AI Assistant -->
+  <circle cx="730" cy="530" r="30" fill="url(#aiGradient)" />
+  <text x="730" y="535" font-family="Arial" font-size="14" font-weight="bold" fill="#F8FAFC" text-anchor="middle">AI</text>
+  
+  <!-- Sidebar Menu -->
+  <text x="40" y="130" font-family="Arial" font-size="14" font-weight="bold" fill="#A5B4FC">MENU</text>
+  <text x="40" y="170" font-family="Arial" font-size="12" fill="#E2E8F0">🔍 Trang chủ</text>
+  <text x="40" y="200" font-family="Arial" font-size="12" fill="#E2E8F0">📚 Danh mục đề thi</text>
+  <text x="40" y="230" font-family="Arial" font-size="12" fill="#E2E8F0">📊 Phân tích kết quả</text>
+  <text x="40" y="260" font-family="Arial" font-size="12" fill="#E2E8F0">📝 Đề thi đã làm</text>
+  <text x="40" y="290" font-family="Arial" font-size="12" fill="#E2E8F0">🧠 Gợi ý của AI</text>
+  <text x="40" y="320" font-family="Arial" font-size="12" fill="#E2E8F0">⚙️ Cài đặt</text>
+  
+  <!-- Chart Bars -->
+  <rect x="530" y="195" width="25" height="80" rx="4" fill="#3B82F6" />
+  <rect x="565" y="215" width="25" height="60" rx="4" fill="#8B5CF6" />
+  <rect x="600" y="235" width="25" height="40" rx="4" fill="#F43F5E" />
+  <rect x="635" y="195" width="25" height="80" rx="4" fill="#10B981" />
+  <rect x="670" y="175" width="25" height="100" rx="4" fill="#A5B4FC" />
+  <rect x="705" y="235" width="25" height="40" rx="4" fill="#FBBF24" />
+  
+  <!-- Pie Chart -->
+  <path d="M380 200 L380 140 A60 60 0 0 1 432 230 Z" fill="#3B82F6" />
+  <path d="M380 200 L432 230 A60 60 0 0 1 380 260 Z" fill="#8B5CF6" />
+  <path d="M380 200 L380 260 A60 60 0 0 1 328 170 Z" fill="#F43F5E" />
+  <path d="M380 200 L328 170 A60 60 0 0 1 380 140 Z" fill="#10B981" />
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="progressGradient1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <linearGradient id="progressGradient2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#A5B4FC" />
+    </linearGradient>
+    <linearGradient id="progressGradient3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#A855F7" />
+    </linearGradient>
+    <linearGradient id="aiGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#A855F7" />
+    </linearGradient>
+  </defs>
+</svg> 
