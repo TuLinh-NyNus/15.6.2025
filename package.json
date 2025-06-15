@@ -3,19 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/web",
+    "packages/database"
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:ts": "pnpm run build:entities && pnpm run build:dto && pnpm run build:database && pnpm run build:utils && pnpm run build:ui && pnpm run build:api",
+    "build:ts": "pnpm run build:database",
     "build:watch": "pnpm run build:ts --watch --preserveWatchOutput",
-    "build:entities": "cd packages/entities && tsc -b --preserveWatchOutput",
-    "build:dto": "cd packages/dto && tsc -b --preserveWatchOutput",
     "build:database": "cd packages/database && tsc -b --preserveWatchOutput",
-    "build:utils": "cd packages/utils && tsc -b --preserveWatchOutput",
-    "build:ui": "cd packages/ui && tsc -b --preserveWatchOutput",
-    "build:api": "cd apps/api && tsc -b --preserveWatchOutput",
     "dev": "scripts\\kill-ports.bat",
     "dev:ps": "powershell -File scripts/simple-dev.ps1",
     "dev:minimal": "powershell -File scripts/dev-minimal.ps1",
