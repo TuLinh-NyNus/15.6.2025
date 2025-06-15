@@ -8,6 +8,9 @@
     "declarationMap": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "strictPropertyInitialization": false,
+    "noEmit": false,
+    "module": "commonjs",
+    "target": "ES2021",
     "paths": {
       "@/*": ["./src/*"]
     }

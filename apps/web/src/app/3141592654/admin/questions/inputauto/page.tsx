@@ -326,15 +326,15 @@ export default function InputAutoPage() {
         const byDoubleEmptyLine = content.split(/\n\s*\n\s*\n/).filter(block => block.trim());
 
         // Cách 2: Tách bằng dấu hiệu câu hỏi mới (ví dụ: "Câu 1:", "Câu 2:")
-        const questionNumberRegex = /(?=\n\s*Câu\s+\d+[\.:]\s*)/i;
+        const questionNumberRegex = /(?=\n\s*Câu\s+\d+[.:]\s*)/i;
         const byQuestionNumber = content.split(questionNumberRegex).filter(block => block.trim());
 
         // Cách 3: Tách bằng dấu hiệu ID câu hỏi
-        const questionIdRegex = /(?=\n\s*ID\s*:\s*[\w\-]+\s*)/i;
+        const questionIdRegex = /(?=\n\s*ID\s*:\s*[\w-]+\s*)/i;
         const byQuestionId = content.split(questionIdRegex).filter(block => block.trim());
 
         // Cách 4: Tách bằng dấu hiệu đáp án (A., B., C., D.)
-        const answerRegex = /(?=\n\s*A[\.\)]\s*)/i;
+        const answerRegex = /(?=\n\s*A[.)]\s*)/i;
         const byAnswerStart = content.split(answerRegex).filter(block => block.trim());
 
         // Chọn phương pháp tách tốt nhất (có nhiều khối nhất)
@@ -361,7 +361,7 @@ export default function InputAutoPage() {
         // Xử lý cho các khối không phải LaTeX
         questionBlocks = questionBlocks.map((block, index) => {
           // Nếu khối bắt đầu bằng "A.", thêm nội dung câu hỏi mặc định
-          if (block.trim().match(/^A[\.\)]/i)) {
+          if (block.trim().match(/^A[.)]/i)) {
             return `Câu hỏi ${index + 1}\n${block}`;
           }
 
@@ -578,15 +578,15 @@ export default function InputAutoPage() {
 
           // Tìm dòng bắt đầu bằng "Câu X:" hoặc dòng đầu tiên nếu không có
           for (let i = 0; i < lines.length; i++) {
-            if (lines[i].match(/^Câu\s+\d+[\.:]/i)) {
-              content = lines[i].replace(/^Câu\s+\d+[\.:]/i, '').trim();
+            if (lines[i].match(/^Câu\s+\d+[.:]/i)) {
+              content = lines[i].replace(/^Câu\s+\d+[.:]/i, '').trim();
               break;
             }
           }
 
           // Nếu không tìm thấy "Câu X:", tìm dòng đầu tiên trước đáp án A
           if (!content) {
-            const aAnswerIndex = lines.findIndex(line => line.match(/^A[\.\)]/i));
+            const aAnswerIndex = lines.findIndex(line => line.match(/^A[.)]/i));
             if (aAnswerIndex > 0) { // Nếu có đáp án A và có dòng trước nó
               // Lấy tất cả các dòng trước đáp án A làm nội dung câu hỏi
               content = lines.slice(0, aAnswerIndex).join('\n').trim();
@@ -617,9 +617,9 @@ export default function InputAutoPage() {
 
         // Tìm các đáp án (hỗ trợ nhiều định dạng)
         const answerPatterns = [
-          /^([A-D])[\.\)](.+)/i,  // A. hoặc A)
+          /^([A-D])[.)](.+)/i,  // A. hoặc A)
           /^([A-D])[\s]+(.+)/i,   // A [space]
-          /^(đáp án|đáp|answer)\s+([A-D])\s*[\.\:](.+)/i  // Đáp án A: hoặc Answer A.
+          /^(đáp án|đáp|answer)\s+([A-D])\s*[.:](.+)/i  // Đáp án A: hoặc Answer A.
         ];
 
         const answers = [];
@@ -729,7 +729,7 @@ export default function InputAutoPage() {
           /ID\s*:\s*(.+)/i,
           /Mã\s*:\s*(.+)/i,
           /QuestionID\s*:\s*(.+)/i,
-          /\[TL\.(\d+)\]/i  // Mẫu [TL.123456]
+          /\[TL.(\d+)\]/i  // Mẫu [TL.123456]
         ];
 
         let fullId = `Question-${index + 1}`;
@@ -737,7 +737,7 @@ export default function InputAutoPage() {
         // Xử lý đặc biệt cho câu hỏi LaTeX
         if (isLatexQuestion) {
           // Tìm ID trong cấu trúc [TL.123456]
-          const tlMatch = block.match(/\[TL\.(\d+)\]/i);
+          const tlMatch = block.match(/\[TL.(\d+)\]/i);
           if (tlMatch && tlMatch[1]) {
             fullId = `TL-${tlMatch[1]}`;
           } else {
@@ -1167,7 +1167,7 @@ export default function InputAutoPage() {
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-slate-800 dark:text-white transition-colors duration-300">Nhập nội dung câu hỏi hàng loạt</CardTitle>
               <CardDescription className="text-slate-600 dark:text-slate-400 transition-colors duration-300">
-                Dán nhiều câu hỏi vào ô bên dưới, mỗi câu hỏi cách nhau bởi 2 dòng trống, hoặc chuyển sang tab "Tải lên file LaTeX" để tải lên file hoặc folder
+                Dán nhiều câu hỏi vào ô bên dưới, mỗi câu hỏi cách nhau bởi 2 dòng trống, hoặc chuyển sang tab &quot;Tải lên file LaTeX&quot; để tải lên file hoặc folder
               </CardDescription>
             </CardHeader>
             <CardContent>

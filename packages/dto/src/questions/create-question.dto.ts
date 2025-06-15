@@ -13,7 +13,8 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { QuestionType, QuestionStatus, QuestionDifficulty, QuestionImageType } from '@project/entities';
+import { QuestionStatus, QuestionDifficulty, QuestionImageType } from '@project/entities';
+import { QuestionType } from '@project/entities/dist/enums/question-enums';
 
 export class QuestionAnswerDto {
   @ApiProperty({ description: 'ID của đáp án' })

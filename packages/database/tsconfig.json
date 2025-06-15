@@ -1,19 +1,47 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./",
-    "composite": true,
-    "declarationMap": true,
+    "baseUrl": ".",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "strictPropertyInitialization": false,
+    "noEmit": false,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      ".prisma/client": ["./node_modules/.prisma/client"]
+      "@/*": ["./src/*"],
+      ".prisma/client": ["./node_modules/.prisma/client"],
+      "@project/entities": ["../entities/src"],
+      "@project/interfaces": ["../interfaces/src"],
+      "@project/dto": ["../dto/src"]
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"],
   "references": [
     { "path": "../entities" },
-    { "path": "../interfaces" }
+    { "path": "../interfaces" },
+    { "path": "../dto" }
   ]
-} 
+}

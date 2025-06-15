@@ -14,7 +14,7 @@ import {
 } from '@project/interfaces';
 
 // Re-export interfaces
-export {
+export type {
   IUserRepository,
   ICourseRepository,
   IEnrollmentRepository,
@@ -37,6 +37,7 @@ export * from './repositories/category';
 export * from './repositories/lesson';
 export * from './repositories/question/question-repository.interface';
 export * from './repositories/question/prisma-question.repository';
+export * from './repositories/question/question.repository';
 export * from './types';
 
 // Create a module to provide all repositories

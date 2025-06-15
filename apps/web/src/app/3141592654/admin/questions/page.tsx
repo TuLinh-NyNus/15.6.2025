@@ -56,11 +56,13 @@ interface FilterOptions {
 interface Question {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _id: string | any;
+  id?: string; // Thêm thuộc tính id để tương thích
   content: string;
   type: string;
   subject?: string;
   grade?: string;
   difficulty?: string;
+  subcount?: string; // Thêm thuộc tính subcount
   answers?: Array<{
     id: string;
     content: string;
@@ -293,7 +295,7 @@ export default function QuestionsPage() {
                   case 'D': formLabel = 'Giải phương trình xác suất'; break;
                   case '0': formLabel = 'Câu hỏi tổng hợp'; break;
                   case 'A': formLabel = 'Chưa phân dạng'; break;
-                  default: formLabel = form.label || form.description || formValue;
+                  default: formLabel = form.description || formValue;
                 }
 
                 return {
@@ -1272,7 +1274,7 @@ export default function QuestionsPage() {
                       // Hiển thị danh sách dạng từ MapID nếu có
                       filteredFormTypes.map(form => (
                         <SelectItem key={form.value} value={form.value}>
-                          {form.label}
+                          {form.description}
                         </SelectItem>
                       ))
                     ) : (

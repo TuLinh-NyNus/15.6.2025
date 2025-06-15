@@ -58,7 +58,7 @@ export async function GET(
     const apiCookieToken = request.cookies.get('api_auth_token')?.value;
 
     // Lấy token từ query parameter, cookie hoặc từ NextAuth
-    let accessToken = tokenFromQuery || apiCookieToken || cookieToken || token.accessToken || '';
+    let accessToken = tokenFromQuery || apiCookieToken || cookieToken || (typeof token.accessToken === 'string' ? token.accessToken : '') || '';
 
     logger.debug('Token info:', {
       hasToken: !!token,
@@ -66,8 +66,8 @@ export async function GET(
       hasCookieToken: !!cookieToken,
       hasApiCookieToken: !!apiCookieToken,
       hasAccessToken: !!accessToken,
-      accessTokenLength: accessToken ? accessToken.length : 0,
-      tokenFirstChars: accessToken ? accessToken.substring(0, 20) + '...' : 'N/A',
+      accessTokenLength: typeof accessToken === 'string' ? accessToken.length : 0,
+      tokenFirstChars: typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A',
       tokenSource: tokenFromQuery
         ? 'query'
         : (apiCookieToken
@@ -86,8 +86,8 @@ export async function GET(
     try {
       // Lấy token mới từ cache, cookie hoặc API auth
       accessToken = await getApiToken(request.nextUrl.origin);
-      logger.info('Đã lấy token thành công, độ dài:', accessToken.length);
-      logger.debug('Token (first 20 chars):', accessToken.substring(0, 20) + '...');
+      logger.info('Đã lấy token thành công, độ dài:', typeof accessToken === 'string' ? accessToken.length : 0);
+      logger.debug('Token (first 20 chars):', typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A');
     } catch (tokenError) {
       logger.error('Lỗi khi lấy token:', tokenError);
 
@@ -119,8 +119,8 @@ export async function GET(
       });
     }
 
-    logger.debug('Gọi API với token, độ dài:', accessToken.length);
-    logger.debug('Authorization header:', `Bearer ${accessToken.substring(0, 20)}...`);
+    logger.debug('Gọi API với token, độ dài:', typeof accessToken === 'string' ? accessToken.length : 0);
+    logger.debug('Authorization header:', `Bearer ${typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A'}`);
 
     const response = await fetch(`${apiUrl}/questions/${subcount}`, {
       method: 'GET',
@@ -271,7 +271,7 @@ export async function PUT(
     const apiCookieToken = request.cookies.get('api_auth_token')?.value;
 
     // Lấy token từ query parameter, cookie hoặc từ NextAuth
-    let accessToken = tokenFromQuery || apiCookieToken || cookieToken || token.accessToken || '';
+    let accessToken = tokenFromQuery || apiCookieToken || cookieToken || (typeof token.accessToken === 'string' ? token.accessToken : '') || '';
 
     logger.debug('Token info (PUT):', {
       hasToken: !!token,
@@ -279,8 +279,8 @@ export async function PUT(
       hasCookieToken: !!cookieToken,
       hasApiCookieToken: !!apiCookieToken,
       hasAccessToken: !!accessToken,
-      accessTokenLength: accessToken ? accessToken.length : 0,
-      tokenFirstChars: accessToken ? accessToken.substring(0, 20) + '...' : 'N/A',
+      accessTokenLength: typeof accessToken === 'string' ? accessToken.length : 0,
+      tokenFirstChars: typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A',
       tokenSource: tokenFromQuery
         ? 'query'
         : (apiCookieToken
@@ -299,8 +299,8 @@ export async function PUT(
     try {
       // Lấy token mới từ cache, cookie hoặc API auth
       accessToken = await getApiToken(request.nextUrl.origin);
-      logger.info('Đã lấy token thành công (PUT), độ dài:', accessToken.length);
-      logger.debug('Token (PUT) (first 20 chars):', accessToken.substring(0, 20) + '...');
+      logger.info('Đã lấy token thành công (PUT), độ dài:', typeof accessToken === 'string' ? accessToken.length : 0);
+      logger.debug('Token (PUT) (first 20 chars):', typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A');
     } catch (tokenError) {
       logger.error('Lỗi khi lấy token (PUT):', tokenError);
 
@@ -332,8 +332,8 @@ export async function PUT(
       });
     }
 
-    logger.debug('Gọi API PUT với token, độ dài:', accessToken.length);
-    logger.debug('Authorization header (PUT):', `Bearer ${accessToken.substring(0, 20)}...`);
+    logger.debug('Gọi API PUT với token, độ dài:', typeof accessToken === 'string' ? accessToken.length : 0);
+    logger.debug('Authorization header (PUT):', `Bearer ${typeof accessToken === 'string' ? accessToken.substring(0, 20) + '...' : 'N/A'}`);
 
     try {
       // Log dữ liệu gửi đi
@@ -470,7 +470,7 @@ export async function DELETE(
     let accessToken = '';
     try {
       accessToken = await getApiToken(request.nextUrl.origin);
-      logger.info('Đã lấy token thành công, độ dài:', accessToken.length);
+      logger.info('Đã lấy token thành công, độ dài:', typeof accessToken === 'string' ? accessToken.length : 0);
     } catch (tokenError) {
       logger.error('Lỗi khi lấy token:', tokenError);
 
@@ -515,7 +515,7 @@ export async function DELETE(
 
         // Lấy token mới
         const newToken = await getApiToken(request.nextUrl.origin);
-        logger.info('Đã lấy token mới thành công, độ dài:', newToken.length);
+        logger.info('Đã lấy token mới thành công, độ dài:', typeof newToken === 'string' ? newToken.length : 0);
 
         // Gọi lại API với token mới
         const retryResponse = await fetch(`${apiUrl}/questions/${subcount}`, {

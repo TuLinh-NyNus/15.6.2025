@@ -14,6 +14,7 @@
  */
 
 import { Logger } from '@nestjs/common';
+import { getErrorMessage } from './error-handler';
 
 // Enum cho loại câu hỏi
 enum QuestionType {
@@ -46,7 +47,7 @@ export function extractAnswersFromLatex(latexContent: string): ExtractedAnswers 
 
     return { type: questionType };
   } catch (error) {
-    logger.error(`Lỗi khi trích xuất type: ${error.message}`);
+    logger.error(`Lỗi khi trích xuất type: ${getErrorMessage(error)}`);
     return { type: QuestionType.ES };
   }
 }

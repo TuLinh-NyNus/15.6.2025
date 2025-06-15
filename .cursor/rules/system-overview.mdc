@@ -1,7 +1,6 @@
 ---
 description: High-level overview of the Adaptive Memory Bank System
 globs: 
-alwaysApply: false
 alwaysApply: true
 ---
 # ADAPTIVE MEMORY BANK SYSTEM OVERVIEW

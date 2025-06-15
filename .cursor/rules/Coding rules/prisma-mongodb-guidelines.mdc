@@ -1,6 +1,6 @@
 ---
-name: prisma-mongodb-guidelines.mdc
-description: Hướng dẫn và best practices cho việc sử dụng Prisma với PostgreSQL và Mongoose với MongoDB
+name: prisma-PostgreSQL-guidelines.mdc
+description: Hướng dẫn và best practices cho việc sử dụng Prisma với PostgreSQL
 globs: apps/api/src/**/*.{ts,js,prisma}
 alwaysApply: true
 ---
@@ -69,7 +69,7 @@ alwaysApply: true
 - Version database schema
 - Maintain documentation cho database schema
 
-## Mongoose với MongoDB
+## PostgreSQL
 
 ### Schema Design
 
@@ -119,11 +119,10 @@ alwaysApply: true
 - Hash sensitive data
 - Implement proper error handling
 - Audit database access
-- Sử dụng MongoDB Atlas security features
+- Sử dụng PostgreSQL Atlas security features
 
 ### Best Practices
 
-- Cô lập Mongoose logic trong repository layer
 - Dùng typescript interfaces cho type safety
 - Implement proper error handling
 - Sử dụng transactions khi cần thiết

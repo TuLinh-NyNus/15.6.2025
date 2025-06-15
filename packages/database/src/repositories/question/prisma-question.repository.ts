@@ -128,7 +128,7 @@ export class PrismaQuestionRepository implements IQuestionRepository {
     return new QuestionTag({
       id: tag.id,
       name: tag.name,
-      description: tag.description,
+      description: tag.description || undefined,
       createdAt: tag.createdAt,
       updatedAt: tag.updatedAt
     });

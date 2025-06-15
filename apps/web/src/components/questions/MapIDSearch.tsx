@@ -122,7 +122,7 @@ export function MapIDSearch() {
       const newCriteria = { ...prev };
 
       // Cập nhật giá trị cho trường hiện tại
-      newCriteria[field] = value === 'all' ? undefined : value;
+      (newCriteria as any)[field] = value === 'all' ? undefined : value;
 
       // Reset các trường phụ thuộc khi thay đổi trường chính
       if (field === 'grade') {

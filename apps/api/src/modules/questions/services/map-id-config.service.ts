@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { UpdateMapIDConfigDto, MapIDConfigResponseDto, ExportMapIDConfigResponseDto } from '../dtos/map-id-config.dto';
 import * as fs from 'fs';
 import * as path from 'path';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 /**
  * Service quản lý cấu hình MapID
@@ -67,8 +68,8 @@ export class MapIDConfigService {
     try {
       fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2), 'utf8');
     } catch (error) {
-      this.logger.error(`Lỗi khi lưu cấu hình: ${error.message}`);
-      throw new Error(`Không thể lưu cấu hình: ${error.message}`);
+      this.logger.error(`Lỗi khi lưu cấu hình: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể lưu cấu hình: ${getErrorMessage(error)}`);
     }
   }
 
@@ -86,8 +87,8 @@ export class MapIDConfigService {
       const configData = fs.readFileSync(this.configPath, 'utf8');
       return JSON.parse(configData);
     } catch (error) {
-      this.logger.error(`Lỗi khi đọc cấu hình: ${error.message}`);
-      throw new Error(`Không thể đọc cấu hình: ${error.message}`);
+      this.logger.error(`Lỗi khi đọc cấu hình: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể đọc cấu hình: ${getErrorMessage(error)}`);
     }
   }
 
@@ -100,8 +101,8 @@ export class MapIDConfigService {
       this.logger.log('Lấy cấu hình MapID');
       return this.readConfig();
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy cấu hình MapID: ${error.message}`);
-      throw new Error(`Không thể lấy cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi lấy cấu hình MapID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể lấy cấu hình MapID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -132,8 +133,8 @@ export class MapIDConfigService {
       
       return updatedConfig;
     } catch (error) {
-      this.logger.error(`Lỗi khi cập nhật cấu hình MapID: ${error.message}`);
-      throw new Error(`Không thể cập nhật cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi cập nhật cấu hình MapID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể cập nhật cấu hình MapID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -165,8 +166,8 @@ export class MapIDConfigService {
       // Cập nhật cấu hình
       return this.updateMapIDConfig(configData);
     } catch (error) {
-      this.logger.error(`Lỗi khi import cấu hình MapID: ${error.message}`);
-      throw new Error(`Không thể import cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi import cấu hình MapID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể import cấu hình MapID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -186,8 +187,8 @@ export class MapIDConfigService {
       
       return { jsonConfig };
     } catch (error) {
-      this.logger.error(`Lỗi khi export cấu hình MapID: ${error.message}`);
-      throw new Error(`Không thể export cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi export cấu hình MapID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể export cấu hình MapID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -204,8 +205,8 @@ export class MapIDConfigService {
       
       return this.DEFAULT_CONFIG;
     } catch (error) {
-      this.logger.error(`Lỗi khi reset cấu hình MapID: ${error.message}`);
-      throw new Error(`Không thể reset cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi reset cấu hình MapID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể reset cấu hình MapID: ${getErrorMessage(error)}`);
     }
   }
 } 

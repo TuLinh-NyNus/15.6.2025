@@ -64,7 +64,6 @@ Last Updated: 2023-05-20
   - Role-based authorization
   - Input validation with Joi
   - Error handling middleware
-  - MongoDB integration with Mongoose
   - Rate limiting for public endpoints
   - API documentation with Swagger
 
@@ -81,7 +80,7 @@ Last Updated: 2023-05-20
 ### Lessons Learned
 - Middleware pattern in Express enhances code organization
 - JWT implementation requires careful security considerations
-- MongoDB schema design impacts query performance
+- PostgreSQL schema design impacts query performance
 - Input validation should happen early in the request lifecycle
 - Consistent error response format improves client experience
 - Documentation-first approach helps clarify API design

@@ -4,6 +4,8 @@ const path = require('path');
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@nynus/ui"],
+  // Enable standalone output for Docker
+  output: 'standalone',
   // Đảm bảo các transpilePackages bao gồm tất cả các package nội bộ cần sử dụng
   images: {
     remotePatterns: [
@@ -15,10 +17,10 @@ const nextConfig = {
   },
   // Chỉ định app directory trong src
   distDir: '.next',
-  experimental: {
-    // Đặt thư mục gốc cho ứng dụng là src
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
+  // experimental: {
+  //   // Đặt thư mục gốc cho ứng dụng là src
+  //   outputFileTracingRoot: path.join(__dirname, '../../'),
+  // },
   // Thêm cấu hình webpack để chỉ định đường dẫn chính xác
   webpack: (config) => {
     config.resolve.alias = {

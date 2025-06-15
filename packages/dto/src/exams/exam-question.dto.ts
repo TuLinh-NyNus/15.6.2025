@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { QuestionType } from '@project/entities/dist/enums/question-enums';
+import { QuestionType } from '@project/entities';
 
 /**
  * DTO cho option của câu hỏi
@@ -55,7 +55,7 @@ export class CreateExamQuestionDto {
   @ApiProperty({
     description: 'Loại câu hỏi',
     enum: QuestionType,
-    example: QuestionType.MC,
+    example: QuestionType.MULTIPLE_CHOICE,
     required: true,
   })
   @IsEnum(QuestionType)
@@ -170,7 +170,7 @@ export class ExamQuestionResponseDto {
   @ApiProperty({
     description: 'Loại câu hỏi',
     enum: QuestionType,
-    example: QuestionType.MC
+    example: QuestionType.MULTIPLE_CHOICE
   })
   type: QuestionType;
 

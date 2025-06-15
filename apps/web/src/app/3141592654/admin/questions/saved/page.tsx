@@ -95,10 +95,10 @@ export default function SavedQuestionsPage() {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              variant="destructive"
+              variant="outline"
               onClick={handleDeleteAllQuestions}
               disabled={isLoading || questions.length === 0}
-              className="bg-red-500/80 hover:bg-red-600 text-white"
+              className="bg-red-500/80 hover:bg-red-600 text-white border-red-500"
             >
               Xóa tất cả
             </Button>

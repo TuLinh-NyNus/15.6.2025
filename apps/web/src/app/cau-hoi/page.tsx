@@ -1,11 +1,15 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Mic, X, History, Tag, Sparkles, ArrowRight, Zap, Flame, Image as ImageIcon, Command } from 'lucide-react';
+import { Search, Mic, X, History, Tag, Sparkles, ArrowRight, Zap, Flame, Image as ImageIcon, Command, Filter, Loader2, AlertCircle } from 'lucide-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef, useMemo } from 'react';
+import DifficultyFilter from '../../components/questions/DifficultyFilter';
+import DifficultyBadge from '../../components/questions/DifficultyBadge';
+import QuestionSearchItem from '../../components/questions/QuestionSearchItem';
+import { useDebouncedQuestions } from '../../hooks/use-questions';
 
 interface SearchSuggestion {
   id: string;
@@ -60,6 +64,34 @@ const filterCategories = [
   { id: 'tutorials', name: 'Bài giảng' },
 ];
 
+// Sample questions data for demonstration
+const sampleQuestions = [
+  {
+    id: '1',
+    content: 'Giải phương trình bậc 2: x² - 5x + 6 = 0',
+    difficulty: 'easy' as const,
+    type: 'MC',
+    tags: ['Toán học', 'Đại số'],
+    createdAt: '2024-01-15'
+  },
+  {
+    id: '2',
+    content: 'Tính tích phân ∫(x² + 2x + 1)dx từ 0 đến 2',
+    difficulty: 'hard' as const,
+    type: 'SA',
+    tags: ['Toán học', 'Giải tích'],
+    createdAt: '2024-01-14'
+  },
+  {
+    id: '3',
+    content: 'Tìm đạo hàm của hàm số f(x) = 3x² - 2x + 1',
+    difficulty: 'medium' as const,
+    type: 'MC',
+    tags: ['Toán học', 'Giải tích'],
+    createdAt: '2024-01-13'
+  }
+];
+
 const aiSuggestions = [
   "Làm thế nào để giải phương trình bậc 3?",
   "Cách viết đoạn văn tiếng Anh hay",
@@ -72,6 +104,8 @@ export default function SearchPage() {
   const [isFocused, setIsFocused] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
   const [typingEffect, setTypingEffect] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
   const [showKeyboardShortcut, setShowKeyboardShortcut] = useState(false);
@@ -162,44 +196,110 @@ export default function SearchPage() {
     return suggestions;
   }, [searchTerm]);
 
-  // Particle effect for background
-  const ParticleBackground = () => (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full bg-purple-500 opacity-20"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            scale: Math.random() * 0.5 + 0.5,
-          }}
-          animate={{
-            x: [
-              Math.random() * window.innerWidth,
-              Math.random() * window.innerWidth,
-              Math.random() * window.innerWidth,
-            ],
-            y: [
-              Math.random() * window.innerHeight,
-              Math.random() * window.innerHeight,
-              Math.random() * window.innerHeight,
-            ],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: Math.random() * 20 + 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            width: `${Math.random() * 15 + 5}px`,
-            height: `${Math.random() * 15 + 5}px`,
-          }}
-        />
-      ))}
-    </div>
+  // Use real API with debounced search
+  const {
+    data: questionsData,
+    isLoading,
+    error
+  } = useDebouncedQuestions(
+    searchTerm,
+    selectedDifficulties,
+    [], // types
+    [], // statuses
+    500 // debounce ms
   );
+
+  // Fallback to sample data if API fails or no search
+  const filteredQuestions = useMemo(() => {
+    // If we have real data from API, use it
+    if (questionsData && typeof questionsData === 'object' && 'items' in questionsData && Array.isArray(questionsData.items)) {
+      return questionsData.items.map((item: any) => ({
+        id: item.id,
+        content: item.content,
+        difficulty: item.difficulty?.toLowerCase() || 'medium',
+        type: item.type,
+        tags: item.tags?.map((tag: any) => tag.name) || [],
+        createdAt: new Date(item.createdAt).toLocaleDateString('vi-VN')
+      }));
+    }
+
+    // Otherwise use sample data for demonstration
+    let filtered = sampleQuestions;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(q =>
+        q.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        q.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    // Filter by difficulty
+    if (selectedDifficulties.length > 0) {
+      filtered = filtered.filter(q =>
+        selectedDifficulties.includes(q.difficulty)
+      );
+    }
+
+    return filtered;
+  }, [questionsData, searchTerm, selectedDifficulties, sampleQuestions]);
+
+  // Particle effect for background
+  const ParticleBackground = () => {
+    const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
+
+    useEffect(() => {
+      // Only access window on client side
+      if (typeof window !== 'undefined') {
+        setDimensions({ width: window.innerWidth, height: window.innerHeight });
+
+        const handleResize = () => {
+          setDimensions({ width: window.innerWidth, height: window.innerHeight });
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }
+    }, []);
+
+    return (
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-purple-500 opacity-20"
+            initial={{
+              x: Math.random() * dimensions.width,
+              y: Math.random() * dimensions.height,
+              scale: Math.random() * 0.5 + 0.5,
+            }}
+            animate={{
+              x: [
+                Math.random() * dimensions.width,
+                Math.random() * dimensions.width,
+                Math.random() * dimensions.width,
+              ],
+              y: [
+                Math.random() * dimensions.height,
+                Math.random() * dimensions.height,
+                Math.random() * dimensions.height,
+              ],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 20,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            style={{
+              width: `${Math.random() * 15 + 5}px`,
+              height: `${Math.random() * 15 + 5}px`,
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-50 via-purple-100 to-slate-100 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900 overflow-hidden transition-colors duration-300">
@@ -248,7 +348,7 @@ export default function SearchPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-2 mb-6"
+            className="flex flex-wrap items-center justify-center gap-2 mb-4"
           >
             {filterCategories.map((category) => (
               <motion.button
@@ -264,6 +364,70 @@ export default function SearchPage() {
                 {category.name}
               </motion.button>
             ))}
+          </motion.div>
+
+          {/* Advanced Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-3 mb-6"
+          >
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                ${showFilters
+                  ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
+            >
+              <Filter className="h-4 w-4" />
+              Bộ lọc nâng cao
+            </motion.button>
+
+            <AnimatePresence>
+              {showFilters && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex items-center gap-3"
+                >
+                  <DifficultyFilter
+                    selectedDifficulties={selectedDifficulties}
+                    onDifficultyChange={setSelectedDifficulties}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Active filters display */}
+            {(selectedDifficulties.length > 0) && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2"
+              >
+                <span className="text-xs text-slate-500 dark:text-slate-400">Đang lọc:</span>
+                {selectedDifficulties.map(difficulty => (
+                  <DifficultyBadge
+                    key={difficulty}
+                    difficulty={difficulty as any}
+                    size="sm"
+                    variant="minimal"
+                  />
+                ))}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setSelectedDifficulties([])}
+                  className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
+                >
+                  <X className="h-3 w-3 text-slate-400" />
+                </motion.button>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Search Input */}
@@ -500,6 +664,88 @@ export default function SearchPage() {
               )}
             </AnimatePresence>
           </motion.div>
+
+          {/* Search Results */}
+          {(searchTerm || selectedDifficulties.length > 0) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-8 max-w-4xl mx-auto"
+            >
+              <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-xl rounded-xl border border-slate-300/50 dark:border-slate-700/50 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
+                    Kết quả tìm kiếm
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    {isLoading && (
+                      <Loader2 className="h-4 w-4 animate-spin text-purple-500" />
+                    )}
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                      {(questionsData && typeof questionsData === 'object' && 'total' in questionsData ? (questionsData.total as number) : filteredQuestions.length)} câu hỏi
+                    </span>
+                  </div>
+                </div>
+
+                {error ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-8"
+                  >
+                    <div className="text-red-400 dark:text-red-500 mb-2">
+                      <AlertCircle className="h-12 w-12 mx-auto mb-3" />
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-400 mb-2">
+                      Có lỗi xảy ra khi tải dữ liệu
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500">
+                      Đang hiển thị dữ liệu mẫu thay thế
+                    </p>
+                  </motion.div>
+                ) : filteredQuestions.length > 0 ? (
+                  <div className="space-y-4">
+                    {filteredQuestions.map((question, index) => (
+                      <QuestionSearchItem
+                        key={question.id}
+                        question={question}
+                        index={index}
+                        onClick={() => {
+                          // Handle question click - navigate to detail page
+                          console.log('Navigate to question:', question.id);
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-8"
+                  >
+                    <div className="text-slate-400 dark:text-slate-500 mb-2">
+                      <Search className="h-12 w-12 mx-auto mb-3" />
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-400">
+                      Không tìm thấy câu hỏi nào phù hợp với tiêu chí tìm kiếm
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        setSearchTerm('');
+                        setSelectedDifficulties([]);
+                      }}
+                      className="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                    >
+                      Xóa bộ lọc
+                    </motion.button>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
 
           {/* Background blur effect when focused */}
           <AnimatePresence>

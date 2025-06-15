@@ -9,6 +9,9 @@ import { MapIDDecoder, DIFFICULTY_MAP } from "@/lib/utils/map-id-decoder";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getMapIDDecoder } from "@/lib/utils/map-id-decoder";
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // Schema validation cho query parameters
 const querySchema = z.object({
   field: z.string().optional(),

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { getErrorMessage } from '../../../utils/error-handler';
 import { IQuestionRendererService } from '@project/interfaces';
 import { LaTeXParserService } from './latex-parser.service';
 import * as puppeteer from 'puppeteer';
@@ -183,8 +184,9 @@ export class LaTeXRendererService implements IQuestionRendererService {
 
       return fullHtml;
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${error.message}`);
-      return `<div class="error">Không thể chuyển đổi LaTeX sang HTML: ${error.message}</div>`;
+      const errorMessage = error instanceof Error ? getErrorMessage(error) : 'Lỗi không xác định';
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${errorMessage}`);
+      return `<div class="error">Không thể chuyển đổi LaTeX sang HTML: ${errorMessage}</div>`;
     }
   }
 
@@ -277,8 +279,9 @@ export class LaTeXRendererService implements IQuestionRendererService {
 
       return text;
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${error.message}`);
-      return `Lỗi: Không thể chuyển đổi LaTeX sang văn bản thuần túy: ${error.message}`;
+      const errorMessage = error instanceof Error ? getErrorMessage(error) : 'Lỗi không xác định';
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${errorMessage}`);
+      return `Lỗi: Không thể chuyển đổi LaTeX sang văn bản thuần túy: ${errorMessage}`;
     }
   }
 
@@ -316,8 +319,9 @@ export class LaTeXRendererService implements IQuestionRendererService {
 
       return pdfBuffer as Buffer;
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang PDF: ${error.message}`);
-      throw new Error(`Không thể chuyển đổi LaTeX sang PDF: ${error.message}`);
+      const errorMessage = error instanceof Error ? getErrorMessage(error) : 'Lỗi không xác định';
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang PDF: ${errorMessage}`);
+      throw new Error(`Không thể chuyển đổi LaTeX sang PDF: ${errorMessage}`);
     }
   }
 

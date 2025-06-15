@@ -1,6 +1,8 @@
 'use client';
 
 import { LaTeXParser } from './parser';
+import type { ExtractedQuestion } from './models';
+
 export { LaTeXParser } from './parser';
 export { QUESTION_TYPE_DESCRIPTION, QUESTION_TYPE_MAP } from './constants';
 export type {

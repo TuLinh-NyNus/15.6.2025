@@ -1,6 +1,7 @@
 import { Controller, Post, Body, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { QuestionService } from '../services/question.service';
+import { getErrorMessage } from '../../../common/utils/error.utils';
 
 /**
  * Controller xử lý các API liên quan đến phân tích LaTeX
@@ -45,7 +46,7 @@ export class LaTeXParserController {
     try {
       return await this.questionService.parseLatexContent(body.content);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi phân tích nội dung LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi phân tích nội dung LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -84,7 +85,7 @@ export class LaTeXParserController {
     try {
       return await this.questionService.validateLatexSyntax(body.content);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi xác thực cú pháp LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi xác thực cú pháp LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -132,7 +133,7 @@ export class LaTeXParserController {
     try {
       return await this.questionService.createQuestionFromLatex(body.examId, body.content);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo câu hỏi từ LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo câu hỏi từ LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -183,7 +184,7 @@ export class LaTeXParserController {
     try {
       return await this.questionService.createManyQuestionsFromLatex(body.examId, body.contents);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi từ LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi từ LaTeX: ${getErrorMessage(error)}`);
     }
   }
 } 

@@ -146,13 +146,13 @@ export default function MapIDDecoderComponent() {
                       {result.lesson.code} - {result.lesson.description}
                     </div>
 
-                    {result.questionType.code !== '0' && (
+                    {result.form && result.form.code !== '0' && (
                       <>
                         <div>
-                          <span className="font-medium">Loại câu hỏi:</span>
+                          <span className="font-medium">Dạng:</span>
                         </div>
                         <div>
-                          {result.questionType.code} - {result.questionType.description}
+                          {result.form.code} - {result.form.description}
                         </div>
                       </>
                     )}

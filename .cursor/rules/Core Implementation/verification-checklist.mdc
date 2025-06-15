@@ -12,7 +12,7 @@ alwaysApply: true
 Add this at the start of every task:
 ```
 ## Verification Commitment
-I WILL run the full verification checklist before completing this task.
+I will run the full verification checklist before completing this task.
 I will maintain tasks.md as the single source of truth for task status.
 ```
 

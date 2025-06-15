@@ -31,7 +31,7 @@ Objective: Create secure login functionality with JWT token support
 [ ] ARCHIVING
 
 ## Verification Commitment
-I WILL run the full verification checklist before completing this task.
+I will run the full verification checklist before completing this task.
 I will maintain tasks.md as the single source of truth for task status.
 ```
 
@@ -96,7 +96,7 @@ After reviewing the Memory Bank files, I've updated the following:
 
 ### Required Resources/Tools
 - Node.js and Express.js for server
-- MongoDB for user database
+- PostgreSQL for user database
 - jsonwebtoken library for JWT handling
 - bcrypt for password hashing
 - dotenv for environment variables
@@ -106,7 +106,7 @@ Adding to tasks.md:
 
 ```markdown
 ## Current Tasks
-- [ ] Set up MongoDB connection
+- [ ] Set up PostgreSQL connection
 - [ ] Create User model with proper validation
 - [ ] Implement registration endpoint with password hashing
 - [ ] Create login endpoint with token generation
@@ -150,21 +150,14 @@ Adding to tasks.md:
 ```
 ## IMPLEMENTATION
 
-### Step 1: Setting up MongoDB Connection
+### Step 1: Setting up PostgreSQL Connection
 
 First, I'll establish the database connection for our user authentication system.
 
-### Command: Install Mongoose
-Purpose: Adding Mongoose as a dependency for MongoDB connection and schema management.
 
-```bash
-npm install mongoose
-```
-
-Result: Successfully installed mongoose v6.9.2 as a dependency.
 
 ### Command: Create Database Connection File
-Purpose: Creating a file to manage MongoDB connection.
+Purpose: Creating a file to manage PostgreSQL connection.
 
 ```bash
 mkdir src/config
@@ -175,13 +168,13 @@ Result: Created config directory and db.js file for database configuration.
 
 [Implementation code and details...]
 
-Step complete. Verified MongoDB connection is working.
+Step complete. Verified PostgreSQL connection is working.
 
-🔄 TASK UPDATE: Set up MongoDB connection - [X] Complete
+🔄 TASK UPDATE: Set up PostgreSQL connection - [X] Complete
 - Updated in tasks.md ✓
 
 🔄 IMPLEMENTATION UPDATE:
-- Added to activeContext.md: MongoDB connection configured with connection pooling and error handling
+- Added to activeContext.md: PostgreSQL connection configured with connection pooling and error handling
 
 ### Step 2: Creating User Model
 
@@ -216,7 +209,7 @@ Now I'll implement the User model with validation and password hashing.
 
 ### Challenges
 - Had to resolve token expiration edge cases that weren't initially anticipated
-- MongoDB connection pooling needed optimization for production environment
+- PostgreSQL connection pooling needed optimization for production environment
 - CORS configuration for authentication requests required additional testing
 - Error handling for invalid credentials needed standardization
 
@@ -275,7 +268,7 @@ Last Updated: 2023-04-15
   - Protected route middleware
   - Token refresh mechanism
   - Logout functionality with token invalidation
-  - MongoDB integration for user storage
+  - PostgreSQL integration for user storage
   - Bcrypt password hashing
 
 ### Completed Testing

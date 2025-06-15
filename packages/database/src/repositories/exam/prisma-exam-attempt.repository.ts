@@ -36,7 +36,7 @@ export class PrismaExamAttemptRepository implements IExamAttemptRepository {
       }
     });
     
-    return attempts.map(attempt => this.mapPrismaAttemptToEntity(attempt));
+    return attempts.map((attempt: any) => this.mapPrismaAttemptToEntity(attempt));
   }
 
   /**
@@ -65,7 +65,7 @@ export class PrismaExamAttemptRepository implements IExamAttemptRepository {
       }
     });
     
-    return attempts.map(attempt => this.mapPrismaAttemptToEntity(attempt));
+    return attempts.map((attempt: any) => this.mapPrismaAttemptToEntity(attempt));
   }
 
   /**
@@ -80,7 +80,7 @@ export class PrismaExamAttemptRepository implements IExamAttemptRepository {
       }
     });
     
-    return attempts.map(attempt => this.mapPrismaAttemptToEntity(attempt));
+    return attempts.map((attempt: any) => this.mapPrismaAttemptToEntity(attempt));
   }
 
   /**

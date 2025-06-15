@@ -1,0 +1,104 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Below is the consolidated set of rules that combines both guidelines while remaining logical, concise, and easy to understand:
+
+---
+
+# **Consolidated Coding Guidelines**
+
+## **1. General Principles**
+
+- **Language & Comments:**  
+  Use English for all code (including variable and function names), but write comments and documentation in Vietnamese.
+
+- **Quality & Readability:**  
+  Write clear, concise, and modular code that follows the DRY principle. Prioritize readability and maintainability over micro-optimizations.
+
+- **Error Handling:**  
+  Ensure comprehensive error handling throughout the code. Never skip or ignore errors.
+
+- **Testing & TDD:**  
+  Follow TDD practices by writing unit, integration, and user acceptance tests. Validate that all functional requirements are measurable and met.
+
+## **2. Code Implementation Environment**
+
+- **Frameworks & Languages:**  
+  ReactJS, Next.js, JavaScript, TypeScript, HTML, CSS, and modern UI/UX frameworks (e.g., TailwindCSS, Shadcn, Radix).  
+- **TypeScript Best Practices:**  
+  Use explicit types and avoid `any` except in exceptional cases. Include JSDoc comments for public methods and classes.
+
+- **Pseudocode Planning:**  
+  Before coding, describe your plan in detailed pseudocode. Confirm your approach before writing the final code.
+
+## **3. Naming Conventions**
+
+- **General:**  
+  Use descriptive names for all identifiers.  
+- **Classes, Interfaces, Types, Enums:**  
+  Use PascalCase. For interfaces, prefix with "I" (e.g., `IUserRepository`).
+- **Variables, Functions, Methods, Properties:**  
+  Use camelCase.
+- **Files & Directories:**  
+  Use kebab-case.
+- **Constants & Environment Variables:**  
+  Use UPPERCASE.
+
+## **4. File & Project Structure**
+
+- **Modularity:**  
+  Each file should have one primary export to enhance modularity.
+- **Organization:**  
+  Group related files by feature/domain into modules. Separate controllers, services, repositories, types, and interfaces.
+- **Exports:**  
+  Use `index.ts` files for clean export management.
+- **Avoid Circular Dependencies:**  
+  Use interface extensions instead of direct imports to prevent circular dependencies.
+
+## **5. Code Style & Best Practices**
+
+- **Early Returns:**  
+  Use early returns to reduce nesting and improve readability.
+- **Single Responsibility:**  
+  Keep functions short (preferably under 30 lines) and focused on one task.
+- **DRY Principle:**  
+  Avoid code duplication by reusing helper functions and shared types.
+- **Comprehensive Error Handling:**  
+  Implement proper error handling in every module.
+- **Accessibility:**  
+  For HTML elements, use TailwindCSS for styling, include accessibility features (e.g., `tabindex="0"`, `aria-label`), and ensure interactive elements have both click and keyboard event handlers (e.g., `handleClick`, `handleKeyDown`).
+- **Imports & Exports:**  
+  Include all required imports, use specific module imports (avoid wildcards), and structure code in the following order:
+  1. Imports  
+  2. Types/Interfaces  
+  3. Constants  
+  4. Helper Functions  
+  5. Main Components/Functions  
+  6. Exports
+
+## **6. Performance & Optimization**
+
+- **Frontend:**
+  - Use React memoization (e.g., `React.memo`, `useMemo`, `useCallback`) to avoid unnecessary re-renders.
+  - Implement lazy loading with `React.lazy` and code-splitting.
+  - Optimize bundle size by importing only what is necessary and considering dynamic imports for large modules.
+  - For long lists, implement virtualization techniques.
+
+- **Backend:**
+  - Optimize database queries with proper indexing, pagination, and caching.
+  - Use API optimization strategies like rate limiting, response compression, and streaming for large responses.
+
+
+## **7. Common Pitfalls to Avoid**
+
+- DO NOT use `any`, Prefer explicit types.
+- Avoid unused imports or variables.
+- Do not mix PostgreSQL ObjectIds with strings without proper conversion.
+- Keep business logic out of controllers.
+- Avoid nested callbacks—use async/await.
+- Ensure consistency in API responses and data types.
+- Avoid deprecated methods or libraries.
+
+---

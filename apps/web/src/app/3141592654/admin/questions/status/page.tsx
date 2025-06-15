@@ -31,6 +31,7 @@ interface FilterOptions {
   type: string;
   difficulty: string;
   form: string;
+  status: string;
   searchTerm: string;
   page: number;
   limit: number;
@@ -51,6 +52,7 @@ export default function QuestionStatusPage() {
     type: 'all',
     difficulty: 'all',
     form: 'all',
+    status: 'all',
     searchTerm: '',
     page: 1,
     limit: 10
@@ -63,6 +65,7 @@ export default function QuestionStatusPage() {
     type: 'all',
     difficulty: 'all',
     form: 'all',
+    status: 'all',
     searchTerm: '',
     page: 1,
     limit: 10
@@ -77,6 +80,7 @@ export default function QuestionStatusPage() {
     type: 'all',
     difficulty: 'all',
     form: 'all',
+    status: 'all',
     searchTerm: '',
     page: 1,
     limit: 10
@@ -121,7 +125,7 @@ export default function QuestionStatusPage() {
 
     // Lọc các form từ MapID
     const forms = mapIDEntries.filter(entry =>
-      entry.type === 'form' &&
+      entry.type === 'type' &&
       entry.value.startsWith(tempFilters.lesson)
     );
 
@@ -175,6 +179,7 @@ export default function QuestionStatusPage() {
       type: 'all',
       difficulty: 'all',
       form: 'all',
+      status: 'all',
       searchTerm: '',
       page: 1,
       limit: 10

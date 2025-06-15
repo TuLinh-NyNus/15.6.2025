@@ -20,6 +20,7 @@ import {
   MapIDConfigResponseDto,
   UpdateMapIDConfigDto
 } from '../dtos/map-id-config.dto';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 /**
  * Controller quản lý các endpoints liên quan đến cấu hình MapID
@@ -47,7 +48,7 @@ export class MapIDConfigController {
       const config = await this.mapIdConfigService.getMapIDConfig();
       return config;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi lấy cấu hình MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
         'Không thể lấy cấu hình MapID',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -78,9 +79,9 @@ export class MapIDConfigController {
       const updatedConfig = await this.mapIdConfigService.updateMapIDConfig(updateDto);
       return updatedConfig;
     } catch (error) {
-      this.logger.error(`Lỗi khi cập nhật cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi cập nhật cấu hình MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể cập nhật cấu hình MapID: ${error.message}`,
+        `Không thể cập nhật cấu hình MapID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -109,9 +110,9 @@ export class MapIDConfigController {
       const config = await this.mapIdConfigService.importMapIDConfig(importDto.jsonConfig);
       return config;
     } catch (error) {
-      this.logger.error(`Lỗi khi import cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi import cấu hình MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể import cấu hình MapID: ${error.message}`,
+        `Không thể import cấu hình MapID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -133,7 +134,7 @@ export class MapIDConfigController {
       const exportResult = await this.mapIdConfigService.exportMapIDConfig();
       return exportResult;
     } catch (error) {
-      this.logger.error(`Lỗi khi export cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi export cấu hình MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
         'Không thể export cấu hình MapID',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -157,7 +158,7 @@ export class MapIDConfigController {
       const defaultConfig = await this.mapIdConfigService.resetMapIDConfig();
       return defaultConfig;
     } catch (error) {
-      this.logger.error(`Lỗi khi reset cấu hình MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi reset cấu hình MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
         'Không thể reset cấu hình MapID',
         HttpStatus.INTERNAL_SERVER_ERROR,

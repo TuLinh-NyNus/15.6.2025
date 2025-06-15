@@ -149,32 +149,8 @@ export default function LaTeXRenderer({
         });
       }
 
-      // Trích xuất lời giải
-      let solution = null;
-
-      // Tìm vị trí bắt đầu của lệnh \loigiai
-      const loigiaiMatch = content.match(/\\loigiai\s*\{/);
-      if (loigiaiMatch && loigiaiMatch.index !== undefined) {
-        try {
-          // Vị trí của dấu { sau \loigiai
-          const startPos = loigiaiMatch.index + loigiaiMatch[0].length - 1;
-
-          // Trích xuất nội dung trong cặp dấu ngoặc cân bằng
-          solution = extractBalancedBraces(content, startPos);
-        } catch (error) {
-          console.error('Lỗi khi trích xuất lời giải với phương pháp cân bằng dấu ngoặc:', error);
-
-          // Fallback: Sử dụng regex đơn giản nếu phương pháp cân bằng thất bại
-          const solutionMatch = content.match(/\\loigiai\s*\{([\s\S]*?)\}/);
-          if (solutionMatch) {
-            solution = solutionMatch[1].trim();
-            console.warn('Đã sử dụng regex đơn giản để trích xuất lời giải, có thể không chính xác với dấu ngoặc lồng nhau');
-          }
-        }
-      }
-
       // Hàm trích xuất nội dung trong cặp dấu ngoặc cân bằng
-      function extractBalancedBraces(text: string, startPos: number): string {
+      const extractBalancedBraces = (text: string, startPos: number): string => {
         let pos = startPos;
 
         // Bỏ qua khoảng trắng
@@ -230,6 +206,30 @@ export default function LaTeXRenderer({
 
         // Trả về nội dung giữa dấu { và } (không bao gồm dấu ngoặc)
         return text.substring(contentStart, pos - 1).trim();
+      };
+
+      // Trích xuất lời giải
+      let solution = null;
+
+      // Tìm vị trí bắt đầu của lệnh \loigiai
+      const loigiaiMatch = content.match(/\\loigiai\s*\{/);
+      if (loigiaiMatch && loigiaiMatch.index !== undefined) {
+        try {
+          // Vị trí của dấu { sau \loigiai
+          const startPos = loigiaiMatch.index + loigiaiMatch[0].length - 1;
+
+          // Trích xuất nội dung trong cặp dấu ngoặc cân bằng
+          solution = extractBalancedBraces(content, startPos);
+        } catch (error) {
+          console.error('Lỗi khi trích xuất lời giải với phương pháp cân bằng dấu ngoặc:', error);
+
+          // Fallback: Sử dụng regex đơn giản nếu phương pháp cân bằng thất bại
+          const solutionMatch = content.match(/\\loigiai\s*\{([\s\S]*?)\}/);
+          if (solutionMatch) {
+            solution = solutionMatch[1].trim();
+            console.warn('Đã sử dụng regex đơn giản để trích xuất lời giải, có thể không chính xác với dấu ngoặc lồng nhau');
+          }
+        }
       }
 
       // Tạo đối tượng dữ liệu

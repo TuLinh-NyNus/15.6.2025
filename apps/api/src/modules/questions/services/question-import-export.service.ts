@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
+import { getErrorMessage, getErrorName } from '../../../utils/error-handler';
 import { LaTeXParserService } from '../../exams/services/latex-parser.service';
 import { 
   QuestionImportDto, 
@@ -9,7 +10,8 @@ import {
   CreateQuestionDto,
   QuestionFilterDto
 } from '@project/dto';
-import { QuestionStatus, QuestionType } from '@project/entities';
+import { QuestionStatus } from '@project/entities';
+import { QuestionType } from '@project/entities/dist/enums/question-enums';
 import { Workbook } from 'exceljs';
 import * as papa from 'papaparse';
 
@@ -142,12 +144,12 @@ export class QuestionImportExportService {
         successIds: [result.id],
       };
     } catch (error) {
-      this.logger.error(`Lỗi khi import câu hỏi từ LaTeX: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi import câu hỏi từ LaTeX: ${getErrorMessage(error)}`, getErrorName(error));
       return {
         totalProcessed: 1,
         successCount: 0,
         failureCount: 1,
-        errors: [{ message: error.message }],
+        errors: [{ message: getErrorMessage(error) }],
       };
     }
   }
@@ -180,8 +182,8 @@ export class QuestionImportExportService {
       
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi xuất câu hỏi sang LaTeX: ${error.message}`, error.stack);
-      throw new Error(`Không thể xuất câu hỏi sang LaTeX: ${error.message}`);
+      this.logger.error(`Lỗi khi xuất câu hỏi sang LaTeX: ${getErrorMessage(error)}`, getErrorName(error));
+      throw new Error(`Không thể xuất câu hỏi sang LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -210,8 +212,8 @@ export class QuestionImportExportService {
       
       return JSON.stringify(cleanedQuestions, null, 2);
     } catch (error) {
-      this.logger.error(`Lỗi khi xuất câu hỏi sang JSON: ${error.message}`, error.stack);
-      throw new Error(`Không thể xuất câu hỏi sang JSON: ${error.message}`);
+      this.logger.error(`Lỗi khi xuất câu hỏi sang JSON: ${getErrorMessage(error)}`, getErrorName(error));
+      throw new Error(`Không thể xuất câu hỏi sang JSON: ${getErrorMessage(error)}`);
     }
   }
 
@@ -373,7 +375,7 @@ export class QuestionImportExportService {
           result.failureCount++;
           result.errors.push({
             index,
-            message: `Lỗi khi import dòng ${index + 1}: ${error.message}`,
+            message: `Lỗi khi import dòng ${index + 1}: ${getErrorMessage(error)}`,
             content: JSON.stringify(row),
           });
         }
@@ -381,8 +383,8 @@ export class QuestionImportExportService {
 
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi import từ Excel/CSV: ${error.message}`, error.stack);
-      throw new BadRequestException(`Không thể import từ Excel/CSV: ${error.message}`);
+      this.logger.error(`Lỗi khi import từ Excel/CSV: ${getErrorMessage(error)}`, getErrorName(error));
+      throw new BadRequestException(`Không thể import từ Excel/CSV: ${getErrorMessage(error)}`);
     }
   }
 
@@ -446,8 +448,8 @@ export class QuestionImportExportService {
       // Tạo buffer cho file Excel
       return await workbook.xlsx.writeBuffer() as unknown as Buffer;
     } catch (error) {
-      this.logger.error(`Lỗi khi xuất câu hỏi sang Excel: ${error.message}`, error.stack);
-      throw new Error(`Không thể xuất câu hỏi sang Excel: ${error.message}`);
+      this.logger.error(`Lỗi khi xuất câu hỏi sang Excel: ${getErrorMessage(error)}`, getErrorName(error));
+      throw new Error(`Không thể xuất câu hỏi sang Excel: ${getErrorMessage(error)}`);
     }
   }
 
@@ -492,8 +494,8 @@ export class QuestionImportExportService {
       const csv = papa.unparse(data);
       return csv;
     } catch (error) {
-      this.logger.error(`Lỗi khi xuất câu hỏi sang CSV: ${error.message}`, error.stack);
-      throw new Error(`Không thể xuất câu hỏi sang CSV: ${error.message}`);
+      this.logger.error(`Lỗi khi xuất câu hỏi sang CSV: ${getErrorMessage(error)}`, getErrorName(error));
+      throw new Error(`Không thể xuất câu hỏi sang CSV: ${getErrorMessage(error)}`);
     }
   }
 
@@ -545,7 +547,7 @@ export class QuestionImportExportService {
             importResult.errors.forEach(error => {
               result.errors.push({
                 index: i,
-                message: error.message,
+                message: getErrorMessage(error),
                 content: error.content,
               });
             });
@@ -555,7 +557,7 @@ export class QuestionImportExportService {
         result.failureCount++;
         result.errors.push({
           index: i,
-          message: error.message,
+          message: getErrorMessage(error),
         });
       }
     }
@@ -650,7 +652,7 @@ export class QuestionImportExportService {
         contentType,
       };
     } catch (error) {
-      this.logger.error(`Lỗi khi xuất câu hỏi: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi xuất câu hỏi: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }

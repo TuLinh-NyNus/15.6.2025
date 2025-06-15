@@ -151,7 +151,7 @@ Next step: Install core dependencies
 - Updated in tasks.md ✓
 
 🔄 IMPLEMENTATION UPDATE:
-- Added to activeContext.md: Database models created for User and Profile, with MongoDB connection configured
+- Added to activeContext.md: Database models created for User and Profile, with PostgreSQL connection configured
 ```
 
 ## ⚠️ INCORRECT COMMAND DOCUMENTATION EXAMPLES ❌

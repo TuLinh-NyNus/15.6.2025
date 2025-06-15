@@ -49,7 +49,6 @@ export default function InputQuesPage() {
     rawContent: '',
     content: '',
     type: 'MC',
-    form: 'multiple-choice',
     solution: '',
     source: '',
     tags: [],
@@ -131,7 +130,7 @@ export default function InputQuesPage() {
       // Thông tin cơ bản
       rawContent: questionData.rawContent || questionData.raw_content || questionData.content || '',
       content: questionData.content || '',
-      type: questionData.type || 'multiple-choice',
+      type: questionData.type || 'MC',
       solution: questionData.solution || '',
       source: questionData.source || '',
       tags: questionData.tags || [],
@@ -355,9 +354,7 @@ export default function InputQuesPage() {
           // Đảm bảo cả raw_content và rawContent đều được cập nhật
           const newValue = { ...value };
 
-          if (newValue.raw_content && !newValue.rawContent) {
-            newValue.rawContent = newValue.raw_content;
-          }
+          // Không cần xử lý raw_content vì interface đã thống nhất sử dụng rawContent
 
           setFormData(prevData => {
             const updatedData = {
@@ -396,7 +393,7 @@ export default function InputQuesPage() {
       return;
     }
 
-    if (!formData.form) {
+    if (!formData.type) {
       setSaveStatus('error');
       setSaveMessage('Loại câu hỏi không được để trống');
       setIsSaving(false);
@@ -477,7 +474,6 @@ export default function InputQuesPage() {
             // Thông tin cơ bản
             rawContent: '',
             content: '',
-            form: 'multiple-choice',
             type: 'MC',
             solution: '',
             source: '',
@@ -523,10 +519,6 @@ export default function InputQuesPage() {
                 description: '',
               },
             },
-
-            // Đáp án
-            correctAnswer: '',
-            answers: [],
 
             // Hình ảnh
             images: {
@@ -694,7 +686,7 @@ export default function InputQuesPage() {
       };
 
       // Cập nhật correctAnswer dựa trên loại câu hỏi
-      if (result.type === 'multiple-choice' || result.type === 'MC') {
+      if (result.type === 'multiple-choice') {
         // Đối với câu hỏi trắc nghiệm (MC), chỉ có một đáp án đúng
         if (result.answers && result.answers.length > 0) {
           const correctAnswer = result.answers.find(answer => answer.isCorrect);
@@ -702,7 +694,7 @@ export default function InputQuesPage() {
             newFormData.correctAnswer = [correctAnswer.content]; // Lưu dưới dạng mảng để phù hợp với API
           }
         }
-      } else if (result.type === 'true-false' || result.type === 'TF') {
+      } else if (result.type === 'true-false') {
         // Đối với câu hỏi đúng/sai (TF), có thể có nhiều đáp án đúng
         if (result.answers && result.answers.length > 0) {
           const correctAnswers = result.answers
@@ -711,14 +703,14 @@ export default function InputQuesPage() {
 
           newFormData.correctAnswer = correctAnswers;
         }
-      } else if (result.type === 'short-answer' || result.type === 'SA') {
+      } else if (result.type === 'short-answer') {
         // Đối với câu hỏi trả lời ngắn (SA), correctAnswer là một mảng với một phần tử
         if (result.correctAnswer) {
           newFormData.correctAnswer = Array.isArray(result.correctAnswer)
             ? result.correctAnswer
             : [result.correctAnswer];
         }
-      } else if (result.type === 'matching' || result.type === 'MA') {
+      } else if (result.type === 'matching') {
         // Đối với câu hỏi ghép đôi (MA), correctAnswer là một mảng
         if (Array.isArray(result.correctAnswer)) {
           newFormData.correctAnswer = result.correctAnswer;
@@ -792,7 +784,7 @@ export default function InputQuesPage() {
           }
 
           // Cập nhật form data với thông tin cơ bản trước
-          safelyUpdateFormData(newFormData);
+          safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
 
           // Sau đó, thực hiện giải mã MapID bất đồng bộ
           (async () => {
@@ -806,51 +798,54 @@ export default function InputQuesPage() {
                   questionID: { ...formData.questionID }
                 };
 
-                // Cập nhật ý nghĩa của từng tham số
-                if (mapIDResult.grade) {
-                  questionIDUpdate.questionID.grade = {
-                    value: details.grade || mapIDResult.grade.code,
-                    description: mapIDResult.grade.description
-                  };
-                }
+                // Đảm bảo questionID tồn tại
+                if (questionIDUpdate.questionID) {
+                  // Cập nhật ý nghĩa của từng tham số
+                  if (mapIDResult.grade) {
+                    questionIDUpdate.questionID.grade = {
+                      value: details.grade || mapIDResult.grade.code,
+                      description: mapIDResult.grade.description
+                    };
+                  }
 
-                if (mapIDResult.subject) {
-                  questionIDUpdate.questionID.subject = {
-                    value: details.subject || mapIDResult.subject.code,
-                    description: mapIDResult.subject.description
-                  };
-                }
+                  if (mapIDResult.subject) {
+                    questionIDUpdate.questionID.subject = {
+                      value: details.subject || mapIDResult.subject.code,
+                      description: mapIDResult.subject.description
+                    };
+                  }
 
-                if (mapIDResult.chapter) {
-                  questionIDUpdate.questionID.chapter = {
-                    value: details.chapter || mapIDResult.chapter.code,
-                    description: mapIDResult.chapter.description
-                  };
-                }
+                  if (mapIDResult.chapter) {
+                    questionIDUpdate.questionID.chapter = {
+                      value: details.chapter || mapIDResult.chapter.code,
+                      description: mapIDResult.chapter.description
+                    };
+                  }
 
-                if (mapIDResult.difficulty) {
-                  questionIDUpdate.questionID.level = {
-                    value: details.level || mapIDResult.difficulty.code,
-                    description: mapIDResult.difficulty.description
-                  };
-                }
+                  if (mapIDResult.difficulty) {
+                    questionIDUpdate.questionID.level = {
+                      value: details.level || mapIDResult.difficulty.code,
+                      description: mapIDResult.difficulty.description
+                    };
+                  }
 
-                if (mapIDResult.lesson) {
-                  questionIDUpdate.questionID.lesson = {
-                    value: details.lesson || mapIDResult.lesson.code,
-                    description: mapIDResult.lesson.description
-                  };
-                }
+                  if (mapIDResult.lesson) {
+                    questionIDUpdate.questionID.lesson = {
+                      value: details.lesson || mapIDResult.lesson.code,
+                      description: mapIDResult.lesson.description
+                    };
+                  }
 
-                if (mapIDResult.form) {
-                  questionIDUpdate.questionID.form = {
-                    value: details.type || mapIDResult.form.code,
-                    description: mapIDResult.form.description
-                  };
+                  if (mapIDResult.form) {
+                    questionIDUpdate.questionID.form = {
+                      value: details.type || mapIDResult.form.code,
+                      description: mapIDResult.form.description
+                    };
+                  }
                 }
 
                 // Cập nhật form data với thông tin từ MapID
-                safelyUpdateFormData(questionIDUpdate);
+                safelyUpdateFormData(prev => ({ ...prev, ...questionIDUpdate }));
               }
             } catch (error) {
               console.error('Lỗi khi giải mã MapID:', error);
@@ -858,21 +853,20 @@ export default function InputQuesPage() {
           })();
         } else {
           // Nếu không có fullId, chỉ cập nhật thông tin cơ bản
-          safelyUpdateFormData(newFormData);
+          safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
         }
       } else {
         // Nếu không có questionIdDetails, chỉ cập nhật thông tin cơ bản
-        safelyUpdateFormData(newFormData);
+        safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
       }
 
       // Cập nhật thông báo thành công
       setSuccess('Đã trích xuất thông tin từ mẫu thành công!');
     } catch (error) {
       console.error('Lỗi khi trích xuất từ mẫu:', error);
-      // Fallback: Cập nhật raw_content và content trong form
+      // Fallback: Cập nhật rawContent và content trong form
       safelyUpdateFormData(prev => ({
         ...prev,
-        raw_content: sample,
         rawContent: sample,
         content: sample
           .replace(/\\begin\{.*?\}/g, '')
@@ -965,14 +959,13 @@ export default function InputQuesPage() {
                   rawContent: '',
                   content: '',
                   type: 'MC',
-                  form: 'multiple-choice',
                   solution: '',
                   source: '',
                   tags: [],
 
                   // Đáp án
                   answers: [],
-                  correctAnswer: '',
+                  correctAnswer: [],
 
                   // Định danh - Subcount
                   subcount: {
@@ -1027,6 +1020,7 @@ export default function InputQuesPage() {
                   examRefs: [],
                   usageHistory: [],
                   feedback: {
+                    count: 0,
                     averageDifficulty: 3,
                     clarity: 3,
                     correctnessRate: 0,
@@ -1127,12 +1121,9 @@ export default function InputQuesPage() {
                             // Trước tiên, xử lý các thông tin cơ bản không cần async
                             const newFormData: Partial<QuestionFormData> = {
                               // 1. Cập nhật thông tin cơ bản
-                              raw_content: result.rawContent,
                               rawContent: result.rawContent,
                               content: result.content,
 
-                              // Cập nhật loại câu hỏi (type và form)
-                              form: result.type,
                               // Đảm bảo type là một trong các giá trị hợp lệ (MC, TF, SA, MA, ES)
                               type: result.type === 'multiple-choice' ? 'MC' :
                                     result.type === 'true-false' ? 'TF' :
@@ -1154,7 +1145,7 @@ export default function InputQuesPage() {
                             };
 
                             // Cập nhật correctAnswer dựa trên loại câu hỏi
-                            if (result.type === 'multiple-choice' || result.type === 'MC') {
+                            if (result.type === 'multiple-choice') {
                               // Đối với câu hỏi trắc nghiệm (MC), chỉ có một đáp án đúng
                               if (result.answers && result.answers.length > 0) {
                                 const correctAnswer = result.answers.find(answer => answer.isCorrect);
@@ -1162,7 +1153,7 @@ export default function InputQuesPage() {
                                   newFormData.correctAnswer = [correctAnswer.content]; // Đảm bảo là mảng
                                 }
                               }
-                            } else if (result.type === 'true-false' || result.type === 'TF') {
+                            } else if (result.type === 'true-false') {
                               // Đối với câu hỏi đúng/sai (TF), có thể có nhiều đáp án đúng
                               if (result.answers && result.answers.length > 0) {
                                 const correctAnswers = result.answers
@@ -1171,14 +1162,14 @@ export default function InputQuesPage() {
 
                                 newFormData.correctAnswer = correctAnswers; // Đã là mảng
                               }
-                            } else if (result.type === 'short-answer' || result.type === 'SA') {
+                            } else if (result.type === 'short-answer') {
                               // Đối với câu hỏi trả lời ngắn (SA), correctAnswer phải là mảng
                               if (result.correctAnswer) {
                                 newFormData.correctAnswer = Array.isArray(result.correctAnswer)
                                   ? result.correctAnswer
                                   : [result.correctAnswer]; // Đảm bảo là mảng
                               }
-                            } else if (result.type === 'matching' || result.type === 'MA') {
+                            } else if (result.type === 'matching') {
                               // Đối với câu hỏi ghép đôi (MA), correctAnswer là một mảng
                               if (Array.isArray(result.correctAnswer)) {
                                 newFormData.correctAnswer = result.correctAnswer; // Đã là mảng
@@ -1252,7 +1243,7 @@ export default function InputQuesPage() {
                                 }
 
                                 // Cập nhật form data với thông tin cơ bản trước
-                                safelyUpdateFormData(newFormData);
+                                safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
 
                                 // Sau đó, thực hiện giải mã MapID bất đồng bộ
                                 (async () => {
@@ -1278,57 +1269,60 @@ export default function InputQuesPage() {
                                         }
                                       };
 
-                                      // Cập nhật ý nghĩa của từng tham số theo Map ID.tex
-                                      // Tham số 1: Lớp (Grade)
-                                      if (mapIDResult.grade) {
-                                        questionIDUpdate.questionID.grade = {
-                                          value: details.grade || mapIDResult.grade.code,
-                                          description: mapIDResult.grade.description || 'Lớp'
-                                        };
-                                      }
+                                      // Đảm bảo questionID tồn tại
+                                      if (questionIDUpdate.questionID) {
+                                        // Cập nhật ý nghĩa của từng tham số theo Map ID.tex
+                                        // Tham số 1: Lớp (Grade)
+                                        if (mapIDResult.grade) {
+                                          questionIDUpdate.questionID.grade = {
+                                            value: details.grade || mapIDResult.grade.code,
+                                            description: mapIDResult.grade.description || 'Lớp'
+                                          };
+                                        }
 
-                                      // Tham số 2: Môn (Subject)
-                                      if (mapIDResult.subject) {
-                                        questionIDUpdate.questionID.subject = {
-                                          value: details.subject || mapIDResult.subject.code,
-                                          description: mapIDResult.subject.description || 'Môn'
-                                        };
-                                      }
+                                        // Tham số 2: Môn (Subject)
+                                        if (mapIDResult.subject) {
+                                          questionIDUpdate.questionID.subject = {
+                                            value: details.subject || mapIDResult.subject.code,
+                                            description: mapIDResult.subject.description || 'Môn'
+                                          };
+                                        }
 
-                                      // Tham số 3: Chương (Chapter)
-                                      if (mapIDResult.chapter) {
-                                        questionIDUpdate.questionID.chapter = {
-                                          value: details.chapter || mapIDResult.chapter.code,
-                                          description: mapIDResult.chapter.description || 'Chương'
-                                        };
-                                      }
+                                        // Tham số 3: Chương (Chapter)
+                                        if (mapIDResult.chapter) {
+                                          questionIDUpdate.questionID.chapter = {
+                                            value: details.chapter || mapIDResult.chapter.code,
+                                            description: mapIDResult.chapter.description || 'Chương'
+                                          };
+                                        }
 
-                                      // Tham số 4: Mức độ (Level)
-                                      if (mapIDResult.difficulty) {
-                                        questionIDUpdate.questionID.level = {
-                                          value: details.level || mapIDResult.difficulty.code,
-                                          description: mapIDResult.difficulty.description || 'Mức độ'
-                                        };
-                                      }
+                                        // Tham số 4: Mức độ (Level)
+                                        if (mapIDResult.difficulty) {
+                                          questionIDUpdate.questionID.level = {
+                                            value: details.level || mapIDResult.difficulty.code,
+                                            description: mapIDResult.difficulty.description || 'Mức độ'
+                                          };
+                                        }
 
-                                      // Tham số 5: Bài (Lesson)
-                                      if (mapIDResult.lesson) {
-                                        questionIDUpdate.questionID.lesson = {
-                                          value: details.lesson || mapIDResult.lesson.code,
-                                          description: mapIDResult.lesson.description || 'Bài'
-                                        };
-                                      }
+                                        // Tham số 5: Bài (Lesson)
+                                        if (mapIDResult.lesson) {
+                                          questionIDUpdate.questionID.lesson = {
+                                            value: details.lesson || mapIDResult.lesson.code,
+                                            description: mapIDResult.lesson.description || 'Bài'
+                                          };
+                                        }
 
-                                      // Tham số 6: Dạng (Form) - chỉ có trong ID6
-                                      if (mapIDResult.form) {
-                                        questionIDUpdate.questionID.form = {
-                                          value: details.type || mapIDResult.form.code,
-                                          description: mapIDResult.form.description || 'Dạng'
-                                        };
+                                        // Tham số 6: Dạng (Form) - chỉ có trong ID6
+                                        if (mapIDResult.form) {
+                                          questionIDUpdate.questionID.form = {
+                                            value: details.type || mapIDResult.form.code,
+                                            description: mapIDResult.form.description || 'Dạng'
+                                          };
+                                        }
                                       }
 
                                       // Cập nhật form data với thông tin từ MapID
-                                      safelyUpdateFormData(questionIDUpdate);
+                                      safelyUpdateFormData(prev => ({ ...prev, ...questionIDUpdate }));
 
                                       // Log thông tin đã cập nhật
                                       console.log('Đã cập nhật thông tin QuestionID:', questionIDUpdate.questionID);
@@ -1339,11 +1333,11 @@ export default function InputQuesPage() {
                                 })();
                               } else {
                                 // Nếu không có fullId, chỉ cập nhật thông tin cơ bản
-                                safelyUpdateFormData(newFormData);
+                                safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
                               }
                             } else {
                               // Nếu không có questionIdDetails, chỉ cập nhật thông tin cơ bản
-                              safelyUpdateFormData(newFormData);
+                              safelyUpdateFormData(prev => ({ ...prev, ...newFormData }));
                             }
 
                             // Hiển thị thông báo thành công

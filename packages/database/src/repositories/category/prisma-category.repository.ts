@@ -182,7 +182,7 @@ export class PrismaCategoryRepository implements ICategoryRepository {
         description,
         parentId,
         order: order || 0,
-        slug,
+        slug: slug || `category-${Date.now()}`,
         imageUrl,
         isVisible: isVisible ?? true
       },
@@ -291,7 +291,7 @@ export class PrismaCategoryRepository implements ICategoryRepository {
         categoryId,
       },
       data: {
-        categoryId: null,
+        categoryId: undefined,
       },
     });
 

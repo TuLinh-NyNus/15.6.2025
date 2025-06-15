@@ -346,6 +346,7 @@ model Question {
   usageCount          Int                  @default(0)
   correctAnswer       Json?
   options             Json?
+  difficulty          Difficulty?          // ← THÊM TRƯỜNG MỚI
   QuestionToTags      QuestionToTags[]
   assessmentQuestions AssessmentQuestion[]
   examQuestions       ExamQuestion[]
@@ -355,6 +356,8 @@ model Question {
   creator             User                 @relation(fields: [creatorId], references: [id])
 
   @@index([type, status])
+  @@index([type, status, difficulty])
+  @@index([difficulty])
   @@index([questionId])
   @@index([subcount])
   @@index([creatorId])

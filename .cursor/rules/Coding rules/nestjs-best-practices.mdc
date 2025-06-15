@@ -35,7 +35,7 @@ alwaysApply: true
 ## Repository Pattern
 
 - Tạo interfaces cho repositories trong thư mục interfaces
-- Triển khai repository cho Prisma và Mongoose
+- Triển khai repository cho Prisma
 - Repository chỉ chứa logic truy vấn database
 - Sử dụng token injection để đăng ký repository implementations
 - Mỗi entity nên có một repository riêng
@@ -55,7 +55,7 @@ alwaysApply: true
 - Sử dụng global exception filters
 - Tạo custom exceptions khi cần
 - Chuẩn hóa response format cho errors
-- Xử lý MongoDB và Prisma errors riêng biệt
+- Xử lý PostgreSQL và Prisma errors riêng biệt
 - Log errors đầy đủ với winston hoặc nest logger
 - Đảm bảo không leak sensitive information trong error messages
 
@@ -73,7 +73,6 @@ alwaysApply: true
 - Sử dụng caching cho các queries phổ biến
 - Paginate collections để tránh quá tải
 - Sử dụng eager loading khi cần thiết
-- Tối ưu hóa Mongoose với lean() cho read operations
 - Tối ưu hóa Prisma với select và include
 - Triển khai rate limiting cho APIs
 

@@ -23,6 +23,7 @@ import {
   QuestionIdDescriptionResponseDto,
   ValidateQuestionIdResponseDto
 } from '../dtos/map-id.dto';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 /**
  * Controller quản lý các endpoints liên quan đến MapID
@@ -50,7 +51,7 @@ export class MapIDController {
       const structure = await this.mapIdService.getMapIdStructure();
       return structure;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy cấu trúc MapID: ${error.message}`);
+      this.logger.error(`Lỗi khi lấy cấu trúc MapID: ${getErrorMessage(error)}`);
       throw new HttpException(
         'Không thể lấy cấu trúc MapID',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -86,9 +87,9 @@ export class MapIDController {
       const result = await this.mapIdService.parseQuestionId(questionId);
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi phân giải QuestionID ${questionId}: ${error.message}`);
+      this.logger.error(`Lỗi khi phân giải QuestionID ${questionId}: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể phân giải QuestionID: ${error.message}`,
+        `Không thể phân giải QuestionID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -122,9 +123,9 @@ export class MapIDController {
       const result = await this.mapIdService.getQuestionIdDescription(questionId);
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy mô tả QuestionID ${questionId}: ${error.message}`);
+      this.logger.error(`Lỗi khi lấy mô tả QuestionID ${questionId}: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể lấy mô tả QuestionID: ${error.message}`,
+        `Không thể lấy mô tả QuestionID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -154,9 +155,9 @@ export class MapIDController {
       const result = await this.mapIdService.validateQuestionId(questionId);
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi validate QuestionID ${questionId}: ${error.message}`);
+      this.logger.error(`Lỗi khi validate QuestionID ${questionId}: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể validate QuestionID: ${error.message}`,
+        `Không thể validate QuestionID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -185,9 +186,9 @@ export class MapIDController {
       const questionId = await this.mapIdService.generateQuestionId(dto);
       return { questionId };
     } catch (error) {
-      this.logger.error(`Lỗi khi tạo QuestionID: ${error.message}`);
+      this.logger.error(`Lỗi khi tạo QuestionID: ${getErrorMessage(error)}`);
       throw new HttpException(
-        `Không thể tạo QuestionID: ${error.message}`,
+        `Không thể tạo QuestionID: ${getErrorMessage(error)}`,
         HttpStatus.BAD_REQUEST,
       );
     }

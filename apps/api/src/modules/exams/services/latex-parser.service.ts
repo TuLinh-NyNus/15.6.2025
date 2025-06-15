@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IQuestionParserService } from '@project/interfaces';
-import { QuestionType } from '@project/entities';
+import { QuestionEnumType as QuestionType } from '@project/entities';
 import { BracketExtractor } from './packages/utils/bracket-extractor';
 import {
   CHOICE_PATTERN,
@@ -86,8 +86,8 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi phân tích nội dung LaTeX: ${error.message}`);
-      throw new Error(`Không thể phân tích nội dung LaTeX: ${error.message}`);
+      this.logger.error(`Lỗi khi phân tích nội dung LaTeX: ${(error as Error).message}`);
+      throw new Error(`Không thể phân tích nội dung LaTeX: ${(error as Error).message}`);
     }
   }
 
@@ -103,7 +103,7 @@ export class LaTeXParserService implements IQuestionParserService {
       }
       return null;
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất QuestionID: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất QuestionID: ${(error as Error).message}`);
       return null;
     }
   }
@@ -126,7 +126,7 @@ export class LaTeXParserService implements IQuestionParserService {
       }
       return null;
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất Subcount: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất Subcount: ${(error as Error).message}`);
       return null;
     }
   }
@@ -166,7 +166,7 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return cleanContent;
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất nội dung: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất nội dung: ${(error as Error).message}`);
       return '';
     }
   }
@@ -195,7 +195,7 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return null;
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất lời giải: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất lời giải: ${(error as Error).message}`);
       return null;
     }
   }
@@ -217,7 +217,7 @@ export class LaTeXParserService implements IQuestionParserService {
         return QuestionType.ES; // Mặc định là câu hỏi tự luận
       }
     } catch (error) {
-      this.logger.error(`Lỗi khi xác định loại câu hỏi: ${error.message}`);
+      this.logger.error(`Lỗi khi xác định loại câu hỏi: ${(error as Error).message}`);
       return QuestionType.ES; // Mặc định là câu hỏi tự luận
     }
   }
@@ -278,7 +278,7 @@ export class LaTeXParserService implements IQuestionParserService {
       // Với câu hỏi ES không có đáp án
       return [];
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất danh sách đáp án: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất danh sách đáp án: ${(error as Error).message}`);
       return [];
     }
   }
@@ -347,7 +347,7 @@ export class LaTeXParserService implements IQuestionParserService {
       // Với câu hỏi ES, không có đáp án cố định
       return '';
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất đáp án đúng: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất đáp án đúng: ${(error as Error).message}`);
       return '';
     }
   }
@@ -429,10 +429,10 @@ export class LaTeXParserService implements IQuestionParserService {
         errors
       };
     } catch (error) {
-      this.logger.error(`Lỗi khi xác thực cú pháp LaTeX: ${error.message}`);
+      this.logger.error(`Lỗi khi xác thực cú pháp LaTeX: ${(error as Error).message}`);
       return {
         isValid: false,
-        errors: [`Lỗi khi xác thực: ${error.message}`]
+        errors: [`Lỗi khi xác thực: ${(error as Error).message}`]
       };
     }
   }
@@ -492,10 +492,10 @@ export class LaTeXParserService implements IQuestionParserService {
         errors
       };
     } catch (error) {
-      this.logger.error(`Lỗi khi xác thực cấu trúc câu hỏi: ${error.message}`);
+      this.logger.error(`Lỗi khi xác thực cấu trúc câu hỏi: ${(error as Error).message}`);
       return {
         isValid: false,
-        errors: [`Lỗi khi xác thực cấu trúc: ${error.message}`]
+        errors: [`Lỗi khi xác thực cấu trúc: ${(error as Error).message}`]
       };
     }
   }
@@ -675,7 +675,7 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return suggestions;
     } catch (error) {
-      this.logger.error(`Lỗi khi đề xuất sửa lỗi: ${error.message}`);
+      this.logger.error(`Lỗi khi đề xuất sửa lỗi: ${(error as Error).message}`);
       return [];
     }
   }
@@ -922,8 +922,8 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return html;
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${error.message}`);
-      return `<div class="error">Không thể chuyển đổi LaTeX sang HTML: ${error.message}</div>`;
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${(error as Error).message}`);
+      return `<div class="error">Không thể chuyển đổi LaTeX sang HTML: ${(error as Error).message}</div>`;
     }
   }
 
@@ -968,8 +968,8 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return text;
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${error.message}`);
-      return `Lỗi: Không thể chuyển đổi LaTeX sang văn bản thuần túy: ${error.message}`;
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${(error as Error).message}`);
+      return `Lỗi: Không thể chuyển đổi LaTeX sang văn bản thuần túy: ${(error as Error).message}`;
     }
   }
 
@@ -1025,7 +1025,7 @@ export class LaTeXParserService implements IQuestionParserService {
 
       return sources;
     } catch (error) {
-      this.logger.error(`Lỗi khi trích xuất nguồn: ${error.message}`);
+      this.logger.error(`Lỗi khi trích xuất nguồn: ${(error as Error).message}`);
       return [];
     }
   }

@@ -6,7 +6,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "prisma generate && tsc -b",
+    "build": "tsc -b",
+    "build:full": "prisma generate && tsc -b",
     "dev": "tsc -b --watch --preserveWatchOutput --pretty false",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",

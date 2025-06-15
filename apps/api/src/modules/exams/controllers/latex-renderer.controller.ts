@@ -30,7 +30,7 @@ export class LaTeXRendererController {
       const html = await this.latexRendererService.renderToHTML(body.content);
       return { html };
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${error.message}`);
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang HTML: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -55,7 +55,7 @@ export class LaTeXRendererController {
       const text = await this.latexRendererService.renderToPlainText(body.content);
       return { text };
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${error.message}`);
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang văn bản thuần túy: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -93,10 +93,10 @@ export class LaTeXRendererController {
       
       res.status(HttpStatus.OK).send(pdfBuffer);
     } catch (error) {
-      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang PDF: ${error.message}`);
+      this.logger.error(`Lỗi khi chuyển đổi LaTeX sang PDF: ${(error as Error).message}`);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Không thể chuyển đổi LaTeX sang PDF',
-        error: error.message
+        error: (error as Error).message
       });
     }
   }
@@ -118,10 +118,10 @@ export class LaTeXRendererController {
       res.setHeader('Content-Type', 'text/html');
       res.status(HttpStatus.OK).send(html);
     } catch (error) {
-      this.logger.error(`Lỗi khi xem trước LaTeX: ${error.message}`);
+      this.logger.error(`Lỗi khi xem trước LaTeX: ${(error as Error).message}`);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Không thể xem trước LaTeX',
-        error: error.message
+        error: (error as Error).message
       });
     }
   }

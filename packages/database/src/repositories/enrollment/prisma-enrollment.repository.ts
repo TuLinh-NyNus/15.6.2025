@@ -292,8 +292,8 @@ export class PrismaEnrollmentRepository implements IEnrollmentRepository {
     course.isPublished = prismaCourse.isPublished;
     course.categoryId = prismaCourse.categoryId;
     course.instructorId = prismaCourse.instructorId;
-    course.thumbnail = prismaCourse.thumbnail;
-    course.introVideo = prismaCourse.introVideo;
+    course.thumbnail = prismaCourse.thumbnail || undefined;
+    course.introVideo = prismaCourse.introVideo || undefined;
     course.prerequisites = prismaCourse.prerequisites;
     course.learningOutcomes = prismaCourse.learningOutcomes;
     course.totalStudents = prismaCourse.totalStudents;

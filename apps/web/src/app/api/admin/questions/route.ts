@@ -202,7 +202,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Hàm trợ giúp để lấy câu hỏi từ API
-// Lưu ý: Hàm này đã bị loại bỏ vì dự án hiện tại sử dụng PostgreSQL với Prisma, không sử dụng MongoDB
+// Lưu ý: Hàm này đã bị loại bỏ vì dự án hiện tại sử dụng PostgreSQL với Prisma,
 
 // Hàm xử lý DELETE request tới /api/admin/questions/:id
 export async function DELETE(request: NextRequest) {

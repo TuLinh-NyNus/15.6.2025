@@ -16,6 +16,8 @@ import { MapIDController } from './controllers/map-id.controller';
 import { MapIDConfigService } from './services/map-id-config.service';
 import { MapIDConfigController } from './controllers/map-id-config.controller';
 import { QuestionStatsService } from './services/question-stats.service';
+import { QuestionRepository } from '@project/database';
+import { SimpleQuestionsController } from './controllers/simple-questions.controller';
 
 @Module({
   imports: [
@@ -23,13 +25,14 @@ import { QuestionStatsService } from './services/question-stats.service';
     DatabaseModule,
   ],
   controllers: [
-    QuestionsController, 
-    QuestionTagsController, 
+    QuestionsController,
+    QuestionTagsController,
     QuestionVersionController,
     QuestionSearchController,
     QuestionImportExportController,
     MapIDController,
-    MapIDConfigController
+    MapIDConfigController,
+    SimpleQuestionsController
   ],
   providers: [
     QuestionsService, 
@@ -41,6 +44,10 @@ import { QuestionStatsService } from './services/question-stats.service';
     {
       provide: 'IQuestionTagRepository',
       useClass: QuestionTagRepository
+    },
+    {
+      provide: 'IQuestionRepository',
+      useClass: QuestionRepository
     },
     QuestionStatsService,
   ],

@@ -17,4 +17,4 @@ export * from './ai/learning-path.entity';
 
 export * from './exams';
 export * from './enums/exam-enums';
-export { QuestionType, QuestionStatus, QuestionImageType, QuestionDifficulty } from './enums/question-enums'; 
+export { QuestionType as QuestionEnumType, QuestionStatus, QuestionImageType, QuestionDifficulty } from './enums/question-enums';

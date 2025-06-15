@@ -1,4 +1,5 @@
-import { QuestionDifficulty, QuestionStatus, QuestionType } from '@project/entities';
+import { QuestionDifficulty, QuestionStatus } from '@project/entities';
+import { QuestionType } from '@project/entities/dist/enums/question-enums';
 
 /**
  * Interface định nghĩa dữ liệu câu hỏi

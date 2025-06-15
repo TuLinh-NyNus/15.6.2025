@@ -6,6 +6,7 @@ import { CreateExamQuestionDto, UpdateExamQuestionDto, QuestionOptionDto } from 
 import { ExamQuestion, Exam } from '@project/database';
 import { LaTeXParserService } from './latex-parser.service';
 import { QuestionsService } from '../../questions/services/questions.service';
+import { getErrorMessage } from '../../../utils/error-handler';
 import { forwardRef, Inject } from '@nestjs/common';
 
 /**
@@ -100,15 +101,17 @@ export class QuestionService implements IExamQuestionService {
     private readonly questionService: QuestionService,
   ) {}
 
+
+
   /**
    * Maps QuestionBankType to ExamQuestionType
    */
   private mapQuestionType(type: QuestionBankType): ExamQuestionType {
     const typeMapping: Record<string, string> = {
-      [QuestionBankType.MC]: 'MULTIPLE_CHOICE',
-      [QuestionBankType.TF]: 'TRUE_FALSE',
-      [QuestionBankType.SA]: 'SHORT_ANSWER',
-      [QuestionBankType.ES]: 'ESSAY'
+      'MC': 'MULTIPLE_CHOICE',
+      'TF': 'TRUE_FALSE',
+      'SA': 'SHORT_ANSWER',
+      'ES': 'ESSAY'
     };
     
     const mappedType = typeMapping[type];
@@ -223,7 +226,7 @@ export class QuestionService implements IExamQuestionService {
       
       return newQuestion as ExamQuestion;
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -269,7 +272,7 @@ export class QuestionService implements IExamQuestionService {
       
       return newQuestions as ExamQuestion[];
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -297,7 +300,7 @@ export class QuestionService implements IExamQuestionService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new BadRequestException(`Lỗi khi cập nhật câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi cập nhật câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -312,35 +315,35 @@ export class QuestionService implements IExamQuestionService {
     if (!question) {
       throw new NotFoundException(`Không tìm thấy câu hỏi với ID: ${id}`);
     }
-    
+
     try {
       // Xóa câu hỏi từ repository
       const deleted = await this.questionRepository.delete(id);
-      
+
       // Cập nhật danh sách câu hỏi trong bài thi
       if (deleted) {
         // Lấy examId từ question (nếu có)
         if ('examId' in (question as object) && (question as { examId: string }).examId) {
           const examId = (question as { examId: string }).examId;
           const exam = await this.examRepository.findById(examId);
-          
+
           if (exam) {
             // Chuyển đổi exam thành CommonExam để tránh xung đột kiểu
             const examData = exam as unknown as CommonExam;
             const updatedQuestions = (examData.questions || []).filter(
               qId => qId !== id
             );
-            const updateData = { 
+            const updateData = {
               questions: updatedQuestions
             } as Partial<Record<string, unknown>>;
             await this.examRepository.update(examId, updateData);
           }
         }
       }
-      
+
       return deleted;
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi xóa câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi xóa câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -360,7 +363,7 @@ export class QuestionService implements IExamQuestionService {
       const questions = await this.questionRepository.findByDifficulty(difficulty);
       return questions.map(q => q as ExamQuestion);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo độ khó: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo độ khó: ${getErrorMessage(error)}`);
     }
   }
 
@@ -374,7 +377,7 @@ export class QuestionService implements IExamQuestionService {
       const questions = await this.questionRepository.findBySubject(subject);
       return questions.map(q => q as ExamQuestion);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo môn học: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo môn học: ${getErrorMessage(error)}`);
     }
   }
 
@@ -392,7 +395,7 @@ export class QuestionService implements IExamQuestionService {
       const questions = await this.questionRepository.findByTags(tags);
       return questions.map(q => q as ExamQuestion);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo tags: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo tags: ${getErrorMessage(error)}`);
     }
   }
 
@@ -457,7 +460,7 @@ export class QuestionService implements IExamQuestionService {
         }
       }
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi kiểm tra quyền truy cập: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi kiểm tra quyền truy cập: ${getErrorMessage(error)}`);
     }
     
     // Nếu là INSTRUCTOR nhưng không phải người tạo, vẫn có thể truy cập
@@ -623,7 +626,7 @@ export class QuestionService implements IExamQuestionService {
       // Nếu không có examId, trả về tất cả câu hỏi theo bộ lọc
       return this.questionRepository.findAll(filter);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tìm câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tìm câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -652,7 +655,7 @@ export class QuestionService implements IExamQuestionService {
       const question = await this.questionRepository.create(data);
       return question as ExamQuestion;
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -674,7 +677,7 @@ export class QuestionService implements IExamQuestionService {
       const newQuestions = await this.questionRepository.createMany(data);
       return newQuestions as ExamQuestion[];
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi: ${getErrorMessage(error)}`);
     }
   }
 
@@ -721,7 +724,7 @@ export class QuestionService implements IExamQuestionService {
       const questions = await this.questionRepository.findByGrade(grade);
       return questions.map(q => q as ExamQuestion);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo khối lớp: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tìm câu hỏi theo khối lớp: ${getErrorMessage(error)}`);
     }
   }
 
@@ -745,7 +748,7 @@ export class QuestionService implements IExamQuestionService {
       const parsedQuestion = await this.latexParserService.parseQuestion(latexContent);
       return parsedQuestion;
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi phân tích cú pháp LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi phân tích cú pháp LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -762,7 +765,7 @@ export class QuestionService implements IExamQuestionService {
     } catch (error) {
       return {
         isValid: false,
-        errors: [`Lỗi khi xác thực cú pháp LaTeX: ${error.message}`]
+        errors: [`Lỗi khi xác thực cú pháp LaTeX: ${getErrorMessage(error)}`]
       };
     }
   }
@@ -820,7 +823,7 @@ export class QuestionService implements IExamQuestionService {
       // Tạo câu hỏi mới
       return this.createQuestion(examId, questionData);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo câu hỏi từ LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo câu hỏi từ LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -888,7 +891,7 @@ export class QuestionService implements IExamQuestionService {
       // Tạo nhiều câu hỏi cùng lúc
       return this.createManyQuestions(examId, validQuestionData);
     } catch (error) {
-      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi từ LaTeX: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi tạo nhiều câu hỏi từ LaTeX: ${getErrorMessage(error)}`);
     }
   }
 
@@ -1058,7 +1061,7 @@ export class QuestionService implements IExamQuestionService {
         const examQuestion = await this.linkQuestionToExam(examId, question.id, score);
         createdQuestions.push(examQuestion);
       } catch (error) {
-        console.error(`Lỗi khi thêm câu hỏi ${question.id} vào bài thi: ${error.message}`);
+        console.error(`Lỗi khi thêm câu hỏi ${question.id} vào bài thi: ${getErrorMessage(error)}`);
         // Tiếp tục với câu hỏi tiếp theo nếu có lỗi
       }
     }

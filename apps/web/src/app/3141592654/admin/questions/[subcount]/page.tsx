@@ -162,7 +162,7 @@ export default function QuestionDetailPage({ params }: QuestionDetailPageProps) 
         {isNotFoundError && (
           <div className="flex flex-col items-center justify-center p-8 bg-slate-800/50 border border-slate-700 rounded-md">
             <p className="text-slate-300 mb-4">
-              Câu hỏi với mã "{params.subcount}" không tồn tại trong hệ thống.
+              Câu hỏi với mã &quot;{params.subcount}&quot; không tồn tại trong hệ thống.
             </p>
             <Button
               variant="default"
@@ -484,9 +484,9 @@ export default function QuestionDetailPage({ params }: QuestionDetailPageProps) 
                 Chỉnh sửa
               </Button>
               <Button
-                variant="destructive"
+                variant="outline"
                 onClick={handleDeleteQuestion}
-                className="bg-red-900 hover:bg-red-800"
+                className="bg-red-900 hover:bg-red-800 border-red-700 text-red-100"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Xóa

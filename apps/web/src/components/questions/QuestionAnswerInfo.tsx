@@ -29,21 +29,20 @@ export function QuestionAnswerInfo({ formData, setFormData }: QuestionAnswerInfo
   type QuestionFormType = 'multiple-choice' | 'true-false' | 'short-answer' | 'matching' | 'essay';
 
   const [answerType, setAnswerType] = useState<QuestionFormType>(
-    (formData.form as QuestionFormType) || 'multiple-choice'
+    (formData.type as QuestionFormType) || 'multiple-choice'
   );
 
-  // Cập nhật answerType khi formData.form thay đổi
+  // Cập nhật answerType khi formData.type thay đổi
   useEffect(() => {
-    setAnswerType((formData.form as QuestionFormType) || 'multiple-choice');
+    setAnswerType((formData.type as QuestionFormType) || 'multiple-choice');
 
     // Log để debug
     console.log('QuestionAnswerInfo - formData đã thay đổi:', {
-      form: formData.form,
       type: formData.type,
       answers: formData.answers?.length || 0,
       correctAnswer: formData.correctAnswer
     });
-  }, [formData.form, formData.answers, formData.correctAnswer]);
+  }, [formData.type, formData.answers, formData.correctAnswer]);
 
   // Cập nhật correctAnswer dựa trên content của answers có isCorrect là true
   const updateCorrectAnswerFromContent = (answers: QuestionFormData['answers']) => {

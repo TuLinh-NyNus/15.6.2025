@@ -1,24 +1,10 @@
 'use client';
 
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemeProviderProps } from "next-themes";
 import * as React from "react";
 
-// Định nghĩa lại interface để phù hợp với thư viện next-themes
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  forcedTheme?: string;
-  defaultTheme?: string;
-  enableSystem?: boolean;
-  disableTransitionOnChange?: boolean;
-  storageKey?: string;
-  themes?: string[];
-  // Định nghĩa kiểu cụ thể cho attribute
-  attribute?: string | {
-    light?: string;
-    dark?: string;
-    system?: string;
-  };
-}
+// Sử dụng type từ thư viện next-themes
+type ThemeProviderProps = NextThemeProviderProps;
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   // Sử dụng attribute="class" để đảm bảo tương thích với next-themes

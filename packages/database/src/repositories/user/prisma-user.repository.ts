@@ -49,7 +49,7 @@ export class PrismaUserRepository implements IUserRepository {
       role: this.mapToEntityRole(prismaUser.role as PrismaUserRole),
       createdAt: prismaUser.createdAt!,
       updatedAt: prismaUser.updatedAt!,
-      password: prismaUser.password
+      password: prismaUser.password || ''
     };
   }
 

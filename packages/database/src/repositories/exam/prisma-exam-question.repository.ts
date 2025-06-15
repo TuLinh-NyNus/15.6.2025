@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { IExamQuestionRepository } from '@project/interfaces';
 import {
   Difficulty,
-  ExamQuestion
+  ExamQuestion,
+  QuestionEnumType,
+  QuestionType
 } from '@project/entities';
-import { QuestionType as QuestionEnumType } from '@project/entities/dist/enums/question-enums';
-import { QuestionType } from '@project/entities/dist/enums/exam-enums';
 import { ExamFilterDto } from '@project/dto';
 import { Prisma, Question } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -45,9 +45,8 @@ const reverseQuestionTypeMapping: Record<QuestionType, QuestionEnumType> = {
   [QuestionType.TRUE_FALSE]: QuestionEnumType.TF,
   [QuestionType.SHORT_ANSWER]: QuestionEnumType.SA,
   [QuestionType.ESSAY]: QuestionEnumType.ES,
-  // Giá trị mặc định cho các trường hợp khác
-  [QuestionType.SINGLE_CHOICE]: QuestionEnumType.MC,
   [QuestionType.MATCHING]: QuestionEnumType.MA,
+  [QuestionType.SINGLE_CHOICE]: QuestionEnumType.MC,
   [QuestionType.FILL_IN_BLANK]: QuestionEnumType.SA
 };
 
@@ -516,10 +515,10 @@ export class PrismaExamQuestionRepository implements IExamQuestionRepository {
 
       // Cập nhật options nếu có
       if (data.options) {
-        updateData.options = this.addMetadataToOptions(data.options, updatedMetadata);
+        updateData.options = this.addMetadataToOptions(data.options, updatedMetadata) as any;
       } else {
         // Giữ nguyên options nhưng cập nhật metadata
-        updateData.options = this.addMetadataToOptions(currentOptions, updatedMetadata);
+        updateData.options = this.addMetadataToOptions(currentOptions, updatedMetadata) as any;
       }
 
       if (data.correctAnswer) {
@@ -783,7 +782,7 @@ export class PrismaExamQuestionRepository implements IExamQuestionRepository {
   }
 
   // Hàm chuyển đổi từ QuestionEnumType sang QuestionType
-  private mapToExamQuestionType(type: QuestionEnumType | QuestionType): QuestionType {
+  private mapToQuestionType(type: QuestionEnumType | QuestionType): QuestionType {
     if (Object.values(QuestionType).includes(type as QuestionType)) {
       return type as QuestionType;
     }
@@ -839,7 +838,7 @@ export class PrismaExamQuestionRepository implements IExamQuestionRepository {
           // Tìm các record có path _metadata.sourceQuestionId không null
           options: {
             path: ['_metadata', 'sourceQuestionId'],
-            not: null
+            not: Prisma.JsonNull
           }
         }
       }) as unknown as PrismaQuestion[];

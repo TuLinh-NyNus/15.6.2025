@@ -1,28 +1,83 @@
-# Model Exam
+# Tổng hợp Thiết kế: Tính năng Page Exam
 
-## Tổng quan
+## Giới thiệu
 
-Model Exam trong hệ thống NyNus đại diện cho các bài kiểm tra, bài thi và đề thi. Hệ thống sử dụng PostgreSQL để lưu trữ thông tin về bài thi.
+Đây là tài liệu tổng hợp thiết kế chi tiết cho tính năng Page Exam trong dự án NyNus. Tài liệu này tổng hợp thông tin từ các nguồn khác nhau bao gồm:
+- `arch_exam.md`
+- `Exam.md`
+- `productContext.md`
+- `projectbrief.md`
+- `systemPatterns.md`
+- `techContext.md`
 
-## Mô hình dữ liệu
+## Mục lục
 
+1. [Tổng quan](#1-tổng-quan)
+2. [Danh sách Module cần tạo](#2-danh-sách-module-cần-tạo)
+3. [Thiết kế Database](#3-thiết-kế-database)
+4. [Thiết kế Backend API](#4-thiết-kế-backend-api)
+5. [Thiết kế Frontend](#5-thiết-kế-frontend)
+6. [Điểm cần lưu ý khi triển khai](#6-điểm-cần-lưu-ý-khi-triển-khai)
+7. [Kế hoạch triển khai](#7-kế-hoạch-triển-khai)
+8. [Tài liệu tham khảo](#8-tài-liệu-tham-khảo)
 
-### PostgreSQL Schema
+## 1. Tổng quan
 
-```typescript
-// Trong Prisma schema
+Tính năng Page Exam là một thành phần quan trọng trong hệ thống NyNus, cho phép quản lý và thực hiện các bài thi. Các chức năng chính bao gồm:
+
+- Quản lý đề thi (tạo, cập nhật, xóa)
+- Quản lý câu hỏi (nhiều loại câu hỏi khác nhau)
+- Thực hiện bài thi (làm bài, nộp bài, chấm điểm)
+- Xem kết quả và phân tích thống kê
+
+Tính năng này phục vụ cho các đối tượng người dùng:
+- Học sinh/sinh viên: Làm bài thi, xem kết quả
+- Giáo viên: Tạo và quản lý đề thi, xem kết quả của học sinh
+- Quản trị viên: Quản lý toàn bộ hệ thống
+
+## 2. Danh sách Module cần tạo
+
+### 2.1. Module Database
+
+- Model `Exam`: Lưu trữ thông tin đề thi
+- Model `Question`: Lưu trữ thông tin câu hỏi
+- Model `ExamResult`: Lưu trữ kết quả làm bài
+- Model `QuestionVersion` (nếu áp dụng): Lưu trữ phiên bản câu hỏi
+- Model `QuestionTag` (nếu áp dụng): Lưu trữ tags cho câu hỏi
+
+### 2.2. Module Backend
+
+- `ExamsModule`: Quản lý CRUD, filter, phân trang, thống kê cho đề thi
+- `QuestionsModule`: Quản lý CRUD, import/export, validate đáp án cho câu hỏi
+- `ExamResultsModule`: Quản lý quá trình làm bài, lưu tạm, nộp bài, tính điểm
+- `MapIDModule` (nếu áp dụng): Xử lý cấu trúc QuestionID và phân cấp ID
+- `LaTeXModule` (nếu áp dụng): Xử lý parse và render công thức LaTeX
+
+### 2.3. Module Frontend
+
+- Pages: Trang danh sách đề thi, chi tiết đề thi, làm bài thi, kết quả, lịch sử làm bài...
+- Components: ExamCard, QuestionDisplay, Timer, ProgressBar, AnswerSheet, ResultSummary...
+- Hooks: useExams, useExam, useAttempt, useTimer, useSubmitAnswer, useExamResult...
+
+## 3. Thiết kế Database
+
+### 3.1. Model Exam
+
+```prisma
 model Exam {
   id            String      @id @default(uuid())
   title         String
   description   Json?       // Chứa thông tin năm học, tỉnh/thành phố, trường
   questions     Int[]       // Mảng ID của các câu hỏi
-  duration      Int
+  duration      Int         // Thời gian làm bài (phút)
   difficulty    Difficulty
   subject       String
   grade         Int
   form          ExamForm    @default(TRAC_NGHIEM)
   createdBy     String
   averageScore  Float?
+  status        ExamStatus  @default(DRAFT)
+  type          ExamType    @default(draft)
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())
   tags          String[]
@@ -31,358 +86,167 @@ model Exam {
   // Relations
   creator       User        @relation("ExamCreator", fields: [createdBy], references: [id])
   examResults   ExamResult[]
-  lessons       Lesson[]
+  lessons       Lesson[]    @relation("LessonExams")
 }
 ```
 
-## Interface trong TypeScript
+### 3.2. Model Question
 
-```typescript
-// Interface cho model Exam
-export interface Exam {
-  id: string;
-  title: string;
-  description: JsonValue; // Chứa thông tin năm học, tỉnh/thành phố, trường
-  questions: number[];
-  duration: number;
-  difficulty: Difficulty;
-  subject: string;
-  grade: number;
-  type: ExamType;
-  createdBy: string;
-  averageScore?: number | null;
-  updatedAt: Date;
-  createdAt: Date;
-  tags: string[];
-  form?: ExamForm | null;
-  examCategory: ExamCategory;
+```prisma
+model Question {
+  id            String       @id @default(uuid())
+  questionId    String?      // MapID format, e.g., "12A3B-C"
+  content       String       // Nội dung câu hỏi
+  rawContent    String?      // Nội dung raw (có thể là LaTeX)
+  type          QuestionType
+  options       Json?        // Danh sách các lựa chọn
+  correctAnswer Json         // Đáp án đúng (format tùy thuộc vào type)
+  explanation   String?      // Giải thích đáp án
+  difficulty    Difficulty   @default(medium)
+  score         Float        @default(1)
+  tags          String[]
+  createdBy     String
+  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime     @default(now())
+  
+  // Relations
+  creator       User         @relation("QuestionCreator", fields: [createdBy], references: [id])
+  versions      QuestionVersion[]
+  questionTags  QuestionTag[]
 }
 ```
 
-## Cấu trúc mô tả trong description
+### 3.3. Model ExamResult
 
-Field `description` dạng JSON thường có cấu trúc như sau:
-
-```typescript
-interface ExamDescription {
-  schoolYear?: string; // Năm học (VD: "2023-2024")
-  schoolName?: string; // Tên trường
-  province?: string; // Tỉnh/thành phố
-  examName?: string; // Tên kỳ thi
-  examDate?: string; // Ngày thi
-  examTime?: string; // Thời gian thi
-  examClass?: string; // Lớp thi
-  instructions?: string; // Hướng dẫn làm bài
-  additionalInfo?: Record<string, any>; // Thông tin bổ sung
-}
-```
-
-## Enum và Types
-
-### Difficulty
-
-```typescript
-enum Difficulty {
-  easy
-  medium
-  hard
-}
-```
-
-### ExamType
-
-```typescript
-export enum ExamType {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  ARCHIVED = 'archived',
-}
-```
-
-### ExamCategory
-
-```typescript
-enum ExamCategory {
-  THUONG_XUYEN_MIENG
-  GIUA_KI_I
-  CUOI_KI_I
-  GIUA_KI_II
-  CUOI_KI_II
-  KHAO_SAT
-  DE_CUONG
-  HOC_SINH_GIOI
-  TUYEN_SINH
-  KHAO_SAT_THI_THU
-}
-```
-
-### ExamForm
-
-```typescript
-enum ExamForm {
-  TRAC_NGHIEM
-  TU_LUAN
-  KET_HOP
-  FORM_2018
-  FORM_2025
-}
-```
-
-## DTO và Input Types
-
-### CreateExamDto/Input
-
-```typescript
-export interface CreateExamDto {
-  title: string;
-  description?: Prisma.InputJsonValue;
-  questions: number[];
-  duration: number;
-  difficulty: Difficulty;
-  subject: string;
-  grade: number;
-  type?: ExamType;
-  createdById: string;
-  tags?: string[];
-  form?: ExamForm;
-  examCategory: ExamCategory;
-}
-```
-
-### UpdateExamDto/Input
-
-```typescript
-export interface UpdateExamDto {
-  title?: string;
-  description?: Prisma.InputJsonValue | Prisma.NullableJsonNullValueInput;
-  questions?: number[];
-  duration?: number;
-  difficulty?: Difficulty;
-  subject?: string;
-  grade?: number;
-  type?: ExamType;
-  averageScore?: number | null;
-  tags?: string[];
-  form?: ExamForm | null;
-  examCategory?: ExamCategory;
-}
-```
-
-### ExamFilter
-
-```typescript
-export interface ExamFilter {
-  subject?: string;
-  grade?: number;
-  difficulty?: Difficulty;
-  examCategory?: ExamCategory;
-  form?: ExamForm;
-  createdBy?: string;
-  search?: string;
-}
-```
-
-## Kết quả thi (ExamResult)
-
-```typescript
-// Trong Prisma schema
+```prisma
 model ExamResult {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   userId      String
   examId      String
   score       Float
-  maxScore    Float
+  maxScore    Float     // Điểm tối đa của bài thi
   startedAt   DateTime
-  completedAt DateTime
-  duration    Int      // Thời gian làm bài tính bằng giây
-  answers     Json?    // Chi tiết câu trả lời
-
-  user        User     @relation(fields: [userId], references: [id])
-  exam        Exam     @relation(fields: [examId], references: [id])
+  completedAt DateTime?
+  duration    Int       // Thời gian làm bài tính bằng giây
+  answers     Json?     // Chi tiết câu trả lời
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  user        User      @relation(fields: [userId], references: [id])
+  exam        Exam      @relation(fields: [examId], references: [id])
 }
 ```
 
-```typescript
-// Interface TypeScript
-export interface ExamResult {
-  id: string;
-  userId: string;
-  examId: string;
-  score: number;
-  maxScore: number;
-  startedAt: Date;
-  completedAt: Date;
-  duration: number;
-  answers?: Record<string, any> | null;
-}
-```
+## 4. Thiết kế Backend API
 
-### Cấu trúc answers
+### 4.1. ExamsController
 
-Field `answers` trong ExamResult thường có dạng:
+- `GET /exams`: Lấy danh sách đề thi (có phân trang, lọc)
+- `GET /exams/:id`: Lấy chi tiết đề thi
+- `POST /exams`: Tạo đề thi mới (admin/teacher)
+- `PUT /exams/:id`: Cập nhật đề thi (admin/teacher)
+- `DELETE /exams/:id`: Xóa đề thi (admin/teacher)
+- `GET /exams/categories`: Lấy danh sách loại đề thi
 
-```typescript
-type ExamResultAnswers = {
-  [questionId: string]: {
-    selectedOptionIds?: number[]; // ID các lựa chọn đã chọn (trắc nghiệm)
-    textAnswer?: string; // Câu trả lời dạng text (tự luận)
-    isCorrect: boolean; // Đúng/sai
-    score: number; // Điểm cho câu này
-    maxScore: number; // Điểm tối đa có thể đạt
-    timeSpent?: number; // Thời gian làm câu này (giây)
-    feedback?: string; // Phản hồi từ hệ thống/giáo viên
-  };
-};
-```
+### 4.2. ExamQuestionsController
 
-## Câu hỏi trong Exam
+- `GET /exams/:id/questions`: Lấy danh sách câu hỏi của đề thi
+- `POST /exams/:id/questions`: Thêm câu hỏi vào đề thi (admin/teacher)
+- `DELETE /exams/:id/questions/:questionId`: Xóa câu hỏi khỏi đề thi (admin/teacher)
 
-Cấu trúc cơ bản của câu hỏi trong Exam:
+### 4.3. ExamAttemptsController
 
-```typescript
-export interface ExamQuestion {
-  id: number;
-  content: string; // Nội dung câu hỏi
-  type: 'MULTIPLE_CHOICE' | 'SINGLE_CHOICE' | 'TRUE_FALSE' | 'ESSAY'; // Loại câu hỏi
-  options?: ExamQuestionOption[]; // Các lựa chọn (cho câu trắc nghiệm)
-  correctAnswers?: number[]; // ID các đáp án đúng
-  explanation?: string; // Giải thích đáp án
-  score: number; // Điểm tối đa cho câu hỏi
-  difficultyLevel?: Difficulty; // Độ khó
-  tags?: string[]; // Thẻ phân loại
-  subject?: string; // Môn học
-  grade?: number; // Lớp
-}
+- `POST /exams/:id/attempts`: Bắt đầu làm bài thi
+- `PUT /exams/attempts/:attemptId`: Lưu tạm hoặc nộp bài
+- `GET /exams/attempts/:attemptId`: Lấy thông tin lượt làm bài
+- `GET /exams/:id/attempts`: Lấy danh sách lượt làm bài của đề thi (admin/teacher)
 
-export interface ExamQuestionOption {
-  id: number;
-  content: string; // Nội dung lựa chọn
-  isCorrect: boolean; // Đáp án đúng/sai
-}
-```
+### 4.4. ExamResultsController
 
-## API Endpoints
+- `GET /exams/results/:id`: Lấy kết quả bài thi
+- `GET /users/me/exam-results`: Lấy lịch sử làm bài của người dùng hiện tại
 
-Hệ thống cung cấp các API endpoint sau để thao tác với Exam:
+### 4.5. QuestionsController
 
-- `GET /exams`: Lấy danh sách các bài thi theo bộ lọc
-- `GET /exams/:id`: Lấy thông tin chi tiết một bài thi
-- `POST /exams`: Tạo mới một bài thi (yêu cầu quyền admin hoặc teacher)
-- `PUT /exams/:id`: Cập nhật thông tin bài thi (yêu cầu quyền admin hoặc teacher)
-- `DELETE /exams/:id`: Xóa bài thi (yêu cầu quyền admin hoặc teacher)
-- `GET /exams/:id/questions`: Lấy danh sách câu hỏi của bài thi
-- `POST /exams/:id/questions`: Thêm câu hỏi vào bài thi (yêu cầu quyền admin hoặc teacher)
-- `PUT /exams/:id/questions/:questionId`: Cập nhật câu hỏi trong bài thi
-- `DELETE /exams/:id/questions/:questionId`: Xóa câu hỏi khỏi bài thi
-- `POST /exams/:id/attempts`: Tạo một lần thi mới
-- `GET /exams/:id/attempts`: Lấy danh sách các lần thi của bài thi
-- `GET /exams/:id/stats`: Lấy thống kê về bài thi (yêu cầu quyền admin hoặc teacher)
-- `GET /exams/:id/performance`: Lấy thông tin về hiệu suất làm bài thi của người dùng
-- `GET /exams/categories`: Lấy danh sách các loại bài thi
+- `GET /questions`: Lấy danh sách câu hỏi (có phân trang, lọc)
+- `GET /questions/:id`: Lấy chi tiết câu hỏi
+- `POST /questions`: Tạo câu hỏi mới (admin/teacher)
+- `PUT /questions/:id`: Cập nhật câu hỏi (admin/teacher)
+- `DELETE /questions/:id`: Xóa câu hỏi (admin/teacher)
 
-### Tham số request cho API GET /exams
+## 5. Thiết kế Frontend
 
-```typescript
-interface GetExamsQuery {
-  page?: number; // Số trang (mặc định: 1)
-  limit?: number; // Số lượng kết quả mỗi trang (mặc định: 10)
-  subject?: string; // Lọc theo môn học
-  grade?: number; // Lọc theo khối lớp
-  difficulty?: Difficulty; // Lọc theo độ khó
-  examCategory?: ExamCategory; // Lọc theo loại đề thi
-  form?: ExamForm; // Lọc theo hình thức
-  createdBy?: string; // Lọc theo người tạo
-  search?: string; // Tìm kiếm theo từ khóa
-  sortBy?: string; // Sắp xếp theo trường (title, createdAt, etc.)
-  sortOrder?: 'asc' | 'desc'; // Thứ tự sắp xếp
-}
-```
+### 5.1. Pages
 
-## Mối quan hệ với các model khác
+- **ExamListPage** (`/exams`): Hiển thị danh sách đề thi
+- **ExamDetailPage** (`/exams/[examId]`): Hiển thị chi tiết đề thi
+- **ExamAttemptPage** (`/exams/[examId]/attempt/[attemptId]`): Trang làm bài thi
+- **ExamResultPage** (`/results/[attemptId]`): Hiển thị kết quả bài thi
+- **ExamHistoryPage** (`/users/me/exam-results`): Hiển thị lịch sử làm bài
 
-- `Exam` có quan hệ 1-n với `ExamResult`: Một bài thi có thể có nhiều kết quả thi từ nhiều người dùng
-- `Exam` có quan hệ n-1 với `User`: Một bài thi được tạo bởi một người dùng (teacher hoặc admin)
-- `Exam` có quan hệ 1-n với `Lesson`: Một bài thi có thể được sử dụng trong nhiều bài học
+### 5.2. Components
 
-## Thống kê và phân tích
+- **ExamCard**: Hiển thị thông tin tóm tắt về một đề thi
+- **QuestionDisplay**: Hiển thị nội dung câu hỏi và các tùy chọn trả lời
+- **Timer**: Hiển thị thời gian còn lại cho bài thi
+- **ProgressBar**: Hiển thị tiến độ làm bài
+- **AnswerSheet**: Hiển thị các câu hỏi đã trả lời/chưa trả lời
+- **ResultSummary**: Hiển thị tóm tắt kết quả bài thi
 
-### ExamStats Interface
+### 5.3. Workflow
 
-```typescript
-export interface ExamStats {
-  id: string; // ID bài thi
-  title: string; // Tiêu đề
-  totalAttempts: number; // Tổng số lần làm bài
-  averageScore: number; // Điểm trung bình
-  highestScore: number; // Điểm cao nhất
-  lowestScore: number; // Điểm thấp nhất
-  passingRate: number; // Tỷ lệ đạt (%)
-  averageCompletionTime: number; // Thời gian hoàn thành trung bình (giây)
-  questionStats: {
-    // Thống kê theo câu hỏi
-    [questionId: string]: {
-      correct: number; // Số lần trả lời đúng
-      incorrect: number; // Số lần trả lời sai
-      correctRate: number; // Tỷ lệ đúng (%)
-      averageTimeSpent: number; // Thời gian trung bình (giây)
-    };
-  };
-  scoreDistribution: {
-    // Phân phối điểm
-    range: string; // Khoảng điểm
-    count: number; // Số lượng
-  }[];
-  timeDistribution: {
-    // Phân phối thời gian
-    range: string; // Khoảng thời gian
-    count: number; // Số lượng
-  }[];
-}
-```
+1. **Xem danh sách đề thi**:
+   - User truy cập trang `/exams`
+   - Xem danh sách đề thi, có thể lọc theo môn học, khối lớp...
+   - Click vào một đề thi để xem chi tiết
 
-### ExamPerformance Interface
+2. **Làm bài thi**:
+   - User xem chi tiết đề thi tại `/exams/[examId]`
+   - Click "Bắt đầu làm bài"
+   - Hệ thống tạo một lượt làm mới (attempt)
+   - User làm bài tại `/exams/[examId]/attempt/[attemptId]`
+   - Timer đếm ngược thời gian còn lại
+   - User có thể nộp bài hoặc hết thời gian tự động nộp bài
 
-```typescript
-export interface ExamPerformance {
-  userId: string; // ID người dùng
-  examId: string; // ID bài thi
-  attempts: number; // Số lần làm bài
-  bestScore: number; // Điểm cao nhất
-  lastScore: number; // Điểm lần gần nhất
-  averageScore: number; // Điểm trung bình
-  lastCompletionTime: number; // Thời gian hoàn thành lần gần nhất (giây)
-  bestCompletionTime: number; // Thời gian hoàn thành nhanh nhất (giây)
-  weakestQuestions: string[]; // Danh sách ID câu hỏi yếu nhất
-  strongestQuestions: string[]; // Danh sách ID câu hỏi mạnh nhất
-  progress: {
-    // Tiến độ qua các lần
-    attemptId: string; // ID lần làm
-    date: Date; // Ngày làm
-    score: number; // Điểm số
-  }[];
-}
-```
+3. **Xem kết quả**:
+   - Sau khi nộp bài, user được chuyển đến trang kết quả `/results/[attemptId]`
+   - Xem điểm số, câu trả lời đúng/sai, giải thích
 
-## Quy trình làm bài thi
+4. **Xem lịch sử làm bài**:
+   - User truy cập trang `/users/me/exam-results`
+   - Xem danh sách các bài thi đã làm, điểm số, thời gian
 
-1. **Bắt đầu làm bài**
+## 6. Điểm cần lưu ý khi triển khai
 
-   - Gọi API `POST /exams/:id/attempts` để tạo một lần thi mới
-   - Lưu thời gian bắt đầu và chuẩn bị giao diện hiển thị câu hỏi
+### 6.1. Hiệu năng
+- Sử dụng pagination và lazy loading cho danh sách dài
+- Tối ưu API calls, sử dụng caching
+- Xử lý nhiều người dùng cùng làm bài một lúc
 
-2. **Làm bài thi**
+### 6.2. Bảo mật
+- Phân quyền chặt chẽ cho các API endpoints
+- Validate input ở cả client và server
+- Ngăn chặn gian lận trong khi làm bài
 
-   - Hiển thị câu hỏi và cho phép người dùng chọn/nhập câu trả lời
-   - Có thể lưu tạm câu trả lời qua API `PUT /exams/attempts/:attemptId`
-   - Theo dõi thời gian làm bài và cảnh báo khi gần hết thời gian
+### 6.3. UX/UI
+- Thiết kế responsive cho các thiết bị khác nhau
+- Timer rõ ràng và hiển thị tiến độ
+- Trải nghiệm làm bài mượt mà, tránh mất dữ liệu
 
-3. **Nộp bài**
+### 6.4. Mở rộng
+- Thiết kế hệ thống đáp án linh hoạt, dễ mở rộng
+- Sử dụng JSON cho các cấu trúc dữ liệu phức tạp
+- Thiết kế cấu trúc code module hóa, dễ bảo trì
 
-   - Gọi API `PUT /exams/attempts/:attemptId` với trạng thái hoàn thành
-   - Lưu thời gian kết thúc và tính toán điểm số
-   - Hiển thị kết quả và phản hồi
+## 7. Kế hoạch triển khai
 
-4. **Xem lại bài làm**
-   - Người dùng có thể xem lại câu trả lời và đáp án đúng (nếu được phép)
-   - Xem nhận xét và phản hồi từ hệ thống/giáo viên
+Xem chi tiết trong file `memory-bank/exam_design_impl.md`.
 
+## 8. Tài liệu tham khảo
+
+- `memory-bank/arch_exam.md`: Kiến trúc chi tiết cho hệ thống Page Exam
+- `memory-bank/Exam.md`: Chi tiết về model Exam và các API
+- `memory-bank/exam_design_detailed.md`: Thiết kế chi tiết cho tính năng Page Exam
+- `memory-bank/systemPatterns.md`: Các pattern được sử dụng trong hệ thống
+- `memory-bank/techContext.md`: Stack công nghệ của dự án 

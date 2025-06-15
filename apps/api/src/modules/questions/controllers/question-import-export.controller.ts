@@ -35,6 +35,7 @@ import {
   CreateQuestionDto
 } from '@project/dto';
 import * as ExcelJS from 'exceljs';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 @ApiTags('questions-import-export')
 @ApiBearerAuth()
@@ -111,7 +112,7 @@ export class QuestionImportExportController {
       const createDto: CreateQuestionDto = {
         content: parsedQuestion.content,
         rawContent: importDto.latexContent,
-        type: parsedQuestion.type as QuestionType,
+        type: parsedQuestion.type as any,
         questionId: parsedQuestion.questionId,
         subcount: parsedQuestion.subcount?.fullId,
         source: parsedQuestion.sources?.[0],
@@ -148,7 +149,7 @@ export class QuestionImportExportController {
         totalProcessed: 1,
         successCount: 0,
         failureCount: 1,
-        errors: [{ message: error.message }],
+        errors: [{ message: getErrorMessage(error) }],
       };
     }
   }
@@ -208,7 +209,7 @@ export class QuestionImportExportController {
             importResult.errors.forEach(error => {
               result.errors.push({
                 index: i,
-                message: error.message,
+                message: getErrorMessage(error),
                 content: error.content,
               });
             });
@@ -218,7 +219,7 @@ export class QuestionImportExportController {
         result.failureCount++;
         result.errors.push({
           index: i,
-          message: error.message,
+          message: getErrorMessage(error),
         });
       }
     }
@@ -470,7 +471,7 @@ export class QuestionImportExportController {
       }
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
-        message: error.message || 'Lỗi khi xuất câu hỏi',
+        message: getErrorMessage(error) || 'Lỗi khi xuất câu hỏi',
       });
     }
   }

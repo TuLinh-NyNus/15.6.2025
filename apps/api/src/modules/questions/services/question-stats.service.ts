@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { getErrorMessage, getErrorName } from '../../../utils/error-handler';
 
 /**
  * Interface kết quả trả lời câu hỏi
@@ -171,7 +172,7 @@ export class QuestionStatsService {
             : 0,
         }));
       } catch (e) {
-        this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${e.message}`);
+        this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${getErrorMessage(e)}`);
       }
       
       const internalDto: InternalQuestionStatsDto = {
@@ -186,7 +187,7 @@ export class QuestionStatsService {
       
       return this.mapToExternalDto(internalDto);
     } catch (error) {
-      this.logger.error(`Error getting question stats: ${error.message}`, error.stack);
+      this.logger.error(`Error getting question stats: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -256,7 +257,7 @@ export class QuestionStatsService {
             ? JSON.parse(existingStats.optionDistribution)
             : (existingStats.optionDistribution || {});
         } catch (e) {
-          this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${e.message}`);
+          this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${getErrorMessage(e)}`);
         }
         
         if (selectedOptionId) {
@@ -277,7 +278,7 @@ export class QuestionStatsService {
         `;
       }
     } catch (error) {
-      this.logger.error(`Error updating question stats: ${error.message}`, error.stack);
+      this.logger.error(`Error updating question stats: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -341,7 +342,7 @@ export class QuestionStatsService {
         needsReview,
       };
     } catch (error) {
-      this.logger.error(`Error analyzing question difficulty: ${error.message}`, error.stack);
+      this.logger.error(`Error analyzing question difficulty: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -426,7 +427,7 @@ export class QuestionStatsService {
         return bDiff - aDiff;
       });
     } catch (error) {
-      this.logger.error(`Error getting questions for difficulty review: ${error.message}`, error.stack);
+      this.logger.error(`Error getting questions for difficulty review: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -489,7 +490,7 @@ export class QuestionStatsService {
         totalAnswered: data.totalAnswered
       }));
     } catch (error) {
-      this.logger.error(`Error getting stats by question type: ${error.message}`, error.stack);
+      this.logger.error(`Error getting stats by question type: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -549,7 +550,7 @@ export class QuestionStatsService {
         totalAnswered: data.totalAnswered
       }));
     } catch (error) {
-      this.logger.error(`Error getting stats by difficulty: ${error.message}`, error.stack);
+      this.logger.error(`Error getting stats by difficulty: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -599,7 +600,7 @@ export class QuestionStatsService {
         }
       }
     } catch (error) {
-      this.logger.error(`Error registering question in exam: ${error.message}`, error.stack);
+      this.logger.error(`Error registering question in exam: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -651,7 +652,7 @@ export class QuestionStatsService {
             ? JSON.parse(stat.optionDistribution)
             : (stat.optionDistribution || {});
         } catch (e) {
-          this.logger.warn(`Error parsing optionDistribution for question ${id}: ${e.message}`);
+          this.logger.warn(`Error parsing optionDistribution for question ${id}: ${getErrorMessage(e)}`);
         }
         
         return {
@@ -668,7 +669,7 @@ export class QuestionStatsService {
         };
       }).filter(Boolean);
     } catch (error) {
-      this.logger.error(`Error getting multiple question stats: ${error.message}`, error.stack);
+      this.logger.error(`Error getting multiple question stats: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -691,7 +692,7 @@ export class QuestionStatsService {
       
       return this.getMultipleQuestionStats(stats.map(s => s.questionId));
     } catch (error) {
-      this.logger.error(`Error getting most difficult questions: ${error.message}`, error.stack);
+      this.logger.error(`Error getting most difficult questions: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -714,7 +715,7 @@ export class QuestionStatsService {
       
       return this.getMultipleQuestionStats(stats.map(s => s.questionId));
     } catch (error) {
-      this.logger.error(`Error getting easiest questions: ${error.message}`, error.stack);
+      this.logger.error(`Error getting easiest questions: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -737,7 +738,7 @@ export class QuestionStatsService {
       
       return this.getMultipleQuestionStats(stats.map(s => s.questionId));
     } catch (error) {
-      this.logger.error(`Error getting time consuming questions: ${error.message}`, error.stack);
+      this.logger.error(`Error getting time consuming questions: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }
@@ -760,7 +761,7 @@ export class QuestionStatsService {
       const questions = Array.isArray(result) ? result : [];
       return questions.map((q: { questionId: string }) => q.questionId);
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy câu hỏi có nhiều lượt trả lời: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy câu hỏi có nhiều lượt trả lời: ${getErrorMessage(error)}`, getErrorName(error));
       return [];
     }
   }
@@ -831,7 +832,7 @@ export class QuestionStatsService {
             ? JSON.parse(existingStats.optionDistribution)
             : (existingStats.optionDistribution || {});
         } catch (e) {
-          this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${e.message}`);
+          this.logger.warn(`Error parsing optionDistribution for question ${questionId}: ${getErrorMessage(e)}`);
         }
         
         if (selectedAnswer) {
@@ -852,7 +853,7 @@ export class QuestionStatsService {
         `;
       }
     } catch (error) {
-      this.logger.error(`Error updating stats from answer result: ${error.message}`, error.stack);
+      this.logger.error(`Error updating stats from answer result: ${getErrorMessage(error)}`, getErrorName(error));
       throw error;
     }
   }

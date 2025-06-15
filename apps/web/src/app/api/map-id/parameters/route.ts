@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { MapIDService, getMapIDService } from "@/lib/services/mapid-service";
 import logger from "@/lib/utils/logger";
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * API route để lấy các tham số MapID
  * GET /api/map-id/parameters

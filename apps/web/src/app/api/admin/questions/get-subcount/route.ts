@@ -3,6 +3,9 @@ import { getToken } from 'next-auth/jwt';
 
 import logger from '@/lib/utils/logger';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // Hàm xử lý GET request tới /api/admin/questions/get-subcount
 export async function GET(request: NextRequest) {
   // Đảm bảo không cache kết quả

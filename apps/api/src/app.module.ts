@@ -16,6 +16,7 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 import { join } from 'path';
 import * as fs from 'fs';
+import { getErrorMessage } from './utils/error-handler';
 
 @Module({
   imports: [
@@ -80,7 +81,7 @@ export class AppModule implements OnModuleInit {
           const content = fs.readFileSync(path, 'utf8');
           console.log(`File content exists: ${content.length > 0}`);
         } catch (error) {
-          console.error(`Error reading file: ${error.message}`);
+          console.error(`Error reading file: ${error instanceof Error ? getErrorMessage(error) : String(error)}`);
         }
       }
     });

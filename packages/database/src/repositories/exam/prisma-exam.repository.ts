@@ -119,13 +119,13 @@ function mapExamToPrismaData(exam: Partial<Exam>): {
     title: exam.title || '',
     description: exam.description as unknown as Prisma.InputJsonValue,
     duration: exam.timeLimit || 0,
-    difficulty: customExam.difficulty ? mapDifficultyToPrisma(customExam.difficulty) : undefined,
-    subject: customExam.subject,
-    grade: customExam.grade,
-    form: customExam.form ? mapExamFormToPrisma(customExam.form) : undefined,
+    difficulty: customExam.difficulty ? mapDifficultyToPrisma(customExam.difficulty) : 'medium',
+    subject: customExam.subject || 'Unknown',
+    grade: customExam.grade || 12,
+    form: customExam.form ? mapExamFormToPrisma(customExam.form) : 'TRAC_NGHIEM',
     tags: customExam.tags || [],
-    examCategory: exam.examCategories && exam.examCategories.length ? 
-      mapExamCategoryToPrisma(exam.examCategories[0]) : undefined,
+    examCategory: exam.examCategories && exam.examCategories.length ?
+      mapExamCategoryToPrisma(exam.examCategories[0]) : 'KHAO_SAT',
     type: customExam.type ? mapExamTypeToPrisma(customExam.type) : undefined
   };
   
@@ -620,9 +620,18 @@ export class PrismaExamRepository implements IExamRepository {
       createdBy: exam.createdBy,
       createdAt: exam.createdAt,
       updatedAt: exam.updatedAt,
-      creator: { id: exam.createdBy },
+      creator: {
+        id: exam.createdBy,
+        createdAt: exam.createdAt,
+        updatedAt: exam.updatedAt,
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        role: 'STUDENT' as any
+      },
       examResults: [],
       lessons: []
-    } as PrismaExamPayload;
+    } as unknown as PrismaExamPayload;
   }
 } 

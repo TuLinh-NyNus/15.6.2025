@@ -67,9 +67,13 @@ export class ExamAttemptController {
     // Nếu có examId, lấy danh sách lần làm bài của user cho bài thi cụ thể
     if (examId) {
       const results = await this.attemptService.getResultsByUser(userId);
-      return results.filter((result: Record<string, unknown>) => {
-        const examIdKey = 'examId' in result ? 'examId' : 'exam_id';
-        return result[examIdKey] === examId;
+      return results.filter((result: unknown): result is Record<string, unknown> => {
+        if (typeof result === 'object' && result !== null) {
+          const record = result as Record<string, unknown>;
+          const examIdKey = 'examId' in record ? 'examId' : 'exam_id';
+          return record[examIdKey] === examId;
+        }
+        return false;
       });
     }
     

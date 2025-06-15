@@ -120,21 +120,25 @@ export function useApiClient<T = any>({
     }
   };
   
-  // Sử dụng useQuery cho các request GET
-  if (method === 'GET') {
-    return useQuery<T>({
-      queryKey: finalQueryKey,
-      queryFn: fetchApi,
-      enabled: enabled && (skipAuth || !!apiToken)
-    });
-  }
-  
-  // Sử dụng useMutation cho các request khác
-  return useMutation<T, Error, void>({
+  // Luôn gọi cả useQuery và useMutation để tuân thủ rules of hooks
+  const queryResult = useQuery<T>({
+    queryKey: finalQueryKey,
+    queryFn: fetchApi,
+    enabled: method === 'GET' && enabled && (skipAuth || !!apiToken)
+  });
+
+  const mutationResult = useMutation<T, Error, void>({
     mutationFn: fetchApi,
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       // Invalidate các query liên quan
       queryClient.invalidateQueries({ queryKey: [endpoint.split('?')[0]] });
     }
   });
+
+  // Trả về kết quả phù hợp dựa trên method
+  if (method === 'GET') {
+    return queryResult;
+  }
+
+  return mutationResult;
 }

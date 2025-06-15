@@ -143,8 +143,8 @@ export class PrismaUserProfileRepository implements IUserProfileRepository {
     profile.updatedAt = new Date(prismaProfile.updatedAt as string);
     
     try {
-      profile.socialLinks = prismaProfile.socialLinks 
-        ? JSON.parse(prismaProfile.socialLinks as string) as UserProfileSocialLinks
+      profile.socialLinks = prismaProfile.socialLinks
+        ? JSON.parse(prismaProfile.socialLinks as string) as Record<string, string>
         : undefined;
     } catch {
       profile.socialLinks = undefined;

@@ -17,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { QuestionStatsService } from '../services/question-stats.service';
+import { getErrorMessage, getErrorName } from '../../../utils/error-handler';
 
 /**
  * DTO cho response lấy thống kê câu hỏi
@@ -108,7 +109,7 @@ export class QuestionStatsController {
       
       return stats;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy câu hỏi được sử dụng nhiều nhất: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy câu hỏi được sử dụng nhiều nhất: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy danh sách câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -152,7 +153,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi phân tích độ khó câu hỏi: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi phân tích độ khó câu hỏi: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể phân tích độ khó câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -186,7 +187,7 @@ export class QuestionStatsController {
       
       return stats;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy thống kê câu hỏi ${questionId}: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy thống kê câu hỏi ${questionId}: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy thống kê câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -212,7 +213,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy thống kê theo loại câu hỏi: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy thống kê theo loại câu hỏi: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy thống kê theo loại câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -238,7 +239,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy thống kê theo độ khó của câu hỏi: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy thống kê theo độ khó của câu hỏi: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy thống kê theo độ khó của câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -272,7 +273,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy thống kê về thời gian làm câu hỏi: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy thống kê về thời gian làm câu hỏi: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy thống kê về thời gian làm câu hỏi',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -306,7 +307,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy danh sách câu hỏi khó nhất: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy danh sách câu hỏi khó nhất: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy danh sách câu hỏi khó nhất',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -340,7 +341,7 @@ export class QuestionStatsController {
       
       return results;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy danh sách câu hỏi dễ nhất: ${error.message}`, error.stack);
+      this.logger.error(`Lỗi khi lấy danh sách câu hỏi dễ nhất: ${getErrorMessage(error)}`, getErrorName(error));
       throw new HttpException(
         'Không thể lấy danh sách câu hỏi dễ nhất',
         HttpStatus.INTERNAL_SERVER_ERROR,

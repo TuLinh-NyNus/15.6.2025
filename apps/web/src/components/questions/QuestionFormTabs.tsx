@@ -99,6 +99,12 @@ export type QuestionFormData = {
   // 6. Content: Nội dung câu hỏi đã xử lý
   content: string;
 
+  // 7. Answers: Danh sách đáp án
+  answers?: QuestionAnswer[];
+
+  // 8. CorrectAnswer: Đáp án đúng
+  correctAnswer?: string | string[];
+
   // 9. Solution: Lời giải câu hỏi
   solution: string;
 

@@ -4,8 +4,9 @@ import { IQuestionRepository } from '@project/interfaces';
 import { QuestionData, QuestionOptionData } from '@project/interfaces';
 import { QuestionFilterDto } from '@project/dto';
 import {
-  Question, QuestionStatus, QuestionDifficulty, QuestionTypeEnum
+  Question, QuestionStatus, QuestionDifficulty
 } from '../../entities';
+import { QuestionEnumType as QuestionTypeEnum } from '@project/entities';
 import { Prisma } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,7 +35,7 @@ export class QuestionRepository implements IQuestionRepository {
       questionId: question.questionId || undefined,
       title: question.content,
       content: question.rawContent,
-      type: question.type as unknown as QuestionTypeEnum,
+      type: question.type as any, // Cast to avoid type conflict
       difficulty: question.difficulty as QuestionDifficulty || QuestionDifficulty.MEDIUM,
       status: question.status,
       explanation: question.solution || undefined,
@@ -583,7 +584,7 @@ export class QuestionRepository implements IQuestionRepository {
     return {
       title,
       content: rawContent,
-      type,
+      type: type as any, // Cast to avoid type conflict
       difficulty,
       explanation,
       options,

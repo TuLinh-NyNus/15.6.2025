@@ -87,15 +87,6 @@ alwaysApply: true
   - Utilities và logic kinh doanh dùng chung.
 
 ## 4. Database Rules
-
-### MongoDB
-
-- Sử dụng schemas với validate.
-- Định nghĩa các chỉ mục (indexes) phù hợp.
-- Sử dụng các kiểu dữ liệu thích hợp.
-- Xử lý chuyển đổi ObjectId một cách đúng đắn.
-- Dùng aggregation cho các query phức tạp.
-
 ### PostgreSQL
 
 - Định nghĩa các mối quan hệ (relationships) rõ ràng.

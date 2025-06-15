@@ -12,6 +12,7 @@ import {
 import { ApiError } from "@/lib/api/types/api-error";
 
 import { toast } from "./use-toast";
+import { useMemo, useState, useEffect } from "react";
 
 /**
  * Hook để lấy danh sách câu hỏi
@@ -138,4 +139,53 @@ export function useDeleteQuestion() {
       });
     },
   });
+}
+
+/**
+ * Enhanced hook để tìm kiếm câu hỏi với difficulty filtering
+ */
+export function useQuestionsWithFilters(params?: IQuestionFilterParams) {
+  // Memoize the params to prevent unnecessary re-renders
+  const memoizedParams = useMemo(() => params, [JSON.stringify(params)]);
+
+  return useQuery({
+    queryKey: createListQueryKey(QueryKeys.QUESTIONS_SEARCH, memoizedParams),
+    queryFn: () => questionService.searchQuestions(memoizedParams || {}),
+    enabled: true,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+}
+
+/**
+ * Hook để lấy danh sách câu hỏi với debounced search
+ */
+export function useDebouncedQuestions(
+  searchTerm: string,
+  difficulties: string[],
+  types: string[] = [],
+  statuses: string[] = [],
+  debounceMs: number = 500
+) {
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, debounceMs);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, debounceMs]);
+
+  const params = useMemo(() => ({
+    search: debouncedSearchTerm,
+    difficulties: difficulties.length > 0 ? difficulties : undefined,
+    types: types.length > 0 ? types : undefined,
+    statuses: statuses.length > 0 ? statuses : undefined,
+    page: 1,
+    limit: 20,
+  }), [debouncedSearchTerm, difficulties, types, statuses]);
+
+  return useQuestionsWithFilters(params);
 }

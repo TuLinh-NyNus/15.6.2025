@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IMapIDService } from '@project/interfaces';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 /**
  * Constants cho Level
@@ -129,8 +130,8 @@ export class MapIDService implements IMapIDService {
         };
       }
     } catch (error) {
-      this.logger.error(`Lỗi khi phân giải QuestionID ${questionId}: ${error.message}`);
-      throw new Error(`Không thể phân giải QuestionID: ${error.message}`);
+      this.logger.error(`Lỗi khi phân giải QuestionID ${questionId}: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể phân giải QuestionID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -186,8 +187,8 @@ export class MapIDService implements IMapIDService {
       
       return questionId;
     } catch (error) {
-      this.logger.error(`Lỗi khi tạo QuestionID: ${error.message}`);
-      throw new Error(`Không thể tạo QuestionID: ${error.message}`);
+      this.logger.error(`Lỗi khi tạo QuestionID: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể tạo QuestionID: ${getErrorMessage(error)}`);
     }
   }
 
@@ -254,10 +255,10 @@ export class MapIDService implements IMapIDService {
         errors
       };
     } catch (error) {
-      this.logger.error(`Lỗi khi validate QuestionID ${questionId}: ${error.message}`);
+      this.logger.error(`Lỗi khi validate QuestionID ${questionId}: ${getErrorMessage(error)}`);
       return {
         isValid: false,
-        errors: [`Lỗi khi validate: ${error.message}`]
+        errors: [`Lỗi khi validate: ${getErrorMessage(error)}`]
       };
     }
   }
@@ -335,8 +336,8 @@ export class MapIDService implements IMapIDService {
       
       return result;
     } catch (error) {
-      this.logger.error(`Lỗi khi lấy mô tả QuestionID ${questionId}: ${error.message}`);
-      throw new Error(`Không thể lấy mô tả QuestionID: ${error.message}`);
+      this.logger.error(`Lỗi khi lấy mô tả QuestionID ${questionId}: ${getErrorMessage(error)}`);
+      throw new Error(`Không thể lấy mô tả QuestionID: ${getErrorMessage(error)}`);
     }
   }
 

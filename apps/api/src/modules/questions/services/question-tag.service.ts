@@ -7,6 +7,7 @@ import {
   QuestionTagResponseDto,
   QuestionTagFilterDto
 } from '@project/dto';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 // Định nghĩa kiểu dữ liệu cho kết quả truy vấn raw
 interface RawQuestionTag {
@@ -38,7 +39,7 @@ export class QuestionTagService {
   async findAll(filters: QuestionTagFilterDto) {
     const page = filters.page ?? 1;
     const limit = filters.limit ?? 10;
-    const search = filters.search || '';
+    const search = filters.name || '';
     const questionId = filters.questionId;
 
     const skip = (page - 1) * limit;
@@ -53,22 +54,24 @@ export class QuestionTagService {
       params.push(`%${search}%`);
     }
 
-    // Nếu có questionId, cần truy vấn phức tạp hơn với joins
+    // Removed questionId filtering as it doesn't exist in QuestionTagFilterDto
+    // // Nếu có questionId, cần truy vấn phức tạp hơn với joins
+    // let joinClause = '';
+    // if (questionId) {
+    //   if (whereClause === '') {
+    //     whereClause = 'WHERE';
+    //   } else {
+    //     whereClause += ' AND';
+    //   }
+    //
+    //   joinClause = `
+    //     JOIN "_QuestionToTags" qt ON qt."B" = qt.id
+    //     JOIN "questions" q ON q.id = qt."A"
+    //   `;
+    //   whereClause += ` q.id = $${params.length + 1}`;
+    //   params.push(questionId);
+    // }
     let joinClause = '';
-    if (questionId) {
-      if (whereClause === '') {
-        whereClause = 'WHERE';
-      } else {
-        whereClause += ' AND';
-      }
-      
-      joinClause = `
-        JOIN "_QuestionToTags" qt ON qt."B" = qt.id
-        JOIN "questions" q ON q.id = qt."A"
-      `;
-      whereClause += ` q.id = $${params.length + 1}`;
-      params.push(questionId);
-    }
 
     // Thực hiện truy vấn COUNT
     const countQuery = `
@@ -99,10 +102,14 @@ export class QuestionTagService {
     const tags = tagsResult;
 
     // Map kết quả sang DTO
-    const formattedTags = tags.map(tag => new QuestionTagResponseDto({
-      ...tag,
-      questionCount: parseInt(tag.questionCount || '0', 10),
-    }));
+    const formattedTags = tags.map(tag => {
+      const dto = new QuestionTagResponseDto();
+      Object.assign(dto, {
+        ...tag,
+        questionCount: parseInt(tag.questionCount || '0', 10),
+      });
+      return dto;
+    });
 
     return {
       tags: formattedTags,
@@ -133,10 +140,12 @@ export class QuestionTagService {
 
     const tagData = Array.isArray(tag) ? tag[0] : tag;
 
-    return new QuestionTagResponseDto({
+    const dto = new QuestionTagResponseDto();
+    Object.assign(dto, {
       ...tagData,
       questionCount: parseInt(tagData.questionCount || '0', 10),
     });
+    return dto;
   }
 
   /**
@@ -151,10 +160,12 @@ export class QuestionTagService {
       RETURNING id, name, description, "createdAt", "updatedAt"
     `;
 
-    return new QuestionTagResponseDto({
+    const dto = new QuestionTagResponseDto();
+    Object.assign(dto, {
       ...tag[0],
       questionCount: 0,
     });
+    return dto;
   }
 
   /**
@@ -228,10 +239,14 @@ export class QuestionTagService {
       ORDER BY qt.name ASC
     `;
 
-    return tags.map(tag => new QuestionTagResponseDto({
-      ...tag,
-      questionCount: tag.questionCount ? parseInt(tag.questionCount, 10) : 0
-    }));
+    return tags.map(tag => {
+      const dto = new QuestionTagResponseDto();
+      Object.assign(dto, {
+        ...tag,
+        questionCount: tag.questionCount ? parseInt(tag.questionCount, 10) : 0
+      });
+      return dto;
+    });
   }
 
   /**

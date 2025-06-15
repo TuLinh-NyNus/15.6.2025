@@ -1,0 +1,83 @@
+# Development Dockerfile for NestJS API Service
+FROM node:18-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat curl python3 make g++ openssl-dev
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm@8.15.4
+
+# Copy package files for dependency installation
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/database/package.json ./packages/database/
+COPY packages/dto/package.json ./packages/dto/
+COPY packages/entities/package.json ./packages/entities/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/interfaces/package.json ./packages/interfaces/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Development stage
+FROM base AS development
+WORKDIR /app
+
+# Install pnpm and curl
+RUN npm install -g pnpm@8.15.4 && \
+    apk add --no-cache libc6-compat curl python3 make g++ openssl-dev
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
+COPY --from=deps /app/packages/dto/node_modules ./packages/dto/node_modules
+COPY --from=deps /app/packages/entities/node_modules ./packages/entities/node_modules
+COPY --from=deps /app/packages/utils/node_modules ./packages/utils/node_modules
+COPY --from=deps /app/packages/interfaces/node_modules ./packages/interfaces/node_modules
+
+# Copy source code (will be overridden by volume mounts in development)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/api/src ./apps/api/src
+COPY apps/api/prisma ./apps/api/prisma
+COPY apps/api/nest-cli.json ./apps/api/
+COPY apps/api/tsconfig*.json ./apps/api/
+COPY packages ./packages
+
+# Generate Prisma client
+WORKDIR /app/apps/api
+RUN npx prisma generate
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nestjs
+
+# Set permissions
+RUN chown -R nestjs:nodejs /app
+USER nestjs
+
+# Expose ports
+EXPOSE 5000 9229
+
+# Environment variables
+ENV NODE_ENV=development
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
+  CMD curl -f http://localhost:5000/health || exit 1
+
+# Create startup script for development
+USER root
+RUN echo '#!/bin/sh\nset -e\necho "Waiting for database..."\nwhile ! nc -z db 5432; do sleep 1; done\necho "Running Prisma migrations..."\ncd /app/apps/api && npx prisma migrate deploy\necho "Starting NestJS development server..."\nexec pnpm dev' > /app/start-dev.sh && \
+    chmod +x /app/start-dev.sh && \
+    chown nestjs:nodejs /app/start-dev.sh
+
+USER nestjs
+
+# Start development server
+WORKDIR /app/apps/api
+CMD ["/app/start-dev.sh"]

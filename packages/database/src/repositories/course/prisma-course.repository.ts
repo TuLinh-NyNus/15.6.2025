@@ -54,8 +54,8 @@ export class PrismaCourseRepository implements ICourseRepository {
     course.isPublished = prismaData.isPublished;
     course.categoryId = prismaData.categoryId;
     course.instructorId = prismaData.instructorId;
-    course.thumbnail = prismaData.thumbnail;
-    course.introVideo = prismaData.introVideo;
+    course.thumbnail = prismaData.thumbnail || undefined;
+    course.introVideo = prismaData.introVideo || undefined;
     course.prerequisites = prismaData.prerequisites || []; // Default to empty array
     course.learningOutcomes = prismaData.learningOutcomes || []; // Default to empty array
     course.totalStudents = prismaData.totalStudents || 0; // Default to 0
@@ -72,9 +72,9 @@ export class PrismaCourseRepository implements ICourseRepository {
       const category = new Category();
       category.id = prismaData.category.id;
       category.name = prismaData.category.name;
-      category.description = prismaData.category.description;
+      category.description = prismaData.category.description || undefined;
       category.slug = prismaData.category.slug; // Required field
-      category.imageUrl = prismaData.category.imageUrl;
+      category.imageUrl = prismaData.category.imageUrl || undefined;
       category.order = prismaData.category.order;
       category.isVisible = prismaData.category.isVisible;
       category.parentId = prismaData.category.parentId ?? undefined; // Handle null parentId

@@ -40,6 +40,32 @@ export interface MapIDResult {
     description: string;
   };
   fullDescription: string;
+  detailedInfo?: {
+    grade: {
+      code: string;
+      description: string;
+    };
+    subject: {
+      code: string;
+      description: string;
+    };
+    chapter: {
+      code: string;
+      description: string;
+    };
+    difficulty: {
+      code: string;
+      description: string;
+    };
+    lesson: {
+      code: string;
+      description: string;
+    };
+    form: {
+      code: string;
+      description: string;
+    };
+  };
 }
 
 /**

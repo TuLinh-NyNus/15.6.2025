@@ -620,7 +620,7 @@ export function QuestionIDInfo({ formData, setFormData }: QuestionIDInfoProps) {
         }
 
         updatedQuestionID[field] = {
-          ...updatedQuestionID[field],
+          ...(updatedQuestionID[field] || {}),
           value: value,
           description: description
         };

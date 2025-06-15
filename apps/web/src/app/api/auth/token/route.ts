@@ -3,6 +3,9 @@ import { cookies } from 'next/headers';
 import { getToken } from 'next-auth/jwt';
 import logger from '@/lib/utils/logger';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * API route để lấy token mới từ API backend
  * @param request NextRequest

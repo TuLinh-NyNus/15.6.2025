@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { 
-  DetailedExamStatsDto, 
-  ExamStatsDto, 
-  ExamStatsParamsDto, 
+import {
+  DetailedExamStatsDto,
+  ExamStatsDto,
+  ExamStatsParamsDto,
   QuestionStatsDto,
   ExamFilterDto
 } from '@project/dto';
 import { IExamStatsService } from '@project/interfaces';
 import { IExamRepository, IExamResultRepository } from '@project/interfaces';
 import { Difficulty, ExamCategory, ExamForm } from '@project/entities';
+import { getErrorMessage } from '../../../utils/error-handler';
 
 // Interface cho exam result
 interface ExamResult {
@@ -454,7 +455,7 @@ export class ExamStatsService implements IExamStatsService {
           statsMap[examId] = stats;
         } catch (error) {
           // Bỏ qua bài thi không tồn tại
-          console.error(`Không thể lấy thống kê cho bài thi ID ${examId}: ${error.message}`);
+          console.error(`Không thể lấy thống kê cho bài thi ID ${examId}: ${getErrorMessage(error)}`);
         }
       })
     );

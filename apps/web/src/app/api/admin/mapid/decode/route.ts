@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decodeMapIDFromSample } from '@/lib/utils/mapid-decoder';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * API endpoint để giải mã MapID
  * @param request Request từ client

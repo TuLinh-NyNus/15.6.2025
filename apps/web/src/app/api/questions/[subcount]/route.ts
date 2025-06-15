@@ -111,7 +111,7 @@ export async function GET(
     // Log dữ liệu mẫu để debug
     logger.debug('Dữ liệu mẫu được trả về:', {
       subcount: subcount,
-      hasRawContent: !!mockData.item.raw_content,
+      hasRawContent: !!mockData.item.rawContent,
       questionID: mockData.item.questionID ? Object.keys(mockData.item.questionID) : []
     });
 

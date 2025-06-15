@@ -46,8 +46,8 @@ export class MapIDDecoder {
   private parseMapIDFile(content: string): void {
     // Phân tích các mức độ
     const levelRegex = /\[([A-Z])\] ([^\n]+)/g;
-    let match;
-    
+    let match: RegExpExecArray | null;
+
     while ((match = levelRegex.exec(content)) !== null) {
       const code = match[1];
       const description = match[2].trim();
@@ -89,7 +89,7 @@ export class MapIDDecoder {
       
       // Tìm lớp mà môn học này thuộc về
       const lines = content.split('\n');
-      const lineIndex = lines.findIndex(line => line.includes(match[0]));
+      const lineIndex = lines.findIndex(line => line.includes(match![0]));
       
       // Tìm lớp gần nhất phía trước
       let gradeCode = '';
@@ -125,7 +125,7 @@ export class MapIDDecoder {
       
       // Tìm lớp và môn học mà chương này thuộc về
       const lines = content.split('\n');
-      const lineIndex = lines.findIndex(line => line.includes(match[0]));
+      const lineIndex = lines.findIndex(line => line.includes(match![0]));
       
       // Tìm môn học gần nhất phía trước
       let subjectCode = '';
@@ -171,7 +171,7 @@ export class MapIDDecoder {
       
       // Tìm lớp, môn học và chương mà bài học này thuộc về
       const lines = content.split('\n');
-      const lineIndex = lines.findIndex(line => line.includes(match[0]));
+      const lineIndex = lines.findIndex(line => line.includes(match![0]));
       
       // Tìm chương gần nhất phía trước
       let chapterCode = '';
@@ -226,7 +226,7 @@ export class MapIDDecoder {
       
       // Tìm lớp, môn học, chương và bài học mà dạng này thuộc về
       const lines = content.split('\n');
-      const lineIndex = lines.findIndex(line => line.includes(match[0]));
+      const lineIndex = lines.findIndex(line => line.includes(match![0]));
       
       // Tìm bài học gần nhất phía trước
       let lessonCode = '';

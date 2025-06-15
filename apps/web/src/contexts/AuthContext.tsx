@@ -109,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Giá trị context
   const value = {
     isAuthenticated: !!session,
-    isAdmin: session?.user?.role === 'admin',
+    isAdmin: (session?.user as any)?.role === 'admin',
     apiToken,
     loading: status === 'loading' || loading,
     refreshApiToken

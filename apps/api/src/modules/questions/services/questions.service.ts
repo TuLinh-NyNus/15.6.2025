@@ -5,6 +5,7 @@ import { QuestionStatus, QuestionType, QuestionDifficulty } from '@project/entit
 import { IQuestionRepository } from '@project/interfaces';
 import { Prisma } from '@prisma/client';
 import { extractAnswersFromLatex } from '../../../utils/question-answer-extractor';
+import { getErrorMessage, getErrorName } from '../../../utils/error-handler';
 
 
 
@@ -104,15 +105,51 @@ export class QuestionsService {
         }
       }
 
+      // Xử lý lọc theo độ khó (DIFFICULTY FILTERING - THÊM MỚI)
+      let difficultyCondition = Prisma.empty;
+      if (filters.difficulties && filters.difficulties.length > 0) {
+        console.log('Lọc theo độ khó:', filters.difficulties);
+        const difficultyValues = filters.difficulties.map(d => `'${d}'`).join(',');
+        difficultyCondition = Prisma.sql`AND "difficulty" IN (${Prisma.raw(difficultyValues)})`;
+      }
+
+      // Xử lý lọc theo loại câu hỏi (TYPE FILTERING - THÊM MỚI)
+      let typeCondition = Prisma.empty;
+      if (filters.types && filters.types.length > 0) {
+        console.log('Lọc theo loại câu hỏi:', filters.types);
+        const typeValues = filters.types.map(t => `'${t}'`).join(',');
+        typeCondition = Prisma.sql`AND "type" IN (${Prisma.raw(typeValues)})`;
+      }
+
+      // Xử lý lọc theo trạng thái (STATUS FILTERING - THÊM MỚI)
+      let statusCondition = Prisma.empty;
+      if (filters.statuses && filters.statuses.length > 0) {
+        console.log('Lọc theo trạng thái:', filters.statuses);
+        const statusValues = filters.statuses.map(s => `'${s}'`).join(',');
+        statusCondition = Prisma.sql`AND "status" IN (${Prisma.raw(statusValues)})`;
+      }
+
+      // Xử lý lọc theo người tạo (CREATOR FILTERING - THÊM MỚI)
+      let creatorCondition = Prisma.empty;
+      if (filters.creatorId) {
+        console.log('Lọc theo người tạo:', filters.creatorId);
+        creatorCondition = Prisma.sql`AND "creatorId" = ${filters.creatorId}`;
+      }
+
       // Log để debug
       console.log('Điều kiện lọc QuestionID:', questionIdConditions.map(c => c.sql).join(' AND '));
       console.log('Điều kiện lọc UsageCount:', usageCountCondition);
+      console.log('Điều kiện lọc Difficulty:', difficultyCondition);
+      console.log('Điều kiện lọc Type:', typeCondition);
+      console.log('Điều kiện lọc Status:', statusCondition);
+      console.log('Điều kiện lọc Creator:', creatorCondition);
 
-      // Sử dụng raw query để lấy dữ liệu
+      // Sử dụng raw query để lấy dữ liệu (CẬP NHẬT: thêm difficulty và các fields khác)
       const questions = await this.prisma.$queryRaw`
         SELECT
           id, content, "createdAt", "updatedAt",
-          "rawContent", status, type, "creatorId", "questionId", "usageCount"
+          "rawContent", status, type, "creatorId", "questionId", "usageCount",
+          difficulty, solution, source, answers, "correctAnswer", feedback
         FROM questions
         WHERE 1=1
         ${search ? Prisma.sql`AND (
@@ -121,12 +158,16 @@ export class QuestionsService {
         )` : Prisma.empty}
         ${questionIdCondition}
         ${usageCountCondition}
+        ${difficultyCondition}
+        ${typeCondition}
+        ${statusCondition}
+        ${creatorCondition}
         ORDER BY "createdAt" DESC
         LIMIT ${limit}
         OFFSET ${skip}
       `;
 
-      // Đếm tổng số câu hỏi bằng raw query
+      // Đếm tổng số câu hỏi bằng raw query (CẬP NHẬT: thêm tất cả conditions)
       const totalResult = await this.prisma.$queryRaw`
         SELECT COUNT(*) as total
         FROM questions
@@ -137,6 +178,10 @@ export class QuestionsService {
         )` : Prisma.empty}
         ${questionIdCondition}
         ${usageCountCondition}
+        ${difficultyCondition}
+        ${typeCondition}
+        ${statusCondition}
+        ${creatorCondition}
       `;
 
       const total = parseInt(totalResult[0]?.total || '0', 10);
@@ -642,12 +687,12 @@ export class QuestionsService {
                 `;
                 console.log(`Đã thêm tag ${tagId} cho câu hỏi ${id}`);
               } catch (tagError) {
-                console.error(`Lỗi khi thêm tag ${tagId} cho câu hỏi ${id}:`, tagError.message);
+                console.error(`Lỗi khi thêm tag ${tagId} cho câu hỏi ${id}:`, getErrorMessage(tagError));
                 // Bỏ qua lỗi và tiếp tục với tag tiếp theo
               }
             }
           } catch (tagsError) {
-            console.error(`Lỗi khi cập nhật tags cho câu hỏi ${id}:`, tagsError.message);
+            console.error(`Lỗi khi cập nhật tags cho câu hỏi ${id}:`, getErrorMessage(tagsError));
             // Bỏ qua lỗi và tiếp tục cập nhật câu hỏi
           }
         }
@@ -691,7 +736,7 @@ export class QuestionsService {
           questionExists = result[0];
           console.log('Tìm thấy câu hỏi trong bảng questions:', questionExists?.id);
         } catch (err) {
-          console.log('Lỗi khi tìm trong bảng questions:', err.message);
+          console.log('Lỗi khi tìm trong bảng questions:', getErrorMessage(err));
 
           // Thử tìm trong bảng question (số ít)
           try {
@@ -701,7 +746,7 @@ export class QuestionsService {
             questionExists = result[0];
             console.log('Tìm thấy câu hỏi trong bảng question:', questionExists?.id);
           } catch (err2) {
-            console.log('Lỗi khi tìm trong bảng question:', err2.message);
+            console.log('Lỗi khi tìm trong bảng question:', getErrorMessage(err2));
           }
         }
 
@@ -716,8 +761,8 @@ export class QuestionsService {
         console.error('Lỗi khi tìm câu hỏi:', findError);
         return {
           success: false,
-          message: `Lỗi khi tìm câu hỏi: ${findError.message}`,
-          error: findError.message
+          message: `Lỗi khi tìm câu hỏi: ${getErrorMessage(findError)}`,
+          error: getErrorMessage(findError)
         };
       }
 
@@ -734,7 +779,7 @@ export class QuestionsService {
             where: { questionId: id }
           });
         } catch (err) {
-          console.log('Không thể đếm assessment_questions:', err.message);
+          console.log('Không thể đếm assessment_questions:', getErrorMessage(err));
         }
 
         if (assessmentCount > 0) {
@@ -752,7 +797,7 @@ export class QuestionsService {
             `;
             console.log('Đã xóa câu hỏi từ bảng questions thành công');
           } catch (err) {
-            console.log('Lỗi khi xóa từ bảng questions:', err.message);
+            console.log('Lỗi khi xóa từ bảng questions:', getErrorMessage(err));
           }
 
           // Thử xóa từ bảng question (số ít) nếu có
@@ -762,7 +807,7 @@ export class QuestionsService {
             `;
             console.log('Đã xóa câu hỏi từ bảng question thành công');
           } catch (err) {
-            console.log('Lỗi khi xóa từ bảng question:', err.message);
+            console.log('Lỗi khi xóa từ bảng question:', getErrorMessage(err));
           }
 
           // Kiểm tra xem câu hỏi đã bị xóa chưa
@@ -776,7 +821,7 @@ export class QuestionsService {
             stillExists = stillExists || countQuestions > 0;
             console.log('Kiểm tra bảng questions:', countQuestions > 0 ? 'Vẫn còn' : 'Đã xóa');
           } catch (err) {
-            console.log('Lỗi khi kiểm tra bảng questions:', err.message);
+            console.log('Lỗi khi kiểm tra bảng questions:', getErrorMessage(err));
           }
 
           try {
@@ -787,7 +832,7 @@ export class QuestionsService {
             stillExists = stillExists || countQuestion > 0;
             console.log('Kiểm tra bảng question:', countQuestion > 0 ? 'Vẫn còn' : 'Đã xóa');
           } catch (err) {
-            console.log('Lỗi khi kiểm tra bảng question:', err.message);
+            console.log('Lỗi khi kiểm tra bảng question:', getErrorMessage(err));
           }
 
           if (!stillExists) {
@@ -799,7 +844,7 @@ export class QuestionsService {
             };
           }
         } catch (directError) {
-          console.log('Không thể xóa trực tiếp, thử dùng transaction:', directError.message);
+          console.log('Không thể xóa trực tiếp, thử dùng transaction:', getErrorMessage(directError));
         }
 
         const result = await this.prisma.$transaction(async (tx) => {
@@ -813,7 +858,7 @@ export class QuestionsService {
               `;
               console.log(`Đã xóa liên kết assessment_questions thành công`);
             } catch (err) {
-              console.log('Lỗi khi xóa liên kết assessment_questions:', err.message);
+              console.log('Lỗi khi xóa liên kết assessment_questions:', getErrorMessage(err));
 
               // Thử cách khác nếu cách trên không thành công
               try {
@@ -822,7 +867,7 @@ export class QuestionsService {
                 `;
                 console.log(`Đã xóa liên kết assessment_questions thành công (cách 2)`);
               } catch (err2) {
-                console.log('Lỗi khi xóa liên kết assessment_questions (cách 2):', err2.message);
+                console.log('Lỗi khi xóa liên kết assessment_questions (cách 2):', getErrorMessage(err2));
               }
             }
 
@@ -834,7 +879,7 @@ export class QuestionsService {
               `;
               console.log(`Đã xóa liên kết exam_questions thành công`);
             } catch (err) {
-              console.log('Lỗi khi xóa liên kết exam_questions:', err.message);
+              console.log('Lỗi khi xóa liên kết exam_questions:', getErrorMessage(err));
 
               try {
                 await this.prisma.$executeRaw`
@@ -842,7 +887,7 @@ export class QuestionsService {
                 `;
                 console.log(`Đã xóa liên kết exam_questions thành công (cách 2)`);
               } catch (err2) {
-                console.log('Lỗi khi xóa liên kết exam_questions (cách 2):', err2.message);
+                console.log('Lỗi khi xóa liên kết exam_questions (cách 2):', getErrorMessage(err2));
               }
             }
 
@@ -855,7 +900,7 @@ export class QuestionsService {
               `;
               console.log(`Đã xóa phiên bản câu hỏi thành công`);
             } catch (err) {
-              console.log('Lỗi khi xóa phiên bản câu hỏi:', err.message);
+              console.log('Lỗi khi xóa phiên bản câu hỏi:', getErrorMessage(err));
 
               // Thử cách khác nếu cách trên không thành công
               try {
@@ -864,7 +909,7 @@ export class QuestionsService {
                 `;
                 console.log(`Đã xóa phiên bản câu hỏi thành công (cách 2)`);
               } catch (err2) {
-                console.log('Lỗi khi xóa phiên bản câu hỏi (cách 2):', err2.message);
+                console.log('Lỗi khi xóa phiên bản câu hỏi (cách 2):', getErrorMessage(err2));
               }
             }
 
@@ -877,7 +922,7 @@ export class QuestionsService {
               `;
               console.log(`Đã xóa liên kết tags thành công`);
             } catch (err) {
-              console.log('Lỗi khi xóa liên kết tags:', err.message);
+              console.log('Lỗi khi xóa liên kết tags:', getErrorMessage(err));
 
               // Thử cách khác nếu cách trên không thành công
               try {
@@ -886,7 +931,7 @@ export class QuestionsService {
                 `;
                 console.log(`Đã xóa liên kết tags thành công (cách 2)`);
               } catch (err2) {
-                console.log('Lỗi khi xóa liên kết tags (cách 2):', err2.message);
+                console.log('Lỗi khi xóa liên kết tags (cách 2):', getErrorMessage(err2));
               }
             }
 
@@ -899,7 +944,7 @@ export class QuestionsService {
               `;
               console.log(`Đã xóa hình ảnh câu hỏi thành công`);
             } catch (err) {
-              console.log('Lỗi khi xóa hình ảnh câu hỏi:', err.message);
+              console.log('Lỗi khi xóa hình ảnh câu hỏi:', getErrorMessage(err));
 
               // Thử cách khác nếu cách trên không thành công
               try {
@@ -908,7 +953,7 @@ export class QuestionsService {
                 `;
                 console.log(`Đã xóa hình ảnh câu hỏi thành công (cách 2)`);
               } catch (err2) {
-                console.log('Lỗi khi xóa hình ảnh câu hỏi (cách 2):', err2.message);
+                console.log('Lỗi khi xóa hình ảnh câu hỏi (cách 2):', getErrorMessage(err2));
               }
             }
 
@@ -922,7 +967,7 @@ export class QuestionsService {
                 `;
                 console.log('Đã xóa câu hỏi trực tiếp từ bảng questions thành công');
               } catch (err) {
-                console.log('Không thể xóa trực tiếp từ bảng questions:', err.message);
+                console.log('Không thể xóa trực tiếp từ bảng questions:', getErrorMessage(err));
               }
 
               // Thử xóa từ bảng question (số ít)
@@ -932,7 +977,7 @@ export class QuestionsService {
                 `;
                 console.log('Đã xóa câu hỏi trực tiếp từ bảng question thành công');
               } catch (err) {
-                console.log('Không thể xóa trực tiếp từ bảng question:', err.message);
+                console.log('Không thể xóa trực tiếp từ bảng question:', getErrorMessage(err));
               }
 
               // Thử xóa từ bảng question trong transaction
@@ -944,7 +989,7 @@ export class QuestionsService {
                 });
                 console.log('Đã xóa câu hỏi chính từ bảng question thành công');
               } catch (err) {
-                console.log('Không thể xóa từ bảng question trong transaction:', err.message);
+                console.log('Không thể xóa từ bảng question trong transaction:', getErrorMessage(err));
 
                 // Nếu không thành công, thử xóa từ bảng questions (số nhiều) trong transaction
                 try {
@@ -953,7 +998,7 @@ export class QuestionsService {
                   `;
                   console.log('Đã xóa câu hỏi chính từ bảng questions thành công');
                 } catch (err2) {
-                  console.log('Không thể xóa từ bảng questions trong transaction:', err2.message);
+                  console.log('Không thể xóa từ bảng questions trong transaction:', getErrorMessage(err2));
                 }
               }
 
@@ -968,7 +1013,7 @@ export class QuestionsService {
                 stillExists = stillExists || countQuestions > 0;
                 console.log('Kiểm tra bảng questions:', countQuestions > 0 ? 'Vẫn còn' : 'Đã xóa');
               } catch (err) {
-                console.log('Lỗi khi kiểm tra bảng questions:', err.message);
+                console.log('Lỗi khi kiểm tra bảng questions:', getErrorMessage(err));
               }
 
               try {
@@ -979,7 +1024,7 @@ export class QuestionsService {
                 stillExists = stillExists || countQuestion > 0;
                 console.log('Kiểm tra bảng question:', countQuestion > 0 ? 'Vẫn còn' : 'Đã xóa');
               } catch (err) {
-                console.log('Lỗi khi kiểm tra bảng question:', err.message);
+                console.log('Lỗi khi kiểm tra bảng question:', getErrorMessage(err));
               }
 
               if (stillExists) {
@@ -991,7 +1036,7 @@ export class QuestionsService {
                   `;
                   console.log('Đã thử xóa lần cuối từ bảng questions');
                 } catch (err) {
-                  console.log('Không thể xóa lần cuối từ bảng questions:', err.message);
+                  console.log('Không thể xóa lần cuối từ bảng questions:', getErrorMessage(err));
                 }
               } else {
                 console.log('Đã xóa câu hỏi chính thành công');
@@ -1002,8 +1047,8 @@ export class QuestionsService {
               console.error('Lỗi khi xóa câu hỏi chính:', deleteError);
               return {
                 success: false,
-                message: `Lỗi khi xóa câu hỏi chính: ${deleteError.message}`,
-                error: deleteError.message
+                message: `Lỗi khi xóa câu hỏi chính: ${getErrorMessage(deleteError)}`,
+                error: getErrorMessage(deleteError)
               };
             }
 
@@ -1019,8 +1064,8 @@ export class QuestionsService {
             console.error('Lỗi trong transaction khi xóa câu hỏi:', txError);
             return {
               success: false,
-              message: `Lỗi trong transaction: ${txError.message}`,
-              error: txError.message
+              message: `Lỗi trong transaction: ${getErrorMessage(txError)}`,
+              error: getErrorMessage(txError)
             };
           }
         });
@@ -1031,7 +1076,8 @@ export class QuestionsService {
         console.error('Lỗi khi thực hiện transaction xóa câu hỏi:', txError);
 
         // Kiểm tra lỗi liên quan đến khóa ngoại
-        if (txError.message && txError.message.includes('foreign key constraint')) {
+        const errorMessage = getErrorMessage(txError);
+        if (errorMessage && errorMessage.includes('foreign key constraint')) {
           console.log('Phát hiện lỗi khóa ngoại, thử xóa liên kết trước');
 
           try {
@@ -1077,20 +1123,20 @@ export class QuestionsService {
               data: { id }
             };
           } catch (fkError) {
-            console.error('Không thể xử lý lỗi khóa ngoại:', fkError.message);
+            console.error('Không thể xử lý lỗi khóa ngoại:', getErrorMessage(fkError));
 
             return {
               success: false,
               message: 'Không thể xóa câu hỏi vì nó đang được sử dụng trong bài thi hoặc bài học. Vui lòng xóa các liên kết trước.',
-              error: txError.message
+              error: getErrorMessage(txError)
             };
           }
         }
 
         return {
           success: false,
-          message: `Lỗi khi xóa câu hỏi: ${txError.message}`,
-          error: txError.message
+          message: `Lỗi khi xóa câu hỏi: ${getErrorMessage(txError)}`,
+          error: getErrorMessage(txError)
         };
       }
     } catch (error) {
@@ -1100,15 +1146,15 @@ export class QuestionsService {
       if (error instanceof NotFoundException) {
         return {
           success: false,
-          message: error.message,
+          message: getErrorMessage(error),
           error: 'NOT_FOUND'
         };
       }
 
       return {
         success: false,
-        message: `Không thể xóa câu hỏi: ${error.message || 'Lỗi không xác định'}`,
-        error: error.name || 'UNKNOWN_ERROR'
+        message: `Không thể xóa câu hỏi: ${getErrorMessage(error)}`,
+        error: getErrorName(error)
       };
     }
   }
@@ -1144,7 +1190,7 @@ export class QuestionsService {
           questions = Array.isArray(result) ? result : [result].filter(Boolean);
           console.log('Tìm thấy câu hỏi trong bảng questions:', questions.length > 0);
         } catch (err) {
-          console.log('Lỗi khi tìm trong bảng questions:', err.message);
+          console.log('Lỗi khi tìm trong bảng questions:', getErrorMessage(err));
 
           // Thử tìm trong bảng question (số ít)
           try {
@@ -1156,7 +1202,7 @@ export class QuestionsService {
             questions = Array.isArray(result) ? result : [result].filter(Boolean);
             console.log('Tìm thấy câu hỏi trong bảng question:', questions.length > 0);
           } catch (err2) {
-            console.log('Lỗi khi tìm trong bảng question:', err2.message);
+            console.log('Lỗi khi tìm trong bảng question:', getErrorMessage(err2));
           }
         }
 
@@ -1177,16 +1223,16 @@ export class QuestionsService {
         console.error('Lỗi khi tìm câu hỏi:', findError);
         return {
           success: false,
-          message: `Lỗi khi tìm câu hỏi: ${findError.message}`,
-          error: findError.message
+          message: `Lỗi khi tìm câu hỏi: ${getErrorMessage(findError)}`,
+          error: getErrorMessage(findError)
         };
       }
     } catch (error) {
       console.error('Lỗi khi xóa câu hỏi theo nội dung:', error);
       return {
         success: false,
-        message: `Không thể xóa câu hỏi: ${error.message || 'Lỗi không xác định'}`,
-        error: error.name || 'UNKNOWN_ERROR'
+        message: `Không thể xóa câu hỏi: ${getErrorMessage(error)}`,
+        error: getErrorName(error)
       };
     }
   }
@@ -1394,7 +1440,7 @@ export class QuestionsService {
 
       return questionData;
     } catch (error) {
-      throw new Error(`Không thể phân tích nội dung LaTeX: ${error.message}`);
+      throw new Error(`Không thể phân tích nội dung LaTeX: ${getErrorMessage(error)}`);
     }
   }
 

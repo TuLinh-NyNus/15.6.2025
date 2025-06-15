@@ -140,7 +140,7 @@ Current environment: [Windows/Mac/Linux]
 [ ] 6. ARCHIVING
 
 ## Verification Commitment
-I WILL run the verification checklist before completing this task.
+I will run the verification checklist before completing this task.
 I will maintain tasks.md as the single source of truth for task status.
 
 I'll begin by reviewing all Memory Bank files...
@@ -169,7 +169,7 @@ Current environment: [Windows/Mac/Linux]
 [ ] 6. ARCHIVING
 
 ## Verification Commitment
-I WILL run the full verification checklist before completing this task.
+I will run the full verification checklist before completing this task.
 I will maintain tasks.md as the single source of truth for task status.
 I will document architectural decisions in systemPatterns.md.
 

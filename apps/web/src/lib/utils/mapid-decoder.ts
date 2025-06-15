@@ -121,7 +121,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
     // Giải mã từng tham số
     if (params[0]) {
       const gradeCode = params[0];
-      const grade = sampleMapIDData.grades[gradeCode];
+      const grade = (sampleMapIDData.grades as any)[gradeCode];
       if (grade) {
         result.grade = {
           code: gradeCode,
@@ -132,7 +132,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
 
     if (params[1]) {
       const subjectCode = params[1];
-      const subject = sampleMapIDData.subjects[subjectCode];
+      const subject = (sampleMapIDData.subjects as any)[subjectCode];
       if (subject) {
         result.subject = {
           code: subjectCode,
@@ -143,7 +143,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
 
     if (params[3]) {
       const difficultyCode = params[3];
-      const difficulty = sampleMapIDData.difficultyLevels[difficultyCode];
+      const difficulty = (sampleMapIDData.difficultyLevels as any)[difficultyCode];
       if (difficulty) {
         result.difficulty = {
           code: difficultyCode,
@@ -156,7 +156,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
     if (params[0]) {
       // Tham số 1: Lớp
       const gradeCode = params[0];
-      const gradeDesc = sampleMapIDData.grades[gradeCode]?.name ||
+      const gradeDesc = (sampleMapIDData.grades as any)[gradeCode]?.name ||
                         `Lớp ${gradeCode === '0' ? '10' : gradeCode === '1' ? '11' : gradeCode === '2' ? '12' : gradeCode === '3' ? 'Đại học' : gradeCode}`;
       result.grade = result.grade || { code: gradeCode, description: gradeDesc };
     }
@@ -164,7 +164,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
     if (params[1]) {
       // Tham số 2: Môn
       const subjectCode = params[1];
-      const subjectDesc = sampleMapIDData.subjects[subjectCode] || `Môn ${subjectCode}`;
+      const subjectDesc = (sampleMapIDData.subjects as any)[subjectCode] || `Môn ${subjectCode}`;
       result.subject = result.subject || { code: subjectCode, description: subjectDesc };
     }
 
@@ -189,7 +189,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '8': 'Đại số tổ hợp',
           '9': 'Véctơ (trong hệ tọa độ)'
         };
-        chapterDescription = chapters[chapterCode] || chapterDescription;
+        chapterDescription = (chapters as any)[chapterCode] || chapterDescription;
       } else if (params[0] === '1' && params[1] === 'P') {
         // Lớp 11 - NGÂN HÀNG CHÍNH
         const chapters = {
@@ -202,7 +202,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '7': 'Đạo hàm',
           '8': 'Quan hệ vuông góc trong không gian'
         };
-        chapterDescription = chapters[chapterCode] || chapterDescription;
+        chapterDescription = (chapters as any)[chapterCode] || chapterDescription;
       }
 
       result.chapter = { code: chapterCode, description: chapterDescription };
@@ -211,7 +211,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
     if (params[3]) {
       // Tham số 4: Mức độ
       const difficultyCode = params[3];
-      const difficultyDesc = sampleMapIDData.difficultyLevels[difficultyCode] || `Mức độ ${difficultyCode}`;
+      const difficultyDesc = (sampleMapIDData.difficultyLevels as any)[difficultyCode] || `Mức độ ${difficultyCode}`;
       result.difficulty = result.difficulty || { code: difficultyCode, description: difficultyDesc };
     }
 
@@ -235,7 +235,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '7': 'Parabol và các vấn đề liên quan',
           '8': 'Bài tổng hợp'
         };
-        lessonDescription = lessons[lessonCode] || lessonDescription;
+        lessonDescription = (lessons as any)[lessonCode] || lessonDescription;
       } else if (params[0] === '1' && params[1] === 'P' && params[2] === '1') {
         // Lớp 11 - NGÂN HÀNG CHÍNH - Chương 1: HS lượng giác và phương trình lượng giác
         const lessons = {
@@ -246,7 +246,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '5': 'PT lượng giác cơ bản',
           '6': 'PT lượng giác thường gặp'
         };
-        lessonDescription = lessons[lessonCode] || lessonDescription;
+        lessonDescription = (lessons as any)[lessonCode] || lessonDescription;
       }
 
       result.lesson = { code: lessonCode, description: lessonDescription };
@@ -271,7 +271,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '8': 'Bài toán dùng cho tam giác, tứ giác',
           '9': 'Bài toán thực tế, PP tọa độ hóa'
         };
-        formDescription = forms[formParam] || formDescription;
+        formDescription = (forms as any)[formParam] || formDescription;
       } else if (params[0] === '0' && params[1] === 'P' && params[2] === '9' && params[4] === '1') {
         // Lớp 10 - NGÂN HÀNG CHÍNH - Chương 9: Véctơ (trong hệ tọa độ) - Bài 1: Toạ độ của véctơ
         const forms = {
@@ -284,7 +284,7 @@ export function decodeMapIDFromSample(mapId: string): MapIDResult | null {
           '7': 'Toán thực tế dùng hệ toạ độ',
           '8': 'Độ dài vecto và ứng dụng'
         };
-        formDescription = forms[formParam] || formDescription;
+        formDescription = (forms as any)[formParam] || formDescription;
       }
 
       result.form = {
